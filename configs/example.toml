@@ -1,0 +1,35 @@
+# Example configuration for the trading system.
+# Copy and modify for your specific setup.
+
+[engine]
+tick_interval_ms = 100
+
+[[exchanges]]
+name = "hyperliquid"
+api_key_env = "HL_API_KEY"
+secret_key_env = "HL_SECRET_KEY"
+testnet = true
+
+[[exchanges]]
+name = "binance"
+api_key_env = "BINANCE_API_KEY"
+secret_key_env = "BINANCE_SECRET_KEY"
+testnet = true
+
+[[strategies]]
+name = "btc_pair_trader"
+strategy_type = "pair_trader"
+instruments = ["Hyperliquid.Perpetual.BTC", "Binance.Perpetual.BTCUSDT"]
+
+[strategies.params]
+entry_zscore = 2.0
+exit_zscore = 0.5
+stop_zscore = 4.0
+lookback_periods = 100
+max_position_notional = "10000"
+order_size = "100"
+
+[telemetry]
+log_level = "info"
+metrics_port = 9090
+enable_tracing = false

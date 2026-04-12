@@ -1,0 +1,19 @@
+[package]
+name = "connector-hyperliquid"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+trading-core = { path = "../../core" }
+tokio = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+anyhow = { workspace = true }
+async-trait = { workspace = true }
+tracing = { workspace = true }
+thiserror = { workspace = true }
+chrono = { workspace = true }
+rust_decimal = { workspace = true }
+hyperliquid_sdk = "0.5.3"
+ethers = "2"
+uuid = { workspace = true }
