@@ -9,6 +9,7 @@ members = [
     "crates/connectors/predict_fun",
     "crates/strategies/prediction_quoter",
     "crates/strategies/pair_trader",
+    "crates/strategies/hl_spread_quoter",
     "crates/engine",
     "crates/fair_value_service",
     "crates/backtest",

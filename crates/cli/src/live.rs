@@ -1,33 +1,111 @@
-//! Live trading mode.
+//! Live trading mode — wires the full engine stack end-to-end.
+//!
+//! On Ctrl+C: engine shuts down gracefully then the ShutdownHandle cancels
+//! all open orders before the process exits.
 
-use std::str::FromStr;
+use std::{collections::HashMap, sync::Arc};
 
-use connector_hyperliquid::HyperliquidClient;
-use rust_decimal::Decimal;
-use trading_core::traits::ExchangeConnector;
-use trading_core::types::decimal::{Price, Quantity};
-use trading_core::types::instrument::{Exchange, InstrumentId, InstrumentKind};
-use trading_core::types::order::{OrderRequest, OrderSide, TimeInForce};
+use anyhow::Context;
+use connector_hyperliquid::{HlMarketDataFeed, HyperliquidClient};
+use strategy_hl_spread_quoter::{HlSpreadQuoter, QuoterParams};
+use trading_core::{
+    config::AppConfig,
+    types::instrument::{Exchange, InstrumentId, InstrumentKind},
+};
+use trading_engine::{
+    market_data_bus::MarketDataBus,
+    runner::{EngineRunner, StrategyInstance},
+};
 
-/// Minimal live-mode smoke: place one testnet order via Hyperliquid connector.
-pub async fn run_once() -> anyhow::Result<()> {
-    let symbol = std::env::var("HL_SYMBOL").unwrap_or_else(|_| "ETH".to_string());
-    let price = std::env::var("HL_TEST_ORDER_PRICE").unwrap_or_else(|_| "1800".to_string());
-    let size = std::env::var("HL_TEST_ORDER_SIZE").unwrap_or_else(|_| "0.01".to_string());
+pub async fn run(config_path: &str) -> anyhow::Result<()> {
+    let config = AppConfig::load(std::path::Path::new(config_path))
+        .with_context(|| format!("loading config from {config_path}"))?;
+    let _ = dotenvy::dotenv();
 
-    let connector = HyperliquidClient::from_env("HL_SECRET_KEY", true).await?;
+    let hl_cfg = config.exchanges.iter()
+        .find(|e| e.name == "hyperliquid")
+        .context("no [exchanges] entry named 'hyperliquid'")?;
 
-    let req = OrderRequest {
-        instrument: InstrumentId::new(Exchange::Hyperliquid, InstrumentKind::Perpetual, symbol.clone()),
-        side: OrderSide::Buy,
-        price: Price::new(Decimal::from_str(&price)?),
-        quantity: Quantity::new(Decimal::from_str(&size)?),
-        tif: TimeInForce::Gtc,
-        client_order_id: None,
-    };
+    let strategy_cfg = config.strategies.first()
+        .context("no [[strategies]] entry in config")?;
 
-    let order_id = connector.place_order(&req).await?;
-    tracing::info!(%symbol, %order_id, "Placed Hyperliquid testnet order");
+    if strategy_cfg.strategy_type != "hl_spread_quoter" {
+        anyhow::bail!(
+            "expected strategy_type = 'hl_spread_quoter', got '{}'",
+            strategy_cfg.strategy_type
+        );
+    }
+
+    let params: QuoterParams = strategy_cfg.params.clone()
+        .try_into()
+        .map_err(|e| anyhow::anyhow!("invalid [strategies.params]: {e}"))?;
+
+    let instrument_str = strategy_cfg.instruments.first()
+        .context("no instruments listed under [[strategies]]")?;
+    let instrument = parse_instrument(instrument_str)?;
+    let symbol = instrument.symbol.clone();
+
+    tracing::info!(config = config_path, symbol = %symbol, testnet = hl_cfg.testnet,
+        "Starting live quoter");
+
+    let connector = HyperliquidClient::from_env(
+        &hl_cfg.secret_key_env, &symbol, hl_cfg.testnet,
+    ).await.context("building HyperliquidClient")?;
+
+    // Extract shutdown handle BEFORE the connector is moved into the runner.
+    // This lets us cancel all orders on Ctrl+C without restructuring the engine.
+    let shutdown = connector.shutdown_handle(hl_cfg.testnet);
+
+    let resolved_instrument = connector.instrument();
+    let asset_info = connector.asset_info();
+    let wallet_address = connector.wallet_address();
+
+    let md_bus = MarketDataBus::new();
+    let _ = md_bus.sender(&resolved_instrument);
+
+    let feed = HlMarketDataFeed::new(asset_info, wallet_address, hl_cfg.testnet);
+    let sink = md_bus.clone() as Arc<dyn trading_core::MarketDataSink>;
+    tokio::spawn(async move { feed.run(sink).await });
+
+    let quoter = HlSpreadQuoter::new(strategy_cfg.name.clone(), resolved_instrument, params);
+
+    let mut connectors: HashMap<Exchange, Box<dyn trading_core::traits::ExchangeConnector>> =
+        HashMap::new();
+    connectors.insert(Exchange::Hyperliquid, Box::new(connector));
+
+    let strategies = vec![StrategyInstance {
+        id: strategy_cfg.name.clone(),
+        strategy: Box::new(quoter),
+    }];
+
+    let runner = EngineRunner::new(connectors, strategies, md_bus);
+
+    tracing::info!("Engine wired — starting run loop");
+    runner.run().await?;
+
+    // EngineRunner::run() returns after Ctrl+C — clean up orders before exit.
+    tracing::info!("Engine stopped — cancelling all open orders");
+    if let Err(e) = shutdown.cancel_all().await {
+        tracing::error!("Shutdown cancel failed: {e:#}");
+    }
 
     Ok(())
+}
+
+fn parse_instrument(s: &str) -> anyhow::Result<InstrumentId> {
+    let parts: Vec<&str> = s.splitn(3, '.').collect();
+    if parts.len() != 3 {
+        anyhow::bail!("invalid instrument '{}': expected 'Exchange.Kind.Symbol'", s);
+    }
+    let exchange = match parts[0] {
+        "Hyperliquid" => Exchange::Hyperliquid,
+        other => anyhow::bail!("unknown exchange '{}'", other),
+    };
+    let kind = match parts[1] {
+        "Perpetual" => InstrumentKind::Perpetual,
+        "Spot" => InstrumentKind::Spot,
+        "Binary" => InstrumentKind::Binary,
+        other => anyhow::bail!("unknown instrument kind '{}'", other),
+    };
+    Ok(InstrumentId::new(exchange, kind, parts[2]))
 }

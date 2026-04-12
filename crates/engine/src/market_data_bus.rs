@@ -1,30 +1,49 @@
-//! MarketDataBus — manages broadcast channels for market data fan-out.
+//! MarketDataBus — per-instrument broadcast channels for market data fan-out.
 //!
-//! Each instrument gets its own broadcast channel. Strategies subscribe
-//! to the instruments they care about. If a strategy falls behind,
-//! it automatically skips stale messages (broadcast lagging semantics).
+//! Implements [`MarketDataSink`] so connectors are transport-agnostic.
+//! The default in-process implementation uses tokio::broadcast. To go distributed,
+//! implement `MarketDataSink` over NATS / Redis Streams and pass that instead.
+//!
+//! Internally uses `RwLock<HashMap>` so it is safe behind an `Arc` and can be
+//! shared between the connector feed task and the engine runner without cloning.
 
-use trading_core::{Event, InstrumentId};
+use std::{
+    collections::HashMap,
+    sync::{Arc, RwLock},
+};
+
 use tokio::sync::broadcast;
-use std::collections::HashMap;
+use trading_core::{Event, InstrumentId, MarketDataSink};
 
-/// Buffer size per instrument broadcast channel.
-/// At 100 updates/sec, this buffers 640ms — more than enough.
+/// Buffer size per instrument channel.
+/// At 200 book updates/sec, 64 entries = 320ms of buffering before a lagging
+/// subscriber is dropped. Increase if strategies are slow consumers.
 const BROADCAST_BUFFER: usize = 64;
 
+/// In-process market data bus backed by per-instrument tokio::broadcast channels.
+///
+/// Wrap in `Arc<MarketDataBus>` and pass to both the connector feed and the engine runner.
 pub struct MarketDataBus {
-    channels: HashMap<InstrumentId, broadcast::Sender<Event>>,
+    channels: RwLock<HashMap<InstrumentId, broadcast::Sender<Event>>>,
 }
 
 impl MarketDataBus {
-    pub fn new() -> Self {
-        Self { channels: HashMap::new() }
+    pub fn new() -> Arc<Self> {
+        Arc::new(Self {
+            channels: RwLock::new(HashMap::new()),
+        })
     }
 
     /// Get or create a broadcast sender for an instrument.
-    pub fn sender(&mut self, instrument: &InstrumentId) -> broadcast::Sender<Event> {
-        self.channels
-            .entry(instrument.clone())
+    /// Called by the engine runner to pre-register instruments before the feed starts.
+    pub fn sender(&self, instrument: &InstrumentId) -> broadcast::Sender<Event> {
+        // Fast path: already exists
+        if let Some(tx) = self.channels.read().unwrap().get(instrument) {
+            return tx.clone();
+        }
+        // Slow path: create
+        let mut map = self.channels.write().unwrap();
+        map.entry(instrument.clone())
             .or_insert_with(|| {
                 let (tx, _) = broadcast::channel(BROADCAST_BUFFER);
                 tx
@@ -32,16 +51,30 @@ impl MarketDataBus {
             .clone()
     }
 
-    /// Subscribe to an instrument's market data.
-    pub fn subscribe(&mut self, instrument: &InstrumentId) -> broadcast::Receiver<Event> {
+    /// Subscribe to an instrument's market data stream.
+    pub fn subscribe(&self, instrument: &InstrumentId) -> broadcast::Receiver<Event> {
         self.sender(instrument).subscribe()
     }
+}
 
-    /// Publish an event to the relevant instrument channel.
-    pub fn publish(&self, instrument: &InstrumentId, event: Event) {
-        if let Some(tx) = self.channels.get(instrument) {
-            // Ignore send errors — means no active receivers
+impl Default for MarketDataBus {
+    fn default() -> Self {
+        Self {
+            channels: RwLock::new(HashMap::new()),
+        }
+    }
+}
+
+/// The in-process sink implementation — events go into broadcast channels.
+/// To go distributed, replace this `Arc<MarketDataBus>` with a NATS/Redis publisher
+/// that also implements `MarketDataSink`.
+impl MarketDataSink for MarketDataBus {
+    fn publish(&self, instrument: &InstrumentId, event: Event) {
+        if let Some(tx) = self.channels.read().unwrap().get(instrument) {
+            // Lagging receivers are automatically dropped by tokio::broadcast
             let _ = tx.send(event);
         }
+        // If no channel exists yet, event is silently dropped (no subscribers).
+        // This is intentional — the feed starts before the runner in some topologies.
     }
 }

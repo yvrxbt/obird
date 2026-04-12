@@ -12,6 +12,7 @@ pub mod error;
 
 pub use action::Action;
 pub use event::Event;
+pub use traits::market_data::MarketDataSink;
 pub use types::instrument::{Exchange, InstrumentId, InstrumentKind};
 pub use types::order::{OrderId, OrderRequest, OrderSide, OrderUpdate, TimeInForce};
 pub use types::market_data::{OrderbookSnapshot, Trade};

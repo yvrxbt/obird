@@ -1,8 +1,9 @@
-//! Per-exchange OrderManager — serializes order submission and owns nonce.
+//! Per-exchange OrderManager — delegates to ExchangeConnector.
 
 use trading_core::Action;
 use trading_core::error::ConnectorError;
 use trading_core::traits::ExchangeConnector;
+use trading_core::types::order::{OrderId, OrderRequest};
 use std::sync::atomic::{AtomicU64, Ordering};
 
 pub struct NonceManager {
@@ -13,14 +14,13 @@ impl NonceManager {
     pub fn new(initial: u64) -> Self {
         Self { current: AtomicU64::new(initial) }
     }
-
     pub fn next(&self) -> u64 {
         self.current.fetch_add(1, Ordering::SeqCst)
     }
 }
 
 pub struct OrderManager {
-    connector: Box<dyn ExchangeConnector>,
+    pub(crate) connector: Box<dyn ExchangeConnector>,
     nonce: Option<NonceManager>,
 }
 
@@ -30,10 +30,12 @@ impl OrderManager {
         Self { connector, nonce }
     }
 
+    /// Submit a single non-place action (cancel, modify). Awaited by the router
+    /// before any place_batch call in the same strategy batch.
     pub async fn submit(&mut self, action: &Action) -> Result<(), ConnectorError> {
         match action {
             Action::PlaceOrder(req) => {
-                let _order_id = self.connector.place_order(req).await?;
+                self.connector.place_order(req).await?;
             }
             Action::CancelOrder { instrument, order_id } => {
                 self.connector.cancel_order(instrument, order_id).await?;
@@ -47,5 +49,11 @@ impl OrderManager {
             Action::LogDecision { .. } => {}
         }
         Ok(())
+    }
+
+    /// Batch-place using the connector's native batch API where available.
+    /// For HL: single BatchOrder call. Default: sequential.
+    pub async fn place_batch(&self, reqs: Vec<OrderRequest>) -> Vec<Result<OrderId, ConnectorError>> {
+        self.connector.place_batch(&reqs).await
     }
 }

@@ -1,0 +1,40 @@
+# HL Spread Quoter — mainnet live config
+# Secrets (HL_SECRET_KEY) stay in .env, never here.
+# Set HL_SYMBOL in .env to match the instrument below.
+
+[engine]
+tick_interval_ms = 100
+
+[[exchanges]]
+name = "hyperliquid"
+# api_key_env unused for HL (private key is sufficient)
+api_key_env = ""
+secret_key_env = "HL_SECRET_KEY"
+testnet = false            # ← mainnet
+
+[[strategies]]
+name = "hl_quoter_v1"
+strategy_type = "hl_spread_quoter"
+# Must match HL_SYMBOL in .env exactly — perp name (e.g. "ETH") or spot base (e.g. "PURR")
+instruments = ["Hyperliquid.Perpetual.ETH"]
+
+[strategies.params]
+# Quote two levels on each side. Total 4 resting orders.
+# ETH perp szDecimals=4, min size=0.0001. Using 0.01 to start.
+level_bps        = [5, 10]       # each level's half-spread in bps
+order_size       = "0.01"        # size per level per side
+
+# Pull all quotes if mid drifts more than this many bps from last quoted mid
+drift_bps        = 3
+drift_pause_secs = 3             # seconds to wait before requoting after drift
+
+# After a fill on any level, pause this many seconds before requoting
+fill_pause_secs  = 10
+
+# Max net position before stopping new orders on the accumulating side
+max_position     = "0.1"
+
+[telemetry]
+log_level     = "info"
+metrics_port  = 9090
+enable_tracing = false

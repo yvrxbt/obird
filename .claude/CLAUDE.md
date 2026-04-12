@@ -26,14 +26,34 @@ Single binary connects to 5 exchanges. Unified risk management.
 3. `Action` enum is the ONLY way strategies express intent
 4. `Event` enum is the ONLY way the engine communicates with strategies
 5. `OrderRouter` is the single point of routing; `OrderManager` per exchange serializes submission
-6. Market data flows through `tokio::broadcast` channels, NOT external message buses
+6. Market data flows via `MarketDataSink` trait (in-process default: `Arc<MarketDataBus>` backed by `tokio::broadcast`). Connector feeds call `sink.publish()` — never reference broadcast directly. This seam enables distributed deployment without touching strategies.
 7. Fair value model lives in `fair_value_service`, NOT in strategy crates
+8. Connector crates are split: `XClient` (order execution, implements `ExchangeConnector`) + `XMarketDataFeed` (WS feed, runs as background task, publishes to `MarketDataSink`)
+
+## Live Run
+
+```bash
+source .env && RUST_LOG=quoter=info,connector_hyperliquid=info cargo run --bin trading-cli -- live --config configs/quoter.toml
+```
+Ctrl+C cancels all orders via `scheduleCancel(now)` before exit.
+Logs: `logs/obird-YYYY-MM-DD.jsonl` (JSON lines, every mid+drift at DEBUG, all decisions at INFO).
+
+## HL Idiosyncrasies
+
+- `cancel_all` uses `scheduleCancel(now)` — single call, no OID lookup, cancels ALL orders for signer
+- `place_batch` uses `BatchOrder` — all orders in one call (not N sequential REST calls)
+- Price rounding: use `PriceTick::tick_for(price).normalize().scale()` — raw `.scale()` is wrong (returns 2 for 0.1)
+- Symbol names: perp = "ETH", "BTC" etc. Spot = "@N" format. Auto-detected in `resolve_symbol()`
+- ALO (post-only) TIF = `HlTif::Alo` — always use for maker orders to prevent crossing
+- `scheduleCancel` cancels ALL instruments — not safe for multi-strategy. Use BatchCancel per-OID then.
+- Optimal deployment: Tokyo (ap-northeast-1)
 
 ## Patterns
 
-- **New exchange connector**: Copy `connectors/hyperliquid/`. Implement `ExchangeConnector`.
-- **New strategy**: Copy `strategies/pair_trader/`. Implement `Strategy` trait.
+- **New exchange connector**: Copy `connectors/hyperliquid/`. Implement `ExchangeConnector` + `place_batch`.
+- **New strategy**: Copy `strategies/hl_spread_quoter/`. Implement `Strategy` trait.
 - **New ADR**: Copy `decisions/template.md`. Number sequentially.
+- **Adding an instrument**: pre-register with `md_bus.sender(&instrument)` before spawning the feed.
 
 ## Testing
 

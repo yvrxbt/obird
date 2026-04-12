@@ -1,7 +1,7 @@
 # Trading System Architecture
 
-> Last updated: 2026-04-12
-> Status: Early implementation (foundation complete, many runtime features still TODO)
+> Last updated: 2026-04-13
+> Status: HL MM live and trading. Binance connector next.
 
 ## 1. Purpose
 
@@ -86,22 +86,86 @@ Intended contract is to publish fair values as `Event::FairValueUpdate` consumed
 5. Use decimal-safe monetary types (`Price`, `Quantity`) for state/accounting.
 6. Hot path remains in-process channels, not external message bus.
 
-## 10. Known Gaps / Risks
+## 10. Live Market Making — HL Implementation
 
-1. `EngineRunner` currently selects only the first market-data subscription receiver per strategy.
-2. `UnifiedRiskManager::check` is not implemented.
+### Strategy: HlSpreadQuoter (`crates/strategies/hl_spread_quoter`)
+
+Always-cancel-first pattern: every requote cycle emits `[CancelAll, PlaceOrder×N]` as a single
+`Vec<Action>`. The router guarantees CancelAll completes before PlaceOrders are submitted.
+HL executes the PlaceOrders as a single `BatchOrder` API call (one round-trip for N orders).
+
+Drift is measured **order-price-based**: compare where quotes WOULD be now vs where they ARE.
+This is correct even with position-skewed quotes; mid-to-mid drift is equivalent only for
+symmetric fixed-spread strategies.
+
+Config: `configs/quoter.toml`. Secrets in `.env` (HL_SECRET_KEY only).
+
+Run: `RUST_LOG=quoter=info cargo run --bin trading-cli -- live --config configs/quoter.toml`
+
+Logs: `logs/obird-YYYY-MM-DD.jsonl` — JSON lines, every mid price + drift level at DEBUG,
+all state transitions at INFO. Full price trace always available for post-incident analysis.
+
+### Cancel Latency
+
+HL uses `scheduleCancel(time=now)` for cancel_all — single API call, no OID lookup.
+Faster than fetching open orders + N individual cancels. Cancels ALL orders for the
+signer on all instruments; acceptable for single-strategy deployment.
+
+Race window (unavoidable): fill can occur in the ~100-300ms between cancel being sent and
+landing on HL. Mitigation: tighten `drift_bps` below half-spread. At 5 bps spread, 3 bps
+drift threshold means requote when quote is 2 bps from new mid — still safe.
+
+Future: track order OIDs at connector level → use BatchCancel directly (eliminates the
+lookup round-trip). Or use per-OID cancel in the same block as order placement.
+
+### Market Data
+
+Subscribes to `AllMids` (sub-block, fires on any mid change) + `OrderUpdates` + `UserFills`.
+`AllMids` gives a synthetic mid-only book — sufficient for fixed-spread quoting.
+For BBO-aware strategies or pair trading: switch to `Subscription::L2Book` or `Subscription::Bbo`
+per instrument.
+
+Optimal deployment region: **Tokyo (ap-northeast-1)** per HL docs — lowest latency to validators.
+
+## 11. Multi-Receiver Fix
+
+`EngineRunner` now uses `futures::stream::select_all` to merge all instrument subscriptions
+into a single fair stream. Both instruments of a pair-trade strategy are polled equally.
+Previously only the first subscription receiver was polled (silent starvation on leg 2+).
+
+## 12. Concurrent Cross-Exchange Dispatch
+
+`OrderRouter` groups actions by exchange and submits place batches concurrently via `join_all`.
+A strategy returning `[PlaceOrder(HL), PlaceOrder(Binance)]` fires both legs simultaneously —
+total latency = max(HL_latency, Binance_latency) rather than sum.
+
+## 13. Known Gaps / Risks
+
+1. ~~`EngineRunner` only polls first subscription receiver~~ — fixed (select_all)
+2. `UnifiedRiskManager::check` is not implemented — passes all orders.
 3. `SimConnector::modify_order` does cancel-replace with hardcoded buy side.
-4. Backtest harness uses `Handle::block_on` in action processing and should be refactored for cleaner async handling.
-5. CLI argument parsing is minimal and not aligned with script flags yet.
+4. Backtest harness uses `Handle::block_on` in action processing.
+5. `PositionTracker::on_fill` is not implemented — strategies track position locally.
+6. `scheduleCancel` cancels across all instruments — not safe for multi-strategy deployment.
+7. Binance, Lighter, Polymarket, Predict.fun connectors are scaffolds only.
+8. FairValueService is stubbed — needed for prediction market quoting.
 
-## 11. ADRs
+## 14. Next Steps
+
+- [ ] Binance connector: `BinanceClient` + `BinanceMarketDataFeed`
+- [ ] FairValueService: subscribe to multi-exchange BookUpdate, publish FairValueUpdate
+- [ ] PositionTracker: aggregate fills from all connectors, feed UnifiedRiskManager
+- [ ] Per-OID cancel: track OIDs at connector level for faster targeted cancel
+- [ ] BBO subscription: replace AllMids with Bbo for per-instrument latency
+- [ ] Backtest wiring: connect CLI `backtest` command to BacktestHarness
+- [ ] Multi-strategy safety: per-instrument scheduleCancel or OID tracking
+
+## 15. ADRs
 
 See `decisions/`:
 - 001 single binary + order router
-- 002 broadcast channels instead of NATS on hot path
+- 002 broadcast channels instead of NATS on hot path (MarketDataSink trait added for future distribution)
 - 003 trait-based strategy abstraction
 - 004 fair value as separate service
 - 005 unified risk management
 - 006 OTel telemetry
-
-The high-level ADR direction still matches implementation intent, but runtime completeness is not yet at production level.
