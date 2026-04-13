@@ -26,23 +26,16 @@ pub fn now_ns() -> u64 {
 
 // ── Order book ────────────────────────────────────────────────────────────────
 
-pub fn l2book_to_snapshot(book: &HlL2Book) -> OrderbookSnapshot {
+/// Convert an L2Book snapshot to our domain type.
+/// `exchange_ts_ns` comes from `book.time * 1_000_000` (HL sends milliseconds).
+pub fn l2book_to_snapshot(book: &HlL2Book, exchange_ts_ns: u64) -> OrderbookSnapshot {
     let bids = book.bids().iter().map(level_to_pair).collect();
     let asks = book.asks().iter().map(level_to_pair).collect();
-    OrderbookSnapshot { bids, asks, timestamp_ns: now_ns() }
+    OrderbookSnapshot { bids, asks, timestamp_ns: exchange_ts_ns }
 }
 
 fn level_to_pair(l: &BookLevel) -> (Price, Quantity) {
     (Price::new(l.px), Quantity::new(l.sz))
-}
-
-/// Synthesise a thin book from a single mid-price value (AllMids path).
-pub fn mid_to_snapshot(mid: rust_decimal::Decimal) -> OrderbookSnapshot {
-    OrderbookSnapshot {
-        bids: vec![(Price::new(mid), Quantity::zero())],
-        asks: vec![(Price::new(mid), Quantity::zero())],
-        timestamp_ns: now_ns(),
-    }
 }
 
 // ── Fills ─────────────────────────────────────────────────────────────────────

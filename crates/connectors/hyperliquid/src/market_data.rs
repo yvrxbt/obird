@@ -1,7 +1,10 @@
 //! Hyperliquid WebSocket market data feed — background task.
 //!
-//! Subscribes to AllMids, OrderUpdates, and UserFills.
+//! Subscribes to L2Book (per-instrument BBO + depth), OrderUpdates, and UserFills.
 //! Publishes normalized Events to a MarketDataSink.
+//!
+//! L2Book gives real best-bid/ask prices and the exchange-side timestamp, enabling
+//! accurate feed-latency measurement (exchange_ts_ns vs local_ts_ns in BookUpdate).
 
 use std::sync::Arc;
 
@@ -50,7 +53,9 @@ impl HlMarketDataFeed {
             hypersdk::hypercore::mainnet_ws()
         };
 
-        ws.subscribe(Subscription::AllMids { dex: None });
+        // L2Book gives real BBO + exchange timestamp. One subscription per instrument.
+        // AllMids (removed) gave only a synthetic mid with no per-instrument timestamp.
+        ws.subscribe(Subscription::L2Book { coin: self.asset.ws_coin.clone() });
         ws.subscribe(Subscription::OrderUpdates { user: self.user });
         ws.subscribe(Subscription::UserFills { user: self.user });
 
@@ -68,19 +73,33 @@ impl HlMarketDataFeed {
 
     fn handle_message(&self, msg: Incoming, sink: &Arc<dyn MarketDataSink>) {
         match msg {
-            Incoming::AllMids { mids, .. } => {
-                if let Some(&mid) = mids.get(&self.asset.mids_key) {
-                    let book = normalize::mid_to_snapshot(mid);
-                    sink.publish(
-                        &self.asset.instrument,
-                        Event::BookUpdate {
-                            instrument: self.asset.instrument.clone(),
-                            book,
-                            exchange_ts_ns: normalize::now_ns(),
-                            local_ts_ns: normalize::now_ns(),
-                        },
-                    );
-                }
+            Incoming::L2Book(book) => {
+                // HL sends book.time in milliseconds → convert to nanoseconds.
+                // exchange_ts_ns: when HL produced this snapshot (their clock)
+                // local_ts_ns:    when we received and processed it (our clock)
+                // Δ = local - exchange gives one-way feed latency estimate.
+                let exchange_ts_ns = book.time * 1_000_000;
+                let local_ts_ns = normalize::now_ns();
+                let snap = normalize::l2book_to_snapshot(&book, exchange_ts_ns);
+
+                tracing::debug!(
+                    target: "md",
+                    instrument = %self.asset.instrument,
+                    feed_latency_us = (local_ts_ns.saturating_sub(exchange_ts_ns)) / 1_000,
+                    best_bid = ?snap.best_bid().map(|(p, _)| p.inner()),
+                    best_ask = ?snap.best_ask().map(|(p, _)| p.inner()),
+                    "L2BOOK"
+                );
+
+                sink.publish(
+                    &self.asset.instrument,
+                    Event::BookUpdate {
+                        instrument: self.asset.instrument.clone(),
+                        book: snap,
+                        exchange_ts_ns,
+                        local_ts_ns,
+                    },
+                );
             }
 
             Incoming::OrderUpdates(updates) => {

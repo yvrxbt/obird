@@ -50,6 +50,8 @@ impl OrderRouter {
             return;
         }
 
+        let batch_start = std::time::Instant::now();
+
         // Pass 1 — risk gate (stubbed, always passes)
         // TODO: implement per-strategy position limits + portfolio notional limits
 
@@ -57,7 +59,7 @@ impl OrderRouter {
         // CancelAll / CancelOrder must land before any PlaceOrder in the same batch
         // to guarantee we're out of the way before re-quoting.
         let mut place_orders: HashMap<Exchange, Vec<OrderRequest>> = HashMap::new();
-        let mut other_actions: Vec<Action> = Vec::new();
+        let mut had_cancel = false;
 
         for action in actions {
             match &action {
@@ -72,6 +74,7 @@ impl OrderRouter {
                 }
                 _ => {
                     // CancelAll, CancelOrder, ModifyOrder — execute now, sequentially
+                    had_cancel = true;
                     let exchange = action.exchange();
                     if let Some(exchange) = exchange {
                         if let Some(mgr) = self.managers.get_mut(&exchange) {
@@ -89,9 +92,12 @@ impl OrderRouter {
             }
         }
 
+        let cancel_elapsed_ms = batch_start.elapsed().as_millis();
+
         // Pass 3 — submit place batches concurrently across exchanges
         // Each exchange gets one place_batch call (HL: single BatchOrder API call).
         // Multiple exchanges run in parallel via join_all.
+        let n_orders: usize = place_orders.values().map(|v| v.len()).sum();
         if !place_orders.is_empty() {
             let futures: Vec<_> = place_orders
                 .into_iter()
@@ -119,6 +125,22 @@ impl OrderRouter {
                 .collect();
 
             join_all(futures).await;
+        }
+
+        let total_elapsed_ms = batch_start.elapsed().as_millis();
+        let place_elapsed_ms = total_elapsed_ms.saturating_sub(cancel_elapsed_ms);
+
+        // Log roundtrip only for batches that touched the exchange (cancel or place).
+        if had_cancel || n_orders > 0 {
+            tracing::info!(
+                target: "quoter",
+                strategy = %strategy_id,
+                cancel_ms = %cancel_elapsed_ms,
+                place_ms = %place_elapsed_ms,
+                total_ms = %total_elapsed_ms,
+                n_orders,
+                "ROUNDTRIP"
+            );
         }
     }
 }

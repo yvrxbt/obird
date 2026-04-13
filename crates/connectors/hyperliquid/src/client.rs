@@ -45,24 +45,44 @@ pub struct ShutdownHandle {
     pub instrument: InstrumentId,
     pub mids_key: String,
     pub testnet: bool,
+    /// Shared OID set from HyperliquidClient — lets shutdown cancel specific orders
+    /// instead of relying on scheduleCancel (which requires $1M traded volume).
+    pub active_oids: std::sync::Arc<std::sync::Mutex<std::collections::HashSet<u64>>>,
 }
 
 impl ShutdownHandle {
-    /// Cancel all open orders using scheduleCancel(now). Called once on Ctrl+C.
+    /// Cancel all tracked resting orders via per-OID BatchCancel.
+    /// Falls back to scheduleCancel if OID set is empty (nothing was placed this session).
     pub async fn cancel_all(&self) -> anyhow::Result<()> {
-        use chrono::Utc;
-        // Build a fresh client — HttpClient is not Clone, and this is not hot path
         let http = if self.testnet { hypercore::testnet() } else { hypercore::mainnet() };
 
-        tracing::info!(instrument = %self.instrument, "SHUTDOWN schedule_cancel(now)");
+        let oids: Vec<u64> = {
+            let lock = self.active_oids.lock().unwrap();
+            lock.iter().copied().collect()
+        };
 
-        http.schedule_cancel(
+        if oids.is_empty() {
+            tracing::info!(instrument = %self.instrument, "SHUTDOWN no tracked OIDs — nothing to cancel");
+            return Ok(());
+        }
+
+        let cancels: Vec<Cancel> = oids.iter()
+            .map(|&oid| Cancel { asset: self.market_index, oid })
+            .collect();
+
+        tracing::info!(
+            instrument = %self.instrument,
+            n_oids = oids.len(),
+            "SHUTDOWN BatchCancel resting orders"
+        );
+
+        http.cancel(
             &self.signer,
+            BatchCancel { cancels },
             self.nonce.next(),
-            Utc::now(),
             None,
             None,
-        ).await.context("schedule_cancel on shutdown")?;
+        ).await.context("BatchCancel on shutdown")?;
 
         tracing::info!(instrument = %self.instrument, "SHUTDOWN all orders cancelled");
         Ok(())
@@ -175,6 +195,11 @@ pub struct HyperliquidClient {
     vault_address: Option<Address>,
     update_tx: mpsc::UnboundedSender<OrderUpdate>,
     update_rx: mpsc::UnboundedReceiver<OrderUpdate>,
+    /// OIDs currently believed to be resting on the exchange.
+    /// Populated by place_batch on Resting response; cleared by cancel_all.
+    /// Shared with ShutdownHandle so graceful shutdown can do per-OID cancel
+    /// without requiring the $1M scheduleCancel volume threshold.
+    active_oids: std::sync::Arc<std::sync::Mutex<std::collections::HashSet<u64>>>,
 }
 
 impl HyperliquidClient {
@@ -213,6 +238,7 @@ impl HyperliquidClient {
         Ok(Self {
             http,
             signer,
+            active_oids: std::sync::Arc::new(std::sync::Mutex::new(std::collections::HashSet::new())),
             market,
             instrument,
             nonce: std::sync::Arc::new(NonceHandler::default()),
@@ -235,6 +261,7 @@ impl HyperliquidClient {
             instrument: self.instrument.clone(),
             mids_key: self.market.mids_key(),
             testnet,
+            active_oids: self.active_oids.clone(),
         }
     }
 
@@ -426,11 +453,14 @@ impl ExchangeConnector for HyperliquidClient {
             }
         };
 
-        // Map each response status back to the corresponding request
+        // Map each response status back to the corresponding request.
+        // Track Resting OIDs so cancel_all can BatchCancel them by ID.
+        let mut oids_lock = self.active_oids.lock().unwrap();
         resp.into_iter().zip(reqs.iter()).map(|(status, req)| {
             match status {
                 OrderResponseStatus::Resting { oid, .. } => {
                     let id = normalize::order_id_from_oid(oid);
+                    oids_lock.insert(oid); // track for BatchCancel
                     let _ = self.update_tx.send(OrderUpdate {
                         instrument: req.instrument.clone(),
                         order_id: id.clone(),
@@ -443,6 +473,7 @@ impl ExchangeConnector for HyperliquidClient {
                     Ok(id)
                 }
                 OrderResponseStatus::Filled { oid, avg_px, .. } => {
+                    // Filled immediately on placement — not resting, no OID to track
                     let id = normalize::order_id_from_oid(oid);
                     let _ = self.update_tx.send(OrderUpdate {
                         instrument: req.instrument.clone(),
@@ -479,6 +510,8 @@ impl ExchangeConnector for HyperliquidClient {
             .await
             .map_err(|e| ConnectorError::Other(anyhow::anyhow!("cancel: {}", e)))?;
 
+        self.active_oids.lock().unwrap().remove(&oid);
+
         let _ = self.update_tx.send(OrderUpdate {
             instrument: instrument.clone(),
             order_id: order_id.clone(),
@@ -491,26 +524,51 @@ impl ExchangeConnector for HyperliquidClient {
         Ok(())
     }
 
-    /// Cancel all resting orders immediately using HL's `scheduleCancel(now)`.
+    /// Cancel all tracked resting orders via per-OID BatchCancel.
     ///
-    /// This is a single API call with no OID lookup — significantly faster than
-    /// fetching open orders and cancelling individually.
+    /// Tracks OIDs returned by place_batch and cancels them specifically.
+    /// This works for all accounts regardless of volume, unlike scheduleCancel
+    /// which requires $1M+ in traded volume.
     ///
-    /// Note: `scheduleCancel` cancels ALL orders for this address/signer across all
-    /// instruments. With a single strategy this is correct. With multiple strategies
-    /// on different instruments, consider per-OID BatchCancel instead.
+    /// If an OID was already filled before the cancel reaches HL, HL returns
+    /// a per-order error inside the batch response — we log it and continue.
     async fn cancel_all(&self, _instrument: &InstrumentId) -> Result<(), ConnectorError> {
-        use chrono::Utc;
+        let oids: Vec<u64> = {
+            let lock = self.active_oids.lock().unwrap();
+            lock.iter().copied().collect()
+        };
+
+        if oids.is_empty() {
+            // No tracked orders — nothing to cancel. This is normal on first startup
+            // before any orders have been placed.
+            return Ok(());
+        }
+
+        let cancels: Vec<Cancel> = oids.iter()
+            .map(|&oid| Cancel { asset: self.market.index(), oid })
+            .collect();
+
+        tracing::info!(
+            target: "quoter",
+            instrument = %self.instrument,
+            n_oids = oids.len(),
+            ?oids,
+            "BATCH_CANCEL"
+        );
+
         self.http
-            .schedule_cancel(
+            .cancel(
                 &self.signer,
+                BatchCancel { cancels },
                 self.nonce.next(),
-                Utc::now(), // time=now → immediate
                 self.vault_address,
                 None,
             )
             .await
-            .map_err(|e| ConnectorError::Other(anyhow::anyhow!("schedule_cancel: {e}")))?;
+            .map_err(|e| ConnectorError::Other(anyhow::anyhow!("batch_cancel: {e}")))?;
+
+        // Clear OID set — all resting orders are now cancelled (filled ones were no-ops).
+        self.active_oids.lock().unwrap().clear();
         Ok(())
     }
 

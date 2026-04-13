@@ -107,16 +107,16 @@ all state transitions at INFO. Full price trace always available for post-incide
 
 ### Cancel Latency
 
-HL uses `scheduleCancel(time=now)` for cancel_all — single API call, no OID lookup.
-Faster than fetching open orders + N individual cancels. Cancels ALL orders for the
-signer on all instruments; acceptable for single-strategy deployment.
+HL uses per-OID `BatchCancel` for cancel_all. OIDs are tracked in `HyperliquidClient::active_oids`
+(Arc<Mutex<HashSet<u64>>>), populated by place_batch on Resting responses, cleared after a
+successful cancel_all. ShutdownHandle shares the same Arc so Ctrl+C uses the same mechanism.
+
+This works for all accounts. `scheduleCancel` (the previous approach) requires $1M+ traded volume
+and is not suitable for new accounts.
 
 Race window (unavoidable): fill can occur in the ~100-300ms between cancel being sent and
-landing on HL. Mitigation: tighten `drift_bps` below half-spread. At 5 bps spread, 3 bps
-drift threshold means requote when quote is 2 bps from new mid — still safe.
-
-Future: track order OIDs at connector level → use BatchCancel directly (eliminates the
-lookup round-trip). Or use per-OID cancel in the same block as order placement.
+landing on HL. Cancelling a filled OID via BatchCancel is a safe no-op — HL returns a per-order
+error inside the batch response which we ignore.
 
 ### Market Data
 
