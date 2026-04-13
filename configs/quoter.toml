@@ -21,8 +21,8 @@ instruments = ["Hyperliquid.Perpetual.ETH"]
 [strategies.params]
 # Quote two levels on each side. Total 4 resting orders.
 # ETH perp szDecimals=4, min size=0.0001. Using 0.01 to start.
-level_bps        = [5, 10]       # each level's half-spread in bps
-order_size       = "0.01"        # size per level per side
+level_bps        = [5, 10, 100]       # each level's half-spread in bps
+order_size       = "0.05"        # size per level per side
 
 # Pull all quotes if mid drifts more than this many bps from last quoted mid
 drift_bps        = 3
@@ -33,6 +33,16 @@ fill_pause_secs  = 10
 
 # Max net position before stopping new orders on the accumulating side
 max_position     = "0.1"
+
+# Inventory skew — shifts reservation mid by (net_position * skew_factor) bps.
+# At max_position (0.1 ETH long), shifts mid down 5 bps → ask is 5 bps cheaper,
+# steering sells without explicitly widening spread. Set to 0 to disable.
+# Calibration: skew at max_position should ≈ one spread width (5–10 bps here).
+skew_factor_bps_per_unit = "50"  # 50 bps per unit → 5 bps shift at 0.1 ETH
+
+# HL mainnet maker rebate is +0.2 bps (negative fee). Taker is +2.5 bps.
+# Post-only orders should always be maker. Set to actual fee for P&L accuracy.
+taker_fee_bps    = "0.2"         # maker rebate (negative taker) for post-only orders
 
 [telemetry]
 log_level     = "info"

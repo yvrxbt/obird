@@ -16,6 +16,7 @@ use trading_engine::{
     market_data_bus::MarketDataBus,
     runner::{EngineRunner, StrategyInstance},
 };
+use trading_telemetry::recorder::DataRecorder;
 
 pub async fn run(config_path: &str) -> anyhow::Result<()> {
     let config = AppConfig::load(std::path::Path::new(config_path))
@@ -62,6 +63,16 @@ pub async fn run(config_path: &str) -> anyhow::Result<()> {
 
     let md_bus = MarketDataBus::new();
     let _ = md_bus.sender(&resolved_instrument);
+
+    // DataRecorder: dedicated BBO + fill capture for quantitative analysis.
+    // Subscribes to the same bus as the strategy — zero coupling, no overhead on hot path.
+    // Writes to logs/data/bbo-YYYY-MM-DD.jsonl and logs/data/fills-YYYY-MM-DD.jsonl.
+    let recorder_rx = md_bus.subscribe(&resolved_instrument);
+    tokio::spawn(async move {
+        if let Err(e) = DataRecorder::new(recorder_rx).run().await {
+            tracing::error!("DataRecorder error: {e:#}");
+        }
+    });
 
     let feed = HlMarketDataFeed::new(asset_info, wallet_address, hl_cfg.testnet);
     let sink = md_bus.clone() as Arc<dyn trading_core::MarketDataSink>;

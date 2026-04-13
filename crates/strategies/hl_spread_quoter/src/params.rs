@@ -23,7 +23,28 @@ pub struct QuoterParams {
 
     /// Max absolute net position. Stop adding to the accumulating side beyond this.
     pub max_position: Decimal,
+
+    /// Inventory skew — bps of reservation-mid shift per unit of net_position.
+    ///
+    /// When long N units, the mid reference shifts down by (N * skew_factor_bps_per_unit) bps,
+    /// making the ask relatively cheaper and the bid relatively more expensive. This steers
+    /// fills toward mean-reverting the position without explicitly widening spreads.
+    ///
+    /// Set to 0 to disable (pure symmetric quoting). Reasonable start: 1–5 bps per unit,
+    /// calibrated so that at max_position the shift equals roughly one spread width.
+    ///
+    /// Example: order_size=0.01, max_position=0.1, level_bps=[5,10]
+    ///   skew_factor_bps_per_unit=50 → at max long (0.1 ETH), reservation shifts 5 bps down.
+    #[serde(default)]
+    pub skew_factor_bps_per_unit: Decimal,
+
+    /// Exchange taker fee in bps — used for P&L reporting only, does not affect quoting.
+    /// HL mainnet taker fee is ~2 bps for most accounts. Set accurately for correct P&L.
+    #[serde(default = "default_taker_fee_bps")]
+    pub taker_fee_bps: Decimal,
 }
+
+fn default_taker_fee_bps() -> Decimal { Decimal::new(2, 1) } // 0.2 bps default (HL maker rebate)
 
 impl QuoterParams {
     pub fn drift_ratio(&self) -> Decimal {

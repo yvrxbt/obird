@@ -1,13 +1,18 @@
-# Trading System (Rust HFT Framework)
+# obird — Rust HFT Framework
 
 A multi-crate Rust workspace for low-latency trading research and execution.
 
-Current state: **foundation + partial implementation**.
-- ✅ Core traits/types and engine skeleton are implemented.
-- ✅ Hyperliquid connector can place/cancel/modify orders.
-- ✅ Backtest harness + simulation components exist.
-- ⚠️ CLI `backtest` and `record` subcommands are placeholders.
-- ⚠️ Most connectors/strategies are scaffolds with TODOs.
+Current state: **HL spread MM live on mainnet ETH perp.**
+- ✅ `HlSpreadQuoter`: 2-level symmetric MM with inventory skew, session P&L tracking
+- ✅ Hyperliquid connector: place/cancel/modify, per-OID BatchCancel, L2Book WS feed
+- ✅ `DataRecorder`: dedicated BBO + fill JSONL capture for quant analysis (`logs/data/`)
+- ✅ Engine: multi-instrument fan-out, cross-exchange concurrent dispatch, graceful shutdown
+- ✅ Backtest harness + simulation components exist (not yet wired to CLI)
+- ⚠️ Binance connector: built, not wired into live runner
+- ⚠️ CLI `backtest` and `record` subcommands are stubs
+- ⚠️ Risk manager, Prometheus metrics, FairValueService: stubbed
+
+**See `RUNBOOK.md` for live operation guide, monitoring, and tuning.**
 
 ## Architecture Overview
 
@@ -78,23 +83,20 @@ cargo build --workspace --release
 
 ## Running
 
-### 1) Live mode (currently Hyperliquid test order smoke path)
-
-The current `live` command executes `live::run_once()` and places one testnet limit order via Hyperliquid.
+### 1) Live mode — HL spread MM
 
 ```bash
 cp .env.example .env
-# Fill HL_SECRET_KEY (+ optional HL_SYMBOL / HL_TEST_ORDER_PRICE / HL_TEST_ORDER_SIZE)
-set -a; source .env; set +a
+# Set HL_SECRET_KEY in .env
 
-cargo run -p trading-cli -- live
+source .env && RUST_LOG=quoter=info,connector_hyperliquid=info,trading_engine=info \
+  ./target/release/trading-cli live --config configs/quoter.toml
 ```
 
-Environment variables used by `live` now:
-- `HL_SECRET_KEY` (required)
-- `HL_SYMBOL` (default: `ETH`)
-- `HL_TEST_ORDER_PRICE` (default: `1800`)
-- `HL_TEST_ORDER_SIZE` (default: `0.01`)
+Environment variables:
+- `HL_SECRET_KEY` (required) — mainnet private key (hex)
+
+**See `RUNBOOK.md` for full operational guide including monitoring, log analysis, and parameter tuning.**
 
 ### 2) Backtest mode (CLI path currently stubbed)
 
