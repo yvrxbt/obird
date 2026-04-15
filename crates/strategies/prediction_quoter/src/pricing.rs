@@ -108,7 +108,7 @@ pub const MAX_PRICE: Decimal = dec!(0.999);
 /// - `poly_fv`            Polymarket mid price (pass `predict_mid` when not configured).
 /// - `predict_mid`        predict.fun book mid `(best_bid + best_ask) / 2`.
 /// - `spread_cents`       Target distance from each side's effective FV.
-/// - `touch_retreat_cents`Retreat distance from predict.fun top-of-book (best bid)
+/// - `touch_retreat_cents`Retreat distance from ask on touch-triggered requotes.
 ///                        used by defensive requotes.
 /// - `spread_threshold_v` Market's scoring window. Sides outside it earn 0 and are skipped.
 /// - `decimal_precision`  Market tick precision (2 or 3 from the API).
@@ -167,9 +167,9 @@ pub fn calculate(
         let yes_fv = poly_fv.min(predict_mid);
         let mut target = yes_fv - spread_cents;
 
-        // Defensive retreat from predict.fun top-of-book (only on touch-triggered requotes).
+        // Defensive retreat from ask (only on touch-triggered requotes).
         if touch_retreat_cents > Decimal::ZERO {
-            target = target.min(yes_bid_mkt - touch_retreat_cents);
+            target = target.min(yes_ask_mkt - touch_retreat_cents);
         }
 
         // Keep within scoring window by clamping just inside `v` (farming-first).
@@ -220,11 +220,9 @@ pub fn calculate(
     let no_bid: Option<Price> = {
         let no_fv = Decimal::ONE - poly_fv.max(predict_mid);
         let mut target = no_fv - spread_cents;
-        let no_bid_mkt = Decimal::ONE - yes_ask_mkt;
-
-        // Defensive retreat from NO top-of-book (only on touch-triggered requotes).
+        // Defensive retreat from NO ask estimate (only on touch-triggered requotes).
         if touch_retreat_cents > Decimal::ZERO {
-            target = target.min(no_bid_mkt - touch_retreat_cents);
+            target = target.min(no_ask_est - touch_retreat_cents);
         }
 
         // Scoring window check: keep inside `v` by clamping (farming-first).

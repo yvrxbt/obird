@@ -55,8 +55,8 @@ max_position_tokens = "300.0"
 
 # ── Timing ───────────────────────────────────────────────────────────────────
 drift_cents         = "0.02"
-touch_trigger_cents = "0.00"       # Defensive requote trigger near top-of-book (0.00 = at touch)
-touch_retreat_cents = "0.02"       # After trigger, requote this far behind top-of-book
+touch_trigger_cents = "0.01"       # Defensive requote trigger when bid gets within this distance of ask
+touch_retreat_cents = "0.02"       # After trigger, requote to at least this distance from ask
 min_quote_hold_secs = 10
 fill_pause_secs     = 5               # Short — fills are free (0% maker fee)
 

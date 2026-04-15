@@ -112,6 +112,9 @@ pub struct PredictionQuoter {
     last_quoted_fv: Option<Decimal>,
     /// When orders were last placed. Used to enforce min_quote_hold_secs.
     last_place_time: Option<Instant>,
+    /// Latch for ask-risk trigger; prevents repeated touch requotes on every tick
+    /// while we remain in the same risk regime.
+    touch_risk_latched: bool,
 
     /// Running token balance for YES outcome (filled tokens we hold).
     yes_tokens: Decimal,
@@ -169,6 +172,7 @@ impl PredictionQuoter {
             polymarket_mid_ts: None,
             last_quoted_fv: None,
             last_place_time: None,
+            touch_risk_latched: false,
             yes_tokens: Decimal::ZERO,
             no_tokens: Decimal::ZERO,
             session_cost: Decimal::ZERO,
@@ -340,11 +344,11 @@ impl PredictionQuoter {
         }
     }
 
-    /// True when currently resting quotes are at/near predict.fun top-of-book.
+    /// True when currently resting quotes are at/near ask (hit-risk zone).
     ///
-    /// YES top-of-book bid = `yes_best_bid`.
-    /// NO top-of-book bid  = `1 - yes_best_ask` (binary identity).
-    fn near_touch(&self, yes_book: &trading_core::types::market_data::OrderbookSnapshot) -> bool {
+    /// YES hit-risk distance = `yes_ask - yes_bid`.
+    /// NO  hit-risk distance = `no_ask_est - no_bid`, where `no_ask_est = 1 - yes_best_bid`.
+    fn near_ask(&self, yes_book: &trading_core::types::market_data::OrderbookSnapshot) -> bool {
         let trigger = self.params.touch_trigger_cents;
 
         let (yes_best_bid, _) = match yes_book.best_bid() {
@@ -356,11 +360,11 @@ impl PredictionQuoter {
             None => return false,
         };
 
-        let yes_top_bid = yes_best_bid.inner();
-        let no_top_bid = Decimal::ONE - yes_best_ask.inner();
+        let yes_ask = yes_best_ask.inner();
+        let no_ask_est = Decimal::ONE - yes_best_bid.inner();
 
-        let yes_dist = yes_top_bid - self.cycle_yes_bid;
-        let no_dist = no_top_bid - self.cycle_no_bid;
+        let yes_dist = yes_ask - self.cycle_yes_bid;
+        let no_dist = no_ask_est - self.cycle_no_bid;
 
         let yes_touch = self.cycle_yes_placed && yes_dist <= trigger;
         let no_touch = self.cycle_no_placed && no_dist <= trigger;
@@ -374,7 +378,7 @@ impl PredictionQuoter {
                 yes_dist = %yes_dist.round_dp(4),
                 no_dist = %no_dist.round_dp(4),
                 trigger = %trigger,
-                "Near touch detected — defensive requote",
+                "Near ask detected — defensive requote",
             );
         }
 
@@ -580,6 +584,7 @@ impl PredictionQuoter {
 
         self.state = State::Cooldown(Instant::now() + Duration::from_secs(pause_secs));
         self.last_quoted_fv = None;
+        self.touch_risk_latched = false;
         vec![self.cancel_all()]
     }
 }
@@ -670,12 +675,19 @@ impl Strategy for PredictionQuoter {
                     State::Cooldown(t) if Instant::now() >= t => {
                         tracing::info!(target: "quoter", strategy = %self.id, fv = %fv, "COOLDOWN_EXPIRED");
                         self.state = State::Empty;
+                        self.touch_risk_latched = false;
                     }
                     State::Cooldown(_) => return vec![],
                     _ => {}
                 }
 
-                let touch_requote = matches!(self.state, State::Quoting) && self.near_touch(book);
+                let touch_risk_now = matches!(self.state, State::Quoting) && self.near_ask(book);
+                let touch_requote = matches!(self.state, State::Quoting)
+                    && touch_risk_now
+                    && !self.touch_risk_latched;
+                if matches!(self.state, State::Quoting) {
+                    self.touch_risk_latched = touch_risk_now;
+                }
                 let fv_requote = matches!(self.state, State::Quoting) && self.fv_drifted(fv);
 
                 // While quoting, requote only on FV drift or touch-risk.

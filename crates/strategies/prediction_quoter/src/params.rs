@@ -32,17 +32,17 @@ pub struct QuoterParams {
     /// Avoids thrashing when mid barely moves. Set ≥ `spread_cents`.
     pub drift_cents: Decimal,
 
-    /// Trigger a defensive requote when a resting bid gets too close to predict.fun
-    /// top-of-book (best bid) by this distance or less.
+    /// Trigger a defensive requote when a resting bid gets too close to the ask
+    /// (i.e., likely to be lifted/hit) by this distance or less.
     ///
     /// Example:
-    /// - `0.00` (default): trigger only when we are at touch/top-of-book.
-    /// - `0.01`: trigger when within 1 cent of top-of-book.
+    /// - `0.00`: trigger only at/through ask (very permissive).
+    /// - `0.01`: trigger when within 1 cent of ask.
     #[serde(default = "default_touch_trigger_cents")]
     pub touch_trigger_cents: Decimal,
 
     /// On defensive touch-triggered requotes, target at least this much distance
-    /// from top-of-book (best bid) for each side.
+    /// from ask for each side.
     #[serde(default = "default_touch_retreat_cents")]
     pub touch_retreat_cents: Decimal,
 
@@ -82,7 +82,7 @@ fn default_min_hold() -> u64 {
     5
 }
 fn default_touch_trigger_cents() -> Decimal {
-    rust_decimal_macros::dec!(0.00)
+    rust_decimal_macros::dec!(0.01)
 }
 fn default_touch_retreat_cents() -> Decimal {
     rust_decimal_macros::dec!(0.02)
