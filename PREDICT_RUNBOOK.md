@@ -3,8 +3,14 @@
 > Operations guide for the `prediction_quoter` strategy.
 > Companion to `RUNBOOK.md` (HL MM). Last updated: 2026-04-15.
 >
-> **Quoting strategy design (decision tree, Polymarket mid signal, join logic):**
-> See `PREDICT_QUOTING_DESIGN.md` — read before modifying any pricing or strategy logic.
+> Before modifying any pricing or strategy logic, read (in order):
+> 1. `PREDICT_QUOTING_DESIGN.md` — decision tree, FV logic, all tuning knobs
+> 2. `PREDICT_FARMING_NOTES.md` — full build history and why things are designed as they are
+> 3. `POLY_HEDGING_ARCHITECTURE.md` — planned hedge layer and risk model direction
+>
+> **Current design summary**: conservative dual-FV pricing. YES anchored to `min(poly,predict)`,
+> NO anchored to `1-max(poly,predict)`. Sides outside the scoring window are skipped.
+> Polymarket FV is required — no fallback to predict.fun mid.
 
 ---
 
@@ -13,16 +19,19 @@
 ```bash
 cd /home/ubuntu/.openclaw/workspace/obird
 source .env
+cargo build --release --bin trading-cli
 
-# 1. Find active boosted markets (do this first every session)
-cargo run --bin trading-cli -- predict-markets --write-configs
+# Run all poly-linked markets
+python3 scripts/farm.py
 
-# 2. Pick the generated config in configs/markets/<id>.toml (includes Polymarket token ID when available)
-# 3. Run the farming bot
-RUST_LOG=quoter=info,connector_predict_fun=info cargo run --release --bin trading-cli -- live --config configs/markets/21177.toml
+# Or single market (for debugging)
+RUST_LOG=quoter=info,connector_predict_fun=info,connector_polymarket=info \
+  ./target/release/trading-cli live --config configs/markets_poly/21177.toml
 ```
 
 Ctrl+C for graceful shutdown — cancels all resting orders before exit.
+
+**Rebuild required after any code change**: `cargo build --release --bin trading-cli`
 
 ---
 
@@ -43,34 +52,37 @@ Contracts approved on `0xA27D22701Bf0f222467673F563e59aA0E38df847`:
 
 ---
 
-## Current Config (`configs/predict_quoter.toml`)
+## Strategy Params Reference
 
-**Market**: "Will Bitcoin hit $60k or $80k first?" (id=21177)
-- Non-negRisk, yield-bearing, 200 bps fee
-- Selected for: tightest spread + highest orderbook depth among non-negRisk open markets
-- `$60k` = YES instrument, `$80k` = NO instrument
+Config lives in each `configs/markets_poly/<market_id>.toml`. All fields with defaults
+are optional — auto-filled by `predict-markets --write-configs`.
 
-**Strategy params (per-market TOML):**
+```toml
+[strategies.params]
+spread_cents         = "0.02"   # distance from conservative FV anchor per side
+                                 # fills: 0.01→high, 0.02→moderate (default), 0.03→low
+                                 # score: ((v-s)/v)² — 0.01→69%, 0.02→44%, 0.03→25%
+order_size_usdt      = "65"     # USDT per side → shares = order_size_usdt / bid_price
+                                 # must satisfy: shares ≥ min_shares_per_side
+drift_cents          = "0.02"   # pull+requote if poly FV moves > this from last quoted
+touch_trigger_cents  = "0.01"   # defensive requote when bid gets this close to ask
+touch_retreat_cents  = "0.02"   # on touch trigger, push bid back by this much from ask
+min_quote_hold_secs  = 10       # min seconds on book before drift-triggered cancel
+fill_pause_secs      = 5        # cooldown after fill (maker fee=0, keep short)
+fv_stale_secs        = 90       # MUST be > 60 (WS recv timeout). PONG every 10s resets.
+max_position_tokens  = "500.0"  # circuit breaker per outcome (~$175 at mid=0.35)
+spread_threshold_v   = "0.06"   # auto-filled — market's ±v scoring window
+min_shares_per_side  = "100"    # auto-filled — minimum qualifying order size
 ```
-spread_cents        = 0.02   # place YES bid 2 cents below mid (score factor ~44% at v=0.06)
-order_size_usdt     = 70.0   # $70 per outcome → ~200 YES shares, ~107 NO shares (≥100 min)
-drift_cents         = 0.02   # requote when mid drifts > 2 cents
-min_quote_hold_secs = 10     # hold quotes at least 10s before drift-triggered cancel
-fill_pause_secs     = 5      # cooldown after any fill
-max_position_tokens = 300.0  # max token exposure per outcome
-spread_threshold_v  = 0.06   # from API (auto-filled by predict-markets CLI)
-min_shares_per_side = 100    # from API (auto-filled by predict-markets CLI)
-```
 
-**Not in TOML (auto-fetched):**
-- `decimal_precision` — fetched from `GET /v1/markets/{id}` at startup. Determines minimum tick (0.01 for precision=2, 0.001 for precision=3). Stored in connector, propagated to strategy via `StrategyState`.
+**Auto-fetched at startup (not in TOML):**
+- `decimal_precision` — from `GET /v1/markets/{id}`. Precision=2 → 0.01 tick, precision=3 → 0.001 tick.
 
-**Points scoring context:**
-- Polymarket-style quadratic scoring: `S = ((v - spread) / v)² × size`
-- `v` = `spreadThreshold` per market (market 21177 has `spreadThreshold = 0.06`)
-- At spread=0.01: `((0.06-0.01)/0.06)² = 0.69` (69% of max score)
-- Two-sided (YES + NO) earns `min(Q_one, Q_two)` — required for full score outside [0.10, 0.90]
-- **Makers pay ZERO fee** — fills are free, only directional exposure risk
+**Removed params (no longer exist):**
+- `join_cents` — was manual fallback join depth. Replaced by skip-if-crossing logic.
+- `fv_clamp_cents` — was FV clamp. Replaced by per-side min/max FV logic.
+
+**Scoring formula:** `score = ((v - |bid - predict_mid|) / v)² × shares × time_on_book`
 
 ---
 
@@ -87,12 +99,89 @@ source .env && cargo run --bin trading-cli -- predict-markets --all   # include 
 source .env && cargo run --bin trading-cli -- predict-markets --write-configs
 source .env && cargo run --bin trading-cli -- predict-markets --all --write-configs --fail-on-missing-poly-token
 
+# Passive position unwind helper (dry-run first)
+source .env && cargo run --bin trading-cli -- predict-liquidate --dry-run --config configs/markets_poly/143028.toml
+
 # On-chain approval setup (one-time per wallet)
 source .env && cargo run --bin trading-cli -- predict-approve --all --config configs/predict_quoter.toml
 
 # Live farming
 source .env && RUST_LOG=quoter=info,connector_predict_fun=info cargo run --release --bin trading-cli -- live --config configs/predict_quoter.toml
 ```
+
+---
+
+## Running All Markets (Multi-Market Farm)
+
+### Start
+
+```bash
+cd /home/ubuntu/.openclaw/workspace/obird
+source .env
+cargo build --release --bin trading-cli   # ensure binary is current
+python3 scripts/farm.py                   # starts all configs/markets_poly/*.toml
+```
+
+Each market gets its own process and log file. The script monitors children
+and restarts on unexpected exits (with exponential backoff for crash loops).
+
+### Status
+
+```bash
+# What's running (PIDs written at startup, updated on restart)
+cat logs/farm/farm.pids
+
+# Periodic status is printed to stdout every 60s:
+#   [farm] status: 11/11 running, 0 in backoff
+```
+
+### Logs
+
+```bash
+# One market
+tail -f logs/farm/143028.log
+
+# All markets interleaved (shows market_id in each line via tracing)
+tail -f logs/farm/*.log
+
+# Filter for fills only
+grep FILL logs/farm/*.log
+
+# Filter for any skipped sides (scoring window or crossing)
+grep "skipped" logs/farm/*.log
+```
+
+### Stop
+
+```bash
+Ctrl-C          # graceful: SIGTERM to all children, waits 15s for order cancels, then SIGKILL stragglers
+kill -TERM <pid_of_farm.py>   # same behaviour from outside the terminal
+```
+
+### Add/remove a market
+
+```bash
+# Regenerate all poly-linked configs from the API
+source .env
+cargo run --release --bin trading-cli -- predict-markets \
+    --all --write-configs --fail-on-missing-poly-token \
+    --output-dir configs/markets_poly
+
+# Restart farm to pick up changes
+# (Ctrl-C the running farm first, then re-run farm.py)
+```
+
+### Crash-loop protection
+
+If a market restarts more than 3 times within 120 seconds, the farm backs off
+for 5 minutes before trying again. You'll see:
+
+```
+[farm] 143028 crash-looping (3 restarts in 120s) — backing off 300s
+```
+
+Check `logs/farm/143028.log` for the root cause (auth failure, API error, etc.)
+before the backoff expires.
 
 ---
 
@@ -149,22 +238,50 @@ format but set `is_neg_risk = true`. Approvals are already done for negRisk cont
 ## Log Interpretation
 
 ```
-INIT existing YES position  yes_tokens=30.302     # position loaded from exchange on startup
-REQUOTE  mid=0.355 yes_bid=0.35 no_bid=0.65       # placed 2 orders (cancel-all + place)
-         yes_qty=28.57 no_qty=15.38 n_orders=2
-ROUNDTRIP cancel_ms=111 place_ms=254 total_ms=365  # cycle latency (should be <500ms US-East)
-FILL  instrument=...$60k price=0.35 qty=28.57      # YES order hit by taker (we get filled)
-      yes_tokens=58.87 session_cost=19.99
-PULL_QUOTES reason=fill pause_secs=5               # cooldown after fill
-COOLDOWN_EXPIRED                                   # back to empty, will requote on next tick
+# Startup: wait for Polymarket FV before quoting
+INFO quoter: Waiting for first Polymarket FV update before quoting
+
+# Normal requote (both sides placed, small divergence)
+INFO quoter: REQUOTE strategy=predict_points_v1
+             predict_mid=0.600 poly_fv=Some(0.590) poly_divergence=Some(0.0100)
+             yes_fv_used=0.590 no_fv_used=0.410
+             yes_bid=Some(0.57) no_bid=Some(0.39)
+             yes_placed=true no_placed=true n_orders=2
+             score_factor_yes=0.25 score_factor_no=0.25
+
+# Large divergence (Arsenal: poly=0.545, predict=0.635)
+INFO quoter: REQUOTE predict_mid=0.635 poly_fv=Some(0.545) poly_divergence=Some(0.0900)
+             yes_bid=None no_bid=Some(0.345)    ← YES skipped (outside scoring window)
+             yes_placed=false no_placed=true n_orders=1
+
+# Fill + cooldown
+INFO quoter: FILL instrument=...-$60k side=Buy price=0.57 qty=114.03 fill_count=1
+INFO quoter: PULL_QUOTES reason=fill pause_secs=5
+INFO quoter: COOLDOWN_EXPIRED  → back to Empty, requotes on next tick
+
+# Per-cycle scoring estimate (on each cancel or fill)
+INFO quoter: CYCLE_END ended_by=fill on_book_secs=14.2
+             yes_placed=true no_placed=true
+             yes_spread=0.03 no_spread=0.03
+             score_factor_yes=0.25 score_factor_no=0.25
+             est_yes_score=485.4 est_no_score=321.6
 ```
 
-**Healthy behavior**: REQUOTE once per 10-30s, FILL occasionally, ROUNDTRIP < 500ms.
+**Key log fields:**
+- `poly_fv=None` before first poly update → `Waiting for...` gate active (correct)
+- `poly_fv=None` after startup → staleness paused quoting (check feed)
+- `poly_divergence=Some(0.09)` → large divergence, expect one side skipped
+- `yes_bid=None` or `no_bid=None` → skipped by scoring-window or crossing guard
+- `score_factor_X=0` → bid outside `spread_threshold_v` (should never happen post-fix)
+- `fv_clamped=true` → poly FV exceeded clamp (removed; clamp now implicit via min/max)
 
-**Unhealthy behavior**:
-- `PLACE_FAILED` → check API key, USDT balance, or order precision issue
-- `ROUNDTRIP` every 300ms → drift_cents or min_quote_hold_secs too low
-- No `REQUOTE` for >60s → book may be empty or WS disconnected (will auto-reconnect)
+**Healthy behavior**: REQUOTE once per 10-30s, fills occasionally, ROUNDTRIP < 500ms.
+
+**Red flags:**
+- `REQUOTE poly_fv=None` → FV gate broken (should never happen; check quoter.rs)
+- `ROUNDTRIP` every <200ms → drift_cents or min_quote_hold_secs too low
+- `Polymarket FV stale` repeating → genuine feed outage (check Polymarket status page)
+- `PLACE_FAILED` → USDT balance, API key, or order validation issue
 
 ---
 

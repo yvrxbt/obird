@@ -3,6 +3,46 @@
 All notable iterations, experiments, and decisions are logged here.
 This file is designed to give LLMs context on what has been tried and why.
 
+## 2026-04-15 — Predict Ops Hardening, Liquidation CLI, Touch-Risk Requote
+
+**Commits:** `4b62a68`, `f44a8f8`, `049401c`, `3315ce0`, `eff1367`
+
+**What shipped:**
+
+1) **Market discovery strictness** (`predict-markets`)
+- Added `--fail-on-missing-poly-token`.
+- In strict mode, markets missing `polymarket_yes_token_id` are skipped from config writes and command exits non-zero.
+- Purpose: prevent accidentally farming markets that cannot be poly-anchored.
+
+2) **Startup safety gate for predict quoter**
+- Quoter now requires fresh Polymarket FV before quoting.
+- If FV is stale/unavailable, quotes are pulled and strategy pauses.
+- Removed blind fallback-to-predict-mid behavior for poly-configured markets.
+
+3) **Passive liquidation command** (`predict-liquidate`)
+- New CLI command to unwind positions with SELL LIMITs (no market crossing intent).
+- Cancels existing open orders on the target market, computes passive sell levels from current book, supports `--dry-run`.
+
+4) **Touch-risk requote iteration (audit trail)**
+- Initial top-of-book trigger caused cancel/replace thrash under certain book states.
+- Refined to **ask-distance hit-risk trigger** + **risk latch**:
+  - trigger when resting bid gets within `touch_trigger_cents` of ask
+  - requote out by `touch_retreat_cents`
+  - one trigger per risk-regime entry (avoids immediate retrigger loops)
+- Pricing remains poly-anchored with scoring-window clamp (`spread_threshold_v`) as farming guardrail.
+
+5) **Config/docs sync updates**
+- Added new strategy knobs to templates/generator output:
+  - `touch_trigger_cents`
+  - `touch_retreat_cents`
+- Updated 143028 live config and startup logging to expose these parameters.
+
+**Operational observations:**
+- 143028 session became strongly YES-heavy; rough MTM can diverge materially from resolution payoff.
+- Shutdown safety: graceful cancellation path is tied to SIGINT/Ctrl-C in runner flow; avoid SIGKILL.
+
+---
+
 ## 2026-04-13 — Inventory Skew, P&L Tracking, DataRecorder
 
 **What shipped:**

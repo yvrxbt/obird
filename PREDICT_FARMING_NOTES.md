@@ -1,205 +1,382 @@
 # predict.fun Points Farming — Session Notes
 _Last updated: 2026-04-15_
 
+Chronological record of bugs found, root causes, and fixes. Future LLMs: read top-to-bottom
+to understand how the strategy reached its current design before making any changes.
+
 ---
 
-## What we built / fixed (chronological)
+## Build history (what we built / fixed, in order)
 
 ### 1. Bug: pre-existing orders misattributed on restart
-**File:** `crates/connectors/predict_fun/src/client.rs` — `PredictFunClient::from_env()`
+**File:** `crates/connectors/predict_fun/src/client.rs`
 
-**Problem:** On restart, `placed_instruments` and `active_orders` were empty. Old resting orders from prior sessions (still on the book) got wallet-event fills whose hashes weren't in our maps → defaulted to YES instrument. Position tracker credited them as YES fills even when they were NO orders (e.g. fill at price 0.640 logged as YES — impossible, our YES bid was 0.35).
+**Problem:** On restart, `placed_instruments` and `active_orders` were empty. Old resting
+orders from prior sessions got wallet-event fills defaulting to YES instrument — wrong
+for NO fills. Position tracker accumulated incorrect inventory.
 
-**Fix:** After auth, call `get_open_orders()` and seed both `active_orders` and `placed_instruments` from existing open orders before moving the client into the engine. This also means `cancel_all()` at startup can actually cancel those old orders (it iterates `active_orders` for predict_ids).
+**Fix:** After auth, call `get_open_orders()` and seed both maps from existing open orders
+before the client enters the engine. `cancel_all()` at startup can now actually cancel
+pre-existing orders.
 
 ---
 
-### 2. Bug: shutdown didn't cancel orders (predict path)
+### 2. Bug: shutdown didn't cancel orders
 **Files:** `crates/connectors/predict_fun/src/client.rs`, `crates/cli/src/live.rs`
 
-**Problem:** `strategy.shutdown()` returns `Action::CancelAll` but the runner aborts strategy tasks before processing it — it was never called. After Ctrl-C the predict path just logged "Engine stopped" with orders still resting.
+**Problem:** `strategy.shutdown()` returns `Action::CancelAll` but the runner aborts
+strategy tasks before processing it. Ctrl-C left orders resting on the book.
 
-**Fix:** Added `PredictShutdownHandle` (mirrors `HyperliquidClient::ShutdownHandle`):
-- `shutting_down: Arc<AtomicBool>` — checked at top of `place_order()`, blocks new places after flag is set
-- `shutdown_handle()` method — extracted BEFORE client moves into engine runner
-- `cancel_all()` — iterates `active_orders` for predict_ids, fires REST cancel, **awaits HTTP confirmation**, logs ack
+**Fix:** Added `PredictShutdownHandle` (mirrors HL pattern):
+- `shutting_down: Arc<AtomicBool>` — blocks new places after flag set
+- `shutdown_handle()` extracted before client moves into engine
+- `cancel_all()` iterates `active_orders`, fires REST cancel, **awaits HTTP confirmation**
 
-**Shutdown sequence now (identical to HL):**
-```
-Ctrl-C / SIGTERM
-  → EngineRunner sets shutting_down flag     (blocks new place_order calls)
-  → strategy tasks aborted
-  → router drains                            (any in-flight place completes, hash recorded)
-  → shutdown.cancel_all()                    (REST cancel all active_orders, awaits ack)
-  → logs "cancel ack received"
-  → process exits
-```
-
-`live.rs` `run_predict()` now mirrors `run_hl()` exactly.
+Shutdown sequence: `Ctrl-C → set flag → drain router → REST cancel → exit`.
 
 ---
 
 ### 3. Points not activating — order size too small
-**File:** `configs/predict_quoter.toml` (and `configs/markets/21177.toml`)
+**Problem:** `order_size_usdt = 10` → ~28 YES shares at 0.35 price. Minimum qualifying
+size is 100 shares. Points system ignored all orders.
 
-**Problem:** `order_size_usdt = 10`:
-- YES at ~0.35: buys **28.6 shares** (minimum is 100)
-- NO at ~0.65: buys **15.4 shares** (minimum is 100)
-Neither side qualified. Points system ignored all our orders.
-
-**Fix:** `order_size_usdt = 70`:
-- YES at ~0.35: buys **~200 shares** ✓
-- NO at ~0.65: buys **~107 shares** ✓
-
-**Sizing rule:** binding constraint is the higher-priced side (fewer tokens per dollar).
-`order_size_usdt ≥ min_shares × max(yes_price, no_price)`
-At mid = 0.50: need $50. At NO = 0.65: need $65. Use $70 for headroom.
+**Sizing rule:** `order_size_usdt ≥ min_shares × max(yes_price, no_price)`.
+At any mid ≤ 0.65: need `order_size_usdt ≥ 65`. Use 65–70 for headroom.
 
 ---
 
-### 4. fill_pause_secs logic
-**Insight:** Maker fee = 0%. Fills cost nothing. Every second off-book = zero points.
-`fill_pause_secs = 5` (kept short). The 30s pause we briefly tried was actively hurting.
+### 4. fill_pause_secs lesson
+Maker fee = 0%. Every second off-book = zero points. `fill_pause_secs = 5` is correct.
+30s pause we tried earlier was actively losing points.
 
 ---
 
 ### 5. Points metadata params added
-**File:** `crates/strategies/prediction_quoter/src/params.rs`
-
-Added two new fields to `QuoterParams` (with defaults so old configs still work):
-- `spread_threshold_v: Decimal` — the `v` in `score_factor = ((v - spread) / v)²`
-- `min_shares_per_side: Decimal` — minimum qualifying order size
-
-**These are NOT in the predict.fun API.** Read them manually by hovering the
-"Activate Points" / "Points Active" badge in the orderbook UI. The tooltip shows:
-```
-Max spread ±6¢ | Min. shares: 100
-```
-→ `spread_threshold_v = 0.06`, `min_shares_per_side = 100`
+Added `spread_threshold_v` and `min_shares_per_side` to `QuoterParams`.
+These are NOT in the API — auto-filled by `predict-markets --write-configs` from
+`GET /v1/markets/{id}` (which returns `spreadThreshold` and `shareThreshold`).
 
 ---
 
 ### 6. Points logging infrastructure
-**File:** `crates/strategies/prediction_quoter/src/quoter.rs`
+Added per-cycle tracking and `SESSION_SUMMARY` log on shutdown.
+Appends JSON to `logs/data/points-sessions.jsonl` for points yield analysis.
 
-**Per-cycle tracking:** When orders are placed, we record:
-- `cycle_placed_at: Instant` (wall clock)
-- `cycle_yes/no_qty` (shares placed)
-- `cycle_yes/no_bid` (prices)
-- `cycle_spread_from_mid` (actual distance from mid)
-
-**On cancel/fill → `CYCLE_END` log:**
+Calibration: after weekly dashboard report, compute:
 ```
-on_book_secs=45.1  yes_qty=200  no_qty=107  spread_from_mid=0.005
-score_factor=0.6944  est_yes_score=6249  est_no_score=3340  ended_by=drift
+rate = dashboard_points / (est_yes_score_raw + est_no_score_raw)
 ```
-
-**REQUOTE log now includes:**
-`score_factor`, `qualifies_yes`, `qualifies_no`, `min_shares`, `spread_threshold_v`
-
-**On shutdown → `SESSION_SUMMARY` log + file write:**
-```
-runtime_secs=3600  cycles=48  on_book_secs=3240  pct_on_book=90%
-est_yes_score_raw=123456  est_no_score_raw=66789
-```
-Also appends one JSON line to **`logs/data/points-sessions.jsonl`** with full cycle array.
-
-**Correlating with dashboard:**
-When Z reports N points from the dashboard:
-```
-points_per_score_second = N / (est_yes_score_raw + est_no_score_raw)
-```
-Use that rate to project future earnings and optimize spread/size tradeoffs.
+Use rate to project future earnings and optimise spread/size.
 
 ---
 
 ### 7. Multi-market infrastructure
-**Files:** `configs/markets/TEMPLATE.toml`, `configs/markets/21177.toml`, `scripts/farm.py`
+`scripts/farm.py`: reads all `configs/markets_poly/*.toml`, starts one process per market,
+auto-restarts crashes. Ctrl-C triggers SIGTERM to all children → graceful cancel → exit.
 
-**`farm.py`** launcher:
-- Reads all `configs/markets/*.toml` (skips `TEMPLATE.toml`)
-- Starts one `trading-cli live` process per config
-- Logs each to `logs/farm/<market_id>.log`
-- Ctrl-C sends SIGTERM to all → each process runs its shutdown cancel sequence
-- Auto-restarts any process that crashes
-
-**`predict-markets` CLI** now:
-- Prints per-market config blocks with auto-resolved Polymarket token IDs when available
-- Estimates `order_size_usdt` to meet minimum-share thresholds
-- Auto-fills `spread_threshold_v` and `min_shares_per_side` from the API
-- Can write full TOML files directly via `--write-configs` (no manual editing)
+`predict-markets --write-configs`: generates full TOML configs with auto-filled
+`spread_threshold_v`, `min_shares_per_side`, `polymarket_yes_token_id`.
 
 ---
 
-### 8. Bug: 1-cent BBO spread caused all cycles to be skipped
-**Files:** `crates/strategies/prediction_quoter/src/pricing.rs`, `configs/markets/*.toml`
+### 8. Bug: 1-cent BBO on precision=2 markets skipped all cycles
+**Problem:** `decimalPrecision=2` markets (tick=0.01) with 1-cent BBO had no valid
+interior price. Strategy logged "BBO < 2 ticks" and never quoted.
 
-**Problem:** Both active markets (21177 BTC $60k/$80k, 143028 Arsenal) had 1-cent BBO spreads (0.36/0.37 and 0.65/0.66). The pricing code had two bugs:
-1. Early-exit check: `spread < join_cents × 2` → `0.01 < 0.02` → always skipped
-2. Even if that passed, 2dp rounding left no valid price strictly between a 1-cent-wide bid and ask
+**Root cause:** Old pricing code assumed 2dp rounding globally. Market API returns
+`decimalPrecision: 2 | 3` — must use the market's actual tick.
 
-**Root cause:** `pricing::calculate` hardcoded 2dp rounding but the predict.fun API actually exposes `decimalPrecision: 2 | 3` per market. Precision=3 markets (0.001 tick) have 9 valid placements inside a 1-cent BBO spread (0.651 to 0.659).
-
-**Fix (two-part):**
-
-**Part A — Automated precision detection:**
-- `get_market_by_id(id)` called once at connector startup, fetches `decimalPrecision` (and also `spreadThreshold`, `shareThreshold`)
-- `decimal_precision: u32` stored in `PredictFunClient`, exposed via `ExchangeConnector::decimal_precision()`
-- Engine runner propagates it through `StrategyState.decimal_precision` to the strategy at `initialize()`
-- `PredictionQuoter` reads it in `initialize()`, passes it to `pricing::calculate()` every tick
-
-**Part B — Pricing logic now uses market tick:**
-- `pricing::calculate` signature: `(book, fair_value, spread_cents, join_cents?, decimal_precision)`
-- Tick = `match decimal_precision { 2 => 0.01, _ => 0.001 }`
-- All clamps and rounding use the fetched tick
-- `join_cents` is optional: when set, join path targets `predict_mid - join_cents`; otherwise auto-join remains
-
-**`predict-markets` CLI also updated:**
-- Calls `get_market_by_id` in parallel with orderbook fetch
-- Auto-fills `spread_threshold_v` and `min_shares_per_side` from the API
-- Resolves `polymarket_yes_token_id` from `polymarketConditionIds` via Gamma API
-- Supports `--write-configs` to emit ready-to-run files in `configs/markets/`
-- Supports `--fail-on-missing-poly-token` to hard-fail if any selected market lacks Polymarket linkage
-
-**Verified with tests:** 10 pricing tests including `one_cent_spread_precision3_market_quotes` (regression), `one_cent_spread_precision2_market_returns_none`, `two_cent_spread_precision2_market_quotes`.
+**Fix:** Fetch `decimalPrecision` from `GET /v1/markets/{id}` at connector startup.
+Propagate through `StrategyState.decimal_precision` to strategy at `initialize()`.
+`pricing::calculate` uses it for all rounding and crossing guards.
 
 ---
 
-## Key facts / strategy notes
+### 9. Bug: immediate fills — crossing guard clamped orders to mid
+**Problem:** Old linked design `no_bid = 1 - yes_bid`. When `poly_mid - spread_cents ≤
+market_bid`, crossing guard clamped YES to `best_bid + tick` ≈ mid. Both sides ended
+up at mid. Any taker at fair value filled us instantly.
+
+**Fix (first pass):** Decouple YES and NO pricing:
+```
+yes_bid = poly_mid - spread_cents          # independent, may rest below market bid
+no_bid  = (1 - poly_mid) - spread_cents    # independent
+```
+YES below market bid = valid resting maker order. No crossing.
+`yes_bid + no_bid = 1 - 2×spread_cents` (< 1.00). If both fill, combined position
+is profitable by `2×spread_cents` regardless of outcome.
+
+---
+
+### 10. Bug: startup blindness — quoting before first Polymarket FV
+**Commit:** `f44a8f8`
+
+**Problem:** On startup, predict.fun WS connected before Polymarket WS. Strategy quoted
+using `poly_fv=None fv_used=predict_mid` — exactly at predict.fun mid. Filled within
+2–3 seconds by informed traders.
+
+**Fix:** Hard gate in `effective_fv()`:
+- If Polymarket FV is configured and unavailable: return `None` → strategy waits, no quotes.
+- If FV is stale (> `fv_stale_secs` since last update): pause quoting.
+- No fallback to predict.fun mid — blind quoting against poly-informed takers is always bad.
+
+First log line after connect is now:
+```
+INFO quoter: Waiting for first Polymarket FV update before quoting
+```
+followed by `REQUOTE` only after the first poly `BookUpdate` arrives.
+
+---
+
+### 11. Polymarket WS feed — three critical bugs fixed
+**File:** `crates/connectors/polymarket/src/market_data.rs`
+
+**Bug A — Wrong PING protocol (critical)**:
+Docs specify: client sends TEXT frame `"PING"`, server responds TEXT `"PONG"`.
+Old code sent WebSocket protocol-level `Message::Ping(vec![])` — wrong layer.
+Result: pings went nowhere, connection appeared alive but had no application heartbeat.
+
+**Fix:** `Message::Text("PING".to_string())` every 10s. Handle `Message::Text("PONG")`.
+
+**Bug B — Wrong subscription type (critical — caused missing price_change events)**:
+Old: `{"type": "Market", "assets_ids": [...]}` — uppercase "Market".
+Docs spec: `{"type": "market"}` — lowercase.
+Result: server silently accepted the connection and sent the initial `book` snapshot
+(because `initial_dump` defaults to true), but never delivered `price_change` events.
+Looked like "quiet market" when it was actually a broken subscription.
+
+**Fix:** Change to lowercase `"market"` in the subscribe message.
+
+**Bug C — Wrong timestamp units**:
+Old `parse_ts_secs` multiplied by `1_000_000_000` (treating input as seconds).
+Polymarket timestamps are milliseconds — should multiply by `1_000_000`.
+
+---
+
+### 12. Polymarket FV staleness — false positives on quiet markets
+**Problem:** `POLY_FV_STALE_SECS = 30` (hardcoded constant). Polymarket only sends
+`price_change` events when the book changes — quiet prediction markets can be silent
+for minutes. This triggered false "stale FV" pauses, killing quoting on valid sessions.
+
+**Also**: `fv_stale_secs (30) < RECV_TIMEOUT_SECS (60)`. The WS reconnect (which
+delivers a fresh `book` snapshot) fires at 60s, AFTER the stale threshold fires at 30s.
+
+**Fix (two parts):**
+
+**Part 1 — PONG heartbeat re-publish**: on every TEXT `"PONG"` response, re-publish
+the last known book state for all subscribed tokens. This resets `polymarket_mid_ts`
+in the strategy every 10 seconds, decoupling "feed is alive" from "book changed recently".
+A market quiet for 6 hours still gets PONG heartbeats → FV never stale.
+
+**Part 2 — `fv_stale_secs` as a configurable param** (default 90):
+Must be > `RECV_TIMEOUT_SECS` (60). This ensures the WS reconnect (which delivers
+a fresh snapshot) always fires before the stale threshold.
+In TOML: `fv_stale_secs = 90  # must be > 60`.
+
+---
+
+### 13. Pricing: venues diverged → zero-score orders placed
+**Problem:** Arsenal market: `poly_mid=0.545`, `predict_mid=0.635`, divergence=0.09.
+With `yes_bid = poly_mid - 0.02 = 0.525`:
+- `|0.525 - 0.635| = 0.11 ≥ spread_threshold_v(0.06)` → `score_factor=0`, earns nothing
+- `no_bid = 0.435 > no_ask_est(0.37)` → crossing guard → skipped
+
+Placed one useless zero-score YES order, held capital with full fill risk.
+
+**Root cause:** using raw poly_mid as FV anchor without a scoring constraint.
+
+**First attempted fix (`fv_clamp_cents`):** clamp poly_mid to within N cents of predict_mid.
+**Problem with that fix:** when `effective_fv ≈ predict_mid - spread_cents`, derived NO bid
+= NO predict mid = immediate fill risk. Solved scoring but created fill risk.
+
+**Correct fix: conservative dual-FV pricing** (see next entry).
+
+---
+
+### 14. Core design upgrade: conservative dual-FV pricing (2026-04-15)
+**File:** `crates/strategies/prediction_quoter/src/pricing.rs`
+
+**Design:** for each side, use the **more conservative** of the two FV signals:
+
+```
+YES: use min(poly_mid, predict_mid) — the lower YES mid, furthest from both bids
+     yes_bid = min(poly_mid, predict_mid) - spread_cents
+
+NO:  use 1 - max(poly_mid, predict_mid) — the lower NO mid, furthest from both NO bids
+     no_bid = (1 - max(poly_mid, predict_mid)) - spread_cents
+```
+
+**Why**: a bid above either venue's mid gives that venue's participants immediate edge.
+`min()`/`(1-max())` guarantees we're below BOTH mids — neither poly-informed nor
+predict.fun-informed traders can fill us without paying at least `spread_cents` in edge.
+
+**Scoring window gate**: if `|bid - predict_mid| ≥ spread_threshold_v`, **skip that side**.
+Zero-score orders lock up capital with nonzero fill risk. Not worth placing.
+
+**Arsenal example** (poly=0.545, predict=0.635, spread=0.02, v=0.06):
+```
+YES: min(0.545, 0.635) - 0.02 = 0.525
+     |0.525 - 0.635| = 0.11 ≥ 0.06 → SKIP (can't earn points safely)
+
+NO:  (1 - max(0.545, 0.635)) - 0.02 = (1-0.635) - 0.02 = 0.345
+     |0.345 - 0.365| = 0.025 < 0.06 → PLACED, score_factor ≈ 31%
+     safe: 2.5 cents from NO predict mid, 0.345 < no_ask_est(0.37) ✓
+```
+
+**Removed params:** `join_cents` (obsolete), `fv_clamp_cents` (replaced by min/max logic).
+**New signature:** `pricing::calculate(yes_book, poly_fv, predict_mid, spread_cents, spread_threshold_v, decimal_precision)`.
+
+**API call site change:**
+```rust
+// Old: single effective_fv (clamped)
+pricing::calculate(book, effective_fv, spread_cents, decimal_precision)
+
+// New: separate poly and predict signals
+pricing::calculate(book, poly_fv, predict_mid, spread_cents, spread_threshold_v, decimal_precision)
+```
+
+**Small/no divergence case**: `min(poly, predict) ≈ poly` → uses poly anchor exactly.
+**Large divergence (poly << predict)**: YES skipped (unsafe), NO placed at predict anchor.
+**Large divergence (poly >> predict)**: YES placed at predict anchor, NO skipped.
+
+---
+
+### 15. farm.py improvements
+**File:** `scripts/farm.py`
+
+- Default config dir changed from `configs/markets/` to `configs/markets_poly/`
+- `--dir` argument for flexibility
+- `--dry-run` flag to preview without starting
+- Crash-loop protection: 3 restarts in 120s → 5-minute backoff
+- Writes `logs/farm/farm.pids` with `market_id=pid` entries for external management
+- Periodic status line every 60s: `[farm] status: N/M running, K in backoff`
+- Stagger startup remains (0.5s between markets) to avoid JWT auth collisions
+
+---
+
+### 16. Strict poly-token market selection + liquidation helper (2026-04-15)
+
+**Commits:** `4b62a68`, `049401c`
+
+**A) `predict-markets` strict guard**
+- Added `--fail-on-missing-poly-token`.
+- In strict mode, markets missing `polymarket_yes_token_id` are skipped in config writes and command exits non-zero.
+- Why: avoid accidentally running unanchored markets when the strategy assumes poly-aware logic.
+
+**B) `predict-liquidate` CLI**
+- Added passive unwind command:
+  - `trading-cli predict-liquidate --dry-run --config ...`
+  - `trading-cli predict-liquidate --config ...`
+- Behavior:
+  - reads positions for configured market
+  - computes passive SELL limits from current book
+  - cancels existing open orders first (no-op in dry-run)
+- Why: UI path for selling was unreliable during live ops; needed deterministic emergency tool.
+
+---
+
+### 17. Touch-trigger v1 failure mode: top-of-book trigger caused thrash (2026-04-15)
+
+**Commit:** `3315ce0`
+
+Initial idea: trigger defensive requote when quote reaches top-of-book (`touch_trigger_cents=0`).
+
+Observed outcome in live logs:
+- repeated `Near touch detected` on alternating book updates
+- immediate `CANCEL_ALL -> Place -> CANCEL_ALL` loops
+- high roundtrip churn with minimal incremental information
+
+Root cause:
+- top-bid proximity is too noisy as a hit-risk proxy in thin/fast books
+- combined with hold-bypass, this can self-trigger continuously
+
+Lesson:
+- trigger signal quality matters more than just adding debounce after the fact
+
+---
+
+### 18. Touch-trigger v2: ask-distance risk + latch (current) (2026-04-15)
+
+**Commit:** `eff1367`
+
+Refinement:
+1. Trigger on **ask-distance** (actual hit-risk proxy), not top-bid proximity.
+2. Keep poly as quote anchor; touch logic is a risk cap/trigger only.
+3. Add **risk latch** so a risk-zone entry triggers once per regime, not every tick.
+
+New knobs:
+- `touch_trigger_cents` (default 0.01)
+- `touch_retreat_cents` (default 0.02)
+
+Design intent:
+- protect against imminent lift risk
+- preserve score-eligible quoting behavior
+- avoid pathological cancel/replace loops
+
+Operational note:
+- still monitor for over-churn in low-depth regimes; this is materially better than v1 but not the final form.
+
+---
+
+## Current strategy state (as of 2026-04-15)
+
+### Pricing logic summary
+1. **FV gate**: require fresh Polymarket FV before any quotes. No fallback.
+2. **Per-side conservative anchoring**: `yes = min(poly,predict) - spread`, `no = (1-max(poly,predict)) - spread`
+3. **Scoring window gate**: skip if `|bid - predict_mid| ≥ spread_threshold_v`
+4. **Crossing guards**: skip if YES target ≥ YES ask; skip if NO target ≥ NO ask estimate
+5. **No clamping to mid**: a side is skipped, never moved to mid
+
+### Tuning knobs (all in TOML `[strategies.params]`)
+- `spread_cents` — fill-risk knob. Score: `((v-s)/v)²`. 0.02=44%, 0.03=25%. Start at 0.02.
+- `drift_cents` — requote trigger. Set = spread_cents. Lower → more churn.
+- `fill_pause_secs` — cooldown after fill. Keep at 5 (maker fee=0, every second matters).
+- `fv_stale_secs` — staleness timeout. **Must be > 60.** Default 90.
+- `max_position_tokens` — circuit breaker per outcome. 500 tokens ≈ $175 max exposure at mid.
+- `min_quote_hold_secs` — prevents drift thrashing. 10s is safe.
+
+### Key invariants
+- `spread_cents < spread_threshold_v` (to earn any points at all)
+- `fv_stale_secs > 60` (WS recv timeout)
+- Both sides are always at least `spread_cents` from BOTH venues' mids when placed
+
+---
+
+## Key facts / scoring reference
 
 ### Scoring formula
 ```
-score_factor = ((v - spread_from_mid) / v)²
-est_points_contribution = score_factor × shares × time_on_book
+score_factor = ((v - spread_from_predict_mid) / v)²
+est_contribution = score_factor × shares × time_on_book_secs
 ```
-- `v` = market's `spread_threshold_v` (e.g. 0.06 for ±6¢ market)
-- `spread_from_mid` = |yes_bid - mid| at time of placement
-- Orders beyond `v` earn **zero** points
-- Closer to mid = quadratically more points
+- `v` = `spread_threshold_v` from API (typically 0.06 for ±6¢ markets)
+- `spread_from_predict_mid` = `|bid - predict_mid|` at placement time
+- Outside `v` = zero points, order is skipped by design
 
-| spread_from_mid | score_factor (v=0.06) |
+| spread_from_predict_mid | score_factor (v=0.06) |
 |---|---|
-| 0.00 (at mid) | 1.000 (100%) |
+| 0.00 | 1.000 (100%) |
 | 0.01 | 0.694 (69%) |
 | 0.02 | 0.444 (44%) |
 | 0.03 | 0.250 (25%) |
-| 0.06 | 0.000 (0%) |
+| 0.04 | 0.111 (11%) |
+| 0.06 | 0.000 (0%) — never placed |
 
-### Binary market constraint
-`no_bid = 1 - yes_bid` (hard identity). We can't post `yes_bid < BBO_bid` without `no_bid` crossing the NO ask. On a tight-BBO market, the quote clamps to `best_bid + tick` regardless of `spread_cents`. To genuinely sit deeper, pick a market with BBO spread ≥ `spread_cents`.
-
-**Tick size**: fetched automatically from the market API at startup. `decimalPrecision=2` → 0.01 tick, `decimalPrecision=3` → 0.001 tick. Most active markets are precision=3. A 1-cent BBO spread on a precision=3 market has 9 valid placements (0.001 to 0.009 inside). A 1-cent BBO spread on a precision=2 market has NO valid placements — the strategy will log "BBO spread < 2 ticks" and skip until the spread widens.
+### Polymarket WS protocol facts (critical for any future changes)
+- **PING/PONG**: TEXT messages, not WebSocket frames. Send `"PING"`, receive `"PONG"`.
+- **Subscription type**: must be lowercase `"market"` in the `type` field.
+- **Timestamps**: milliseconds (multiply by 1,000,000 for nanoseconds).
+- **Events**: `book` (snapshot on subscribe + after fills), `price_change` (incremental).
+- **Quiet market**: book may not change for minutes — normal, not a dead feed.
+- **Heartbeat interval**: send PING every 10s per docs. We re-publish book on PONG.
 
 ### Position risk
-`N YES + N NO tokens` = costs $N, pays $N regardless of outcome → **zero P&L risk when balanced**.
-Imbalance risk = `|yes_tokens - no_tokens| × avg_price`.
-`max_position_tokens` is the circuit breaker per side.
-
-### Both-sides requirement
-BUY YES = bid side. BUY NO = ask-equivalent side (since `no_bid = 1 - yes_bid`). Our dual-BUY strategy satisfies the "qualifying orders on both bid and ask sides" requirement.
+- `N YES + N NO` = costs $N, pays $N regardless of outcome → zero directional risk when balanced
+- Imbalance risk = `|yes_tokens - no_tokens| × avg_price`
+- `max_position_tokens` circuit breaker per side. At 500 tokens and ~$0.35 avg price ≈ $175 max exposure
 
 ### Points distribution cadence
-Weekly (every 7 days). 2-3 day calculation period before distribution.
+Weekly (every 7 days). 2–3 day calculation period before distribution.
 
 ---
 
@@ -207,12 +384,11 @@ Weekly (every 7 days). 2-3 day calculation period before distribution.
 
 | What | Where |
 |---|---|
-| Active single-market config | `configs/predict_quoter.toml` |
-| Per-market configs | `configs/markets/<market_id>.toml` |
-| Market config template | `configs/markets/TEMPLATE.toml` |
+| Per-market configs (poly-linked) | `configs/markets_poly/<market_id>.toml` |
 | Multi-market launcher | `scripts/farm.py` |
-| Points sessions log | `logs/data/points-sessions.jsonl` |
+| Farm process PIDs | `logs/farm/farm.pids` |
 | Per-market farm logs | `logs/farm/<market_id>.log` |
+| Points sessions log | `logs/data/points-sessions.jsonl` |
 | BBO tick data | `logs/data/bbo-YYYY-MM-DD.jsonl` |
 | Fill data | `logs/data/fills-YYYY-MM-DD.jsonl` |
 | Main tracing log | `logs/obird-YYYY-MM-DD.jsonl` |
@@ -221,63 +397,40 @@ Weekly (every 7 days). 2-3 day calculation period before distribution.
 
 ## Run instructions
 
-### Prerequisites
 ```bash
 cd /home/ubuntu/.openclaw/workspace/obird
-source .env            # loads PREDICT_API_KEY, PREDICT_PRIVATE_KEY
-```
+source .env
 
-### Build (first time or after code changes)
-```bash
-cargo build --release -p trading-cli
-```
+# Build (always after code changes)
+cargo build --release --bin trading-cli
 
-### Discover markets
-```bash
-./target/release/trading-cli predict-markets
-# --all to include non-boosted markets
-```
-Prints full TOML config blocks with estimated order sizes. Copy into `configs/markets/<id>.toml`, fill in `spread_threshold_v` and `min_shares_per_side` from the UI.
+# Regenerate configs (do this when new boosted markets appear)
+./target/release/trading-cli predict-markets \
+    --all --write-configs --fail-on-missing-poly-token \
+    --output-dir configs/markets_poly
 
-### Run single market
-```bash
-./target/release/trading-cli live --config configs/markets/21177.toml
-# or use the root config:
-./target/release/trading-cli live --config configs/predict_quoter.toml
-```
-
-### Run all markets (recommended)
-```bash
+# Run all markets
 python3 scripts/farm.py
-```
-Ctrl-C shuts down all cleanly (cancels all orders on each market before exit).
 
-### Add a new market
-1. Run `predict-markets` — it now auto-fills `spread_threshold_v`, `min_shares_per_side`, and `order_size_usdt` from the API
-2. Copy the printed TOML block into a new file: `configs/markets/<id>.toml`
-3. Assign a unique `metrics_port` (9091, 9092, 9093, …) to avoid port conflicts when running multiple markets
-4. `farm.py` picks it up automatically on next run
-5. `decimal_precision` and tick size are fetched automatically at startup — nothing to configure
-
-### Check points log after a session
-```bash
-# Pretty-print the last session summary
-tail -1 logs/data/points-sessions.jsonl | python3 -m json.tool
-
-# All sessions (one per line)
-cat logs/data/points-sessions.jsonl | python3 -m json.tool --no-ensure-ascii
+# Single market (debug)
+RUST_LOG=quoter=info,connector_predict_fun=info,connector_polymarket=debug \
+  ./target/release/trading-cli live --config configs/markets_poly/143028.toml
 ```
 
-### When dashboard shows N points (weekly)
-```bash
-# Quick correlation calc
-python3 -c "
-import json, sys
-sessions = [json.loads(l) for l in open('logs/data/points-sessions.jsonl')]
-total_raw = sum(s['totals']['est_yes_score_raw'] + s['totals']['est_no_score_raw'] for s in sessions)
-reported = float(sys.argv[1])
-print(f'Reported points: {reported}')
-print(f'Total score·secs: {total_raw:.1f}')
-print(f'Rate: {reported/total_raw:.6f} points per score·sec')
-" <N_FROM_DASHBOARD>
+### What healthy startup looks like
+
 ```
+INFO connector_polymarket: Polymarket CLOB WS connected and subscribed
+INFO quoter: Waiting for first Polymarket FV update before quoting
+  ... (a few seconds for first poly book event) ...
+INFO quoter: REQUOTE predict_mid=0.635 poly_fv=Some(0.545)
+             yes_bid=None no_bid=Some(0.345) yes_placed=false no_placed=true
+             poly_divergence=Some(0.0900) score_factor_no=0.3086
+```
+
+Red flags in logs:
+- `REQUOTE poly_fv=None` → started quoting before poly connected (should never happen post-fix)
+- `score_factor_yes=0` AND `score_factor_no=0` → large divergence, both sides skipped
+- `Polymarket FV stale` more than once → genuine feed outage (check Polymarket status)
+- `PLACE_FAILED` → check USDT balance, API key, or order validation issue
+- Market restarting repeatedly → check `logs/farm/<id>.log` for root cause
