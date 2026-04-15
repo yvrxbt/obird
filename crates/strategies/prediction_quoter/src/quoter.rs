@@ -254,26 +254,36 @@ impl PredictionQuoter {
 
     // ── Helpers ───────────────────────────────────────────────────────────────
 
-    /// Return the Polymarket mid if it is fresh (< POLY_FV_STALE_SECS old),
-    /// otherwise fall back to the predict.fun mid.
+    /// Determine effective fair value.
     ///
-    /// When Polymarket FV is stale we log a warning so the operator knows the
-    /// fallback is active. The warn fires at most once per stale period because
-    /// the next fresh update resets `polymarket_mid_ts`.
-    fn effective_fv(&self, predict_mid: Decimal) -> Decimal {
+    /// Safety posture:
+    /// - If Polymarket FV is configured, we require a fresh Polymarket update.
+    ///   No fallback to predict.fun mid (prevents quoting blind during feed lag/outage).
+    /// - If Polymarket FV is not configured, use predict.fun mid.
+    fn effective_fv(&self, predict_mid: Decimal) -> Option<Decimal> {
+        if self.polymarket_fv_instrument.is_none() {
+            return Some(predict_mid);
+        }
+
         match (self.polymarket_mid, self.polymarket_mid_ts) {
-            (Some(pm), Some(ts)) if ts.elapsed().as_secs() < POLY_FV_STALE_SECS => pm,
+            (Some(pm), Some(ts)) if ts.elapsed().as_secs() < POLY_FV_STALE_SECS => Some(pm),
             (Some(_), _) => {
-                // Had a Polymarket signal but it's now stale.
                 tracing::warn!(
                     target: "quoter",
                     strategy = %self.id,
                     stale_threshold_secs = POLY_FV_STALE_SECS,
-                    "Polymarket FV stale — falling back to predict.fun mid",
+                    "Polymarket FV stale — pausing quotes until feed recovers",
                 );
-                predict_mid
+                None
             }
-            _ => predict_mid, // No Polymarket signal configured or not yet received.
+            _ => {
+                tracing::info!(
+                    target: "quoter",
+                    strategy = %self.id,
+                    "Waiting for first Polymarket FV update before quoting",
+                );
+                None
+            }
         }
     }
 
@@ -504,8 +514,21 @@ impl Strategy for PredictionQuoter {
                 };
                 self.latest_mid = Some(mid);
 
-                // Effective fair value: Polymarket mid if fresh, else predict.fun mid.
-                let fv = self.effective_fv(mid);
+                // Effective fair value. If Polymarket is configured and unavailable,
+                // pause (or stay paused) instead of quoting blind.
+                let fv = match self.effective_fv(mid) {
+                    Some(v) => v,
+                    None => {
+                        if matches!(self.state, State::Quoting) {
+                            return self.pull_quotes(
+                                "poly_fv_unavailable",
+                                self.params.fill_pause_secs,
+                                mid,
+                            );
+                        }
+                        return vec![];
+                    }
+                };
 
                 tracing::debug!(
                     target: "quoter",
