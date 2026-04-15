@@ -39,9 +39,6 @@ instruments    = []                    # FILL IN — ["PredictFun.Binary.<id>-YE
 # ── Spread ────────────────────────────────────────────────────────────────────
 # score_factor = ((spread_threshold_v - spread_from_mid) / spread_threshold_v)^2
 spread_cents     = "0.02"
-# Optional: when FV pricing lands <= best bid, attempt join at (predict_mid - join_cents)
-# before standard crossing guards.
-# join_cents     = "0.01"
 
 # ── Sizing ────────────────────────────────────────────────────────────────────
 # Must produce ≥ min_shares_per_side tokens per side to qualify for points.
@@ -58,6 +55,8 @@ max_position_tokens = "300.0"
 
 # ── Timing ───────────────────────────────────────────────────────────────────
 drift_cents         = "0.02"
+touch_trigger_cents = "0.00"       # Defensive requote trigger near top-of-book (0.00 = at touch)
+touch_retreat_cents = "0.02"       # After trigger, requote this far behind top-of-book
 min_quote_hold_secs = 10
 fill_pause_secs     = 5               # Short — fills are free (0% maker fee)
 

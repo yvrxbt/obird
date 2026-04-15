@@ -36,10 +36,11 @@
 
 use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 
-/// Staleness threshold for the Polymarket fair-value signal.
-/// If no Polymarket `BookUpdate` arrives within this window, the strategy falls
-/// back to the predict.fun mid as fair value and logs a warning.
-const POLY_FV_STALE_SECS: u64 = 30;
+// Staleness threshold is now a strategy param (`fv_stale_secs`, default 90s).
+// See QuoterParams for the tuning rationale — short summary:
+//   Polymarket WS recv timeout = 60s. After 60s silence the feed reconnects and
+//   re-delivers a fresh `book` snapshot. fv_stale_secs must exceed 60s to avoid
+//   false stale-pauses on quiet (illiquid) markets.
 
 use rust_decimal::Decimal;
 use trading_core::{
@@ -73,9 +74,16 @@ struct CycleRecord {
     no_qty: Decimal,
     yes_bid: Decimal,
     no_bid: Decimal,
-    spread_from_mid: Decimal,
+    /// Actual distance of yes_bid from predict.fun mid at placement time.
+    /// Used for score_factor computation. 0 if YES was not placed this cycle.
+    yes_spread_from_mid: Decimal,
+    /// Actual distance of no_bid from the NO mid (= 1 - predict.fun mid) at placement.
+    /// 0 if NO was not placed this cycle.
+    no_spread_from_mid: Decimal,
     score_factor: Decimal,
     ended_by: &'static str, // "fill" | "drift" | "shutdown"
+    yes_placed: bool,
+    no_placed: bool,
 }
 
 pub struct PredictionQuoter {
@@ -123,15 +131,19 @@ pub struct PredictionQuoter {
     session_started_at: Option<Instant>,
     /// When the current cycle's orders were placed.
     cycle_placed_at: Option<Instant>,
-    /// YES qty placed in the current cycle (shares, not USDT).
+    /// YES qty placed in the current cycle (shares, not USDT). 0 if YES was skipped.
     cycle_yes_qty: Decimal,
-    /// NO qty placed in the current cycle (shares, not USDT).
+    /// NO qty placed in the current cycle (shares, not USDT). 0 if NO was skipped.
     cycle_no_qty: Decimal,
-    /// Spread from mid used in the current cycle.
-    cycle_spread_from_mid: Decimal,
-    /// Prices for the current cycle.
+    /// Actual spread of yes_bid from predict.fun mid at placement. 0 if YES skipped.
+    cycle_yes_spread_from_mid: Decimal,
+    /// Actual spread of no_bid from NO mid (= 1 - predict mid) at placement. 0 if NO skipped.
+    cycle_no_spread_from_mid: Decimal,
+    /// Prices for the current cycle (0 if that side was skipped).
     cycle_yes_bid: Decimal,
     cycle_no_bid: Decimal,
+    cycle_yes_placed: bool,
+    cycle_no_placed: bool,
     /// Completed cycles this session.
     cycles: Vec<CycleRecord>,
 }
@@ -167,9 +179,12 @@ impl PredictionQuoter {
             cycle_placed_at: None,
             cycle_yes_qty: Decimal::ZERO,
             cycle_no_qty: Decimal::ZERO,
-            cycle_spread_from_mid: Decimal::ZERO,
+            cycle_yes_spread_from_mid: Decimal::ZERO,
+            cycle_no_spread_from_mid: Decimal::ZERO,
             cycle_yes_bid: Decimal::ZERO,
             cycle_no_bid: Decimal::ZERO,
+            cycle_yes_placed: false,
+            cycle_no_placed: false,
             cycles: Vec::new(),
         }
     }
@@ -193,23 +208,34 @@ impl PredictionQuoter {
             return;
         };
         let on_book_secs = placed_at.elapsed().as_secs_f64();
-        let sf = self.score_factor(self.cycle_spread_from_mid);
+        let t = Decimal::try_from(on_book_secs).unwrap_or(Decimal::ZERO);
+
+        // Compute per-side score factors from actual spread at placement.
+        let sf_yes = self.score_factor(self.cycle_yes_spread_from_mid);
+        let sf_no = self.score_factor(self.cycle_no_spread_from_mid);
 
         tracing::info!(
             target: "quoter",
-            strategy = %self.id,
+            strategy      = %self.id,
             ended_by,
-            on_book_secs = format!("{:.1}", on_book_secs),
-            yes_qty      = %self.cycle_yes_qty,
-            no_qty       = %self.cycle_no_qty,
-            yes_bid      = %self.cycle_yes_bid,
-            no_bid       = %self.cycle_no_bid,
-            spread_from_mid = %self.cycle_spread_from_mid.round_dp(4),
-            score_factor = %sf.round_dp(4),
-            est_yes_score = %( sf * self.cycle_yes_qty * Decimal::try_from(on_book_secs).unwrap_or(Decimal::ZERO) ).round_dp(1),
-            est_no_score  = %( sf * self.cycle_no_qty  * Decimal::try_from(on_book_secs).unwrap_or(Decimal::ZERO) ).round_dp(1),
+            on_book_secs  = format!("{:.1}", on_book_secs),
+            yes_qty       = %self.cycle_yes_qty,
+            no_qty        = %self.cycle_no_qty,
+            yes_bid       = %self.cycle_yes_bid,
+            no_bid        = %self.cycle_no_bid,
+            yes_placed    = self.cycle_yes_placed,
+            no_placed     = self.cycle_no_placed,
+            yes_spread    = %self.cycle_yes_spread_from_mid.round_dp(4),
+            no_spread     = %self.cycle_no_spread_from_mid.round_dp(4),
+            score_factor_yes = %sf_yes.round_dp(4),
+            score_factor_no  = %sf_no.round_dp(4),
+            est_yes_score = %( sf_yes * self.cycle_yes_qty * t ).round_dp(1),
+            est_no_score  = %( sf_no  * self.cycle_no_qty  * t ).round_dp(1),
             "CYCLE_END",
         );
+
+        // Use YES score factor for the record (or NO if YES not placed).
+        let sf = if self.cycle_yes_placed { sf_yes } else { sf_no };
 
         self.cycles.push(CycleRecord {
             on_book_secs,
@@ -217,9 +243,12 @@ impl PredictionQuoter {
             no_qty: self.cycle_no_qty,
             yes_bid: self.cycle_yes_bid,
             no_bid: self.cycle_no_bid,
-            spread_from_mid: self.cycle_spread_from_mid,
+            yes_spread_from_mid: self.cycle_yes_spread_from_mid,
+            no_spread_from_mid: self.cycle_no_spread_from_mid,
             score_factor: sf,
             ended_by,
+            yes_placed: self.cycle_yes_placed,
+            no_placed: self.cycle_no_placed,
         });
     }
 
@@ -230,15 +259,29 @@ impl PredictionQuoter {
         no_qty: Decimal,
         yes_bid: Decimal,
         no_bid: Decimal,
-        mid: Decimal,
+        yes_placed: bool,
+        no_placed: bool,
+        predict_mid: Decimal,
     ) {
         self.cycle_placed_at = Some(Instant::now());
         self.cycle_yes_qty = yes_qty;
         self.cycle_no_qty = no_qty;
         self.cycle_yes_bid = yes_bid;
         self.cycle_no_bid = no_bid;
-        // spread from mid = |yes_bid - mid|; always positive since yes_bid < mid.
-        self.cycle_spread_from_mid = (mid - yes_bid).abs();
+        self.cycle_yes_placed = yes_placed;
+        self.cycle_no_placed = no_placed;
+        // Spread = distance from respective mid at placement time.
+        self.cycle_yes_spread_from_mid = if yes_placed {
+            (predict_mid - yes_bid).abs()
+        } else {
+            Decimal::ZERO
+        };
+        self.cycle_no_spread_from_mid = if no_placed {
+            let no_mid = Decimal::ONE - predict_mid;
+            (no_mid - no_bid).abs()
+        } else {
+            Decimal::ZERO
+        };
     }
 
     fn utc_now_iso() -> String {
@@ -254,24 +297,26 @@ impl PredictionQuoter {
 
     // ── Helpers ───────────────────────────────────────────────────────────────
 
-    /// Determine effective fair value.
+    /// Return the raw Polymarket mid, or `None` to pause quoting.
     ///
-    /// Safety posture:
-    /// - If Polymarket FV is configured, we require a fresh Polymarket update.
-    ///   No fallback to predict.fun mid (prevents quoting blind during feed lag/outage).
-    /// - If Polymarket FV is not configured, use predict.fun mid.
-    fn effective_fv(&self, predict_mid: Decimal) -> Option<Decimal> {
+    /// Returns `Some(predict_mid)` when Polymarket is not configured (no-poly mode).
+    /// Returns `None` when poly is configured but the feed is unavailable or stale
+    /// — quoting pauses until the feed recovers.
+    ///
+    /// The per-side min/max FV logic that keeps bids within the scoring window lives
+    /// in `pricing::calculate`, not here. This function is purely a freshness gate.
+    fn poly_fv(&self, predict_mid: Decimal) -> Option<Decimal> {
         if self.polymarket_fv_instrument.is_none() {
             return Some(predict_mid);
         }
 
         match (self.polymarket_mid, self.polymarket_mid_ts) {
-            (Some(pm), Some(ts)) if ts.elapsed().as_secs() < POLY_FV_STALE_SECS => Some(pm),
+            (Some(pm), Some(ts)) if ts.elapsed().as_secs() < self.params.fv_stale_secs => Some(pm),
             (Some(_), _) => {
                 tracing::warn!(
                     target: "quoter",
                     strategy = %self.id,
-                    stale_threshold_secs = POLY_FV_STALE_SECS,
+                    fv_stale_secs = self.params.fv_stale_secs,
                     "Polymarket FV stale — pausing quotes until feed recovers",
                 );
                 None
@@ -295,6 +340,47 @@ impl PredictionQuoter {
         }
     }
 
+    /// True when currently resting quotes are at/near predict.fun top-of-book.
+    ///
+    /// YES top-of-book bid = `yes_best_bid`.
+    /// NO top-of-book bid  = `1 - yes_best_ask` (binary identity).
+    fn near_touch(&self, yes_book: &trading_core::types::market_data::OrderbookSnapshot) -> bool {
+        let trigger = self.params.touch_trigger_cents;
+
+        let (yes_best_bid, _) = match yes_book.best_bid() {
+            Some(v) => v,
+            None => return false,
+        };
+        let (yes_best_ask, _) = match yes_book.best_ask() {
+            Some(v) => v,
+            None => return false,
+        };
+
+        let yes_top_bid = yes_best_bid.inner();
+        let no_top_bid = Decimal::ONE - yes_best_ask.inner();
+
+        let yes_dist = yes_top_bid - self.cycle_yes_bid;
+        let no_dist = no_top_bid - self.cycle_no_bid;
+
+        let yes_touch = self.cycle_yes_placed && yes_dist <= trigger;
+        let no_touch = self.cycle_no_placed && no_dist <= trigger;
+
+        if yes_touch || no_touch {
+            tracing::info!(
+                target: "quoter",
+                strategy = %self.id,
+                yes_touch,
+                no_touch,
+                yes_dist = %yes_dist.round_dp(4),
+                no_dist = %no_dist.round_dp(4),
+                trigger = %trigger,
+                "Near touch detected — defensive requote",
+            );
+        }
+
+        yes_touch || no_touch
+    }
+
     /// Cancel all resting orders (connector clears both YES and NO).
     /// We use the YES instrument — `cancel_all` in `PredictFunClient`
     /// cancels every tracked order across both outcomes.
@@ -304,70 +390,90 @@ impl PredictionQuoter {
         }
     }
 
-    /// Build the two BUY orders (YES + NO) for one quoting cycle.
-    fn build_place_actions(&self, prices: pricing::QuotePrices) -> Vec<Action> {
+    /// Build BUY orders for one quoting cycle from independently priced YES and NO.
+    ///
+    /// Either side may be `None` in `pricing` (skipped due to crossing guard) or
+    /// suppressed here due to position limits. Returns placed orders and the
+    /// effective qty for each side (0 = not placed).
+    fn build_place_actions(
+        &self,
+        pricing: &pricing::PricingResult,
+    ) -> (Vec<Action>, Decimal, Decimal) {
         let mut actions = Vec::with_capacity(2);
+        let mut yes_qty_placed = Decimal::ZERO;
+        let mut no_qty_placed = Decimal::ZERO;
 
-        // YES BUY: skip if we're already at max position on this outcome.
-        if self.yes_tokens < self.params.max_position_tokens {
-            let yes_qty = (self.params.order_size_usdt / prices.yes_bid.inner())
-                .round_dp(4)
-                .max(Decimal::ONE / Decimal::from(10_000)); // never zero
-
-            actions.push(Action::PlaceOrder(OrderRequest {
-                instrument: self.yes_instrument.clone(),
-                side: OrderSide::Buy,
-                price: prices.yes_bid,
-                quantity: Quantity::new(yes_qty),
-                tif: TimeInForce::PostOnly,
-                client_order_id: Some("yes".into()),
-            }));
-        } else {
-            tracing::info!(
-                target: "quoter",
-                strategy = %self.id,
-                yes_tokens = %self.yes_tokens,
-                max = %self.params.max_position_tokens,
-                "YES position limit reached — skipping YES quote",
-            );
+        // YES BUY
+        match pricing.yes_bid {
+            Some(price) if self.yes_tokens < self.params.max_position_tokens => {
+                let qty = (self.params.order_size_usdt / price.inner())
+                    .round_dp(4)
+                    .max(Decimal::ONE / Decimal::from(10_000));
+                actions.push(Action::PlaceOrder(OrderRequest {
+                    instrument: self.yes_instrument.clone(),
+                    side: OrderSide::Buy,
+                    price,
+                    quantity: Quantity::new(qty),
+                    tif: TimeInForce::PostOnly,
+                    client_order_id: Some("yes".into()),
+                }));
+                yes_qty_placed = qty;
+            }
+            Some(_) => {
+                tracing::info!(
+                    target: "quoter",
+                    strategy   = %self.id,
+                    yes_tokens = %self.yes_tokens,
+                    max        = %self.params.max_position_tokens,
+                    "YES position limit reached — skipping YES quote",
+                );
+            }
+            None => {} // pricing guard skipped this side
         }
 
-        // NO BUY: skip if at max position on this outcome.
-        if self.no_tokens < self.params.max_position_tokens {
-            let no_qty = (self.params.order_size_usdt / prices.no_bid.inner())
-                .round_dp(4)
-                .max(Decimal::ONE / Decimal::from(10_000));
-
-            actions.push(Action::PlaceOrder(OrderRequest {
-                instrument: self.no_instrument.clone(),
-                side: OrderSide::Buy,
-                price: prices.no_bid,
-                quantity: Quantity::new(no_qty),
-                tif: TimeInForce::PostOnly,
-                client_order_id: Some("no".into()),
-            }));
-        } else {
-            tracing::info!(
-                target: "quoter",
-                strategy = %self.id,
-                no_tokens = %self.no_tokens,
-                max = %self.params.max_position_tokens,
-                "NO position limit reached — skipping NO quote",
-            );
+        // NO BUY
+        match pricing.no_bid {
+            Some(price) if self.no_tokens < self.params.max_position_tokens => {
+                let qty = (self.params.order_size_usdt / price.inner())
+                    .round_dp(4)
+                    .max(Decimal::ONE / Decimal::from(10_000));
+                actions.push(Action::PlaceOrder(OrderRequest {
+                    instrument: self.no_instrument.clone(),
+                    side: OrderSide::Buy,
+                    price,
+                    quantity: Quantity::new(qty),
+                    tif: TimeInForce::PostOnly,
+                    client_order_id: Some("no".into()),
+                }));
+                no_qty_placed = qty;
+            }
+            Some(_) => {
+                tracing::info!(
+                    target: "quoter",
+                    strategy  = %self.id,
+                    no_tokens = %self.no_tokens,
+                    max       = %self.params.max_position_tokens,
+                    "NO position limit reached — skipping NO quote",
+                );
+            }
+            None => {} // pricing guard skipped this side
         }
 
-        actions
+        (actions, yes_qty_placed, no_qty_placed)
     }
 
-    /// Full requote cycle: cancel everything → place YES + NO.
+    /// Full requote cycle: cancel everything → place YES and/or NO independently.
     ///
     /// `predict_mid`: current predict.fun YES mid (used for score/cycle tracking).
-    /// `fv`:          effective fair value used for pricing (Polymarket or predict_mid fallback).
+    /// `fv`:          effective fair value used for pricing (Polymarket mid, or
+    ///                predict.fun mid when Polymarket is not configured).
+    /// `pricing`:     independently computed YES and NO prices (either may be None
+    ///                if a crossing guard blocked that side).
     fn requote(
         &mut self,
         predict_mid: Decimal,
         fv: Decimal,
-        prices: pricing::QuotePrices,
+        pricing: pricing::PricingResult,
         ended_by: &'static str,
     ) -> Vec<Action> {
         // Close the previous cycle before starting a new one.
@@ -375,51 +481,68 @@ impl PredictionQuoter {
 
         let mut actions = Vec::with_capacity(3);
         actions.push(self.cancel_all());
-        let place = self.build_place_actions(prices);
+        let (place, yes_qty, no_qty) = self.build_place_actions(&pricing);
 
-        let yes_qty = if self.yes_tokens < self.params.max_position_tokens {
-            (self.params.order_size_usdt / prices.yes_bid.inner()).round_dp(4)
+        let yes_bid_val = pricing.yes_bid.map(|p| p.inner()).unwrap_or(Decimal::ZERO);
+        let no_bid_val = pricing.no_bid.map(|p| p.inner()).unwrap_or(Decimal::ZERO);
+
+        let yes_placed = yes_qty > Decimal::ZERO;
+        let no_placed = no_qty > Decimal::ZERO;
+
+        // Score factor for each placed side.
+        let sf_yes = if yes_placed {
+            self.score_factor((predict_mid - yes_bid_val).abs())
         } else {
             Decimal::ZERO
         };
-        let no_qty = if self.no_tokens < self.params.max_position_tokens {
-            (self.params.order_size_usdt / prices.no_bid.inner()).round_dp(4)
+        let sf_no = if no_placed {
+            let no_mid = Decimal::ONE - predict_mid;
+            self.score_factor((no_mid - no_bid_val).abs())
         } else {
             Decimal::ZERO
         };
 
-        let sf = self.score_factor((predict_mid - prices.yes_bid.inner()).abs());
         let qualifies_yes = yes_qty >= self.params.min_shares_per_side;
         let qualifies_no = no_qty >= self.params.min_shares_per_side;
 
+        let poly_divergence = self
+            .polymarket_mid
+            .map(|p| (p - predict_mid).abs().round_dp(4));
+
         tracing::info!(
             target: "quoter",
-            strategy   = %self.id,
-            predict_mid = %predict_mid,
-            poly_fv    = ?self.polymarket_mid,
-            fv_used    = %fv,
-            yes_bid    = %prices.yes_bid,
-            no_bid     = %prices.no_bid,
+            strategy        = %self.id,
+            predict_mid     = %predict_mid,
+            poly_fv         = ?self.polymarket_mid,
+            poly_divergence = ?poly_divergence,
+            yes_fv_used     = %(fv.min(predict_mid)),
+            no_fv_used      = %(Decimal::ONE - fv.max(predict_mid)),
+            yes_bid         = ?pricing.yes_bid.map(|p| p.inner()),
+            no_bid          = ?pricing.no_bid.map(|p| p.inner()),
             yes_qty    = %yes_qty,
             no_qty     = %no_qty,
-            n_orders   = place.len(),
-            yes_pos    = %self.yes_tokens,
-            no_pos     = %self.no_tokens,
-            score_factor       = %sf.round_dp(4),
-            qualifies_yes      = qualifies_yes,
-            qualifies_no       = qualifies_no,
+            yes_placed,
+            no_placed,
+            n_orders           = place.len(),
+            yes_pos            = %self.yes_tokens,
+            no_pos             = %self.no_tokens,
+            score_factor_yes   = %sf_yes.round_dp(4),
+            score_factor_no    = %sf_no.round_dp(4),
+            qualifies_yes,
+            qualifies_no,
             min_shares         = %self.params.min_shares_per_side,
             spread_threshold_v = %self.params.spread_threshold_v,
             "REQUOTE",
         );
 
-        // Open a new cycle only if at least one side placed qualifying orders.
         if !place.is_empty() {
             self.open_cycle(
                 yes_qty,
                 no_qty,
-                prices.yes_bid.inner(),
-                prices.no_bid.inner(),
+                yes_bid_val,
+                no_bid_val,
+                yes_placed,
+                no_placed,
                 predict_mid,
             );
         }
@@ -514,9 +637,9 @@ impl Strategy for PredictionQuoter {
                 };
                 self.latest_mid = Some(mid);
 
-                // Effective fair value. If Polymarket is configured and unavailable,
-                // pause (or stay paused) instead of quoting blind.
-                let fv = match self.effective_fv(mid) {
+                // Raw Polymarket mid (freshness gate only). If unavailable, pause.
+                // The min/max per-side conservative pricing is done inside pricing::calculate.
+                let fv = match self.poly_fv(mid) {
                     Some(v) => v,
                     None => {
                         if matches!(self.state, State::Quoting) {
@@ -552,14 +675,18 @@ impl Strategy for PredictionQuoter {
                     _ => {}
                 }
 
-                // Skip if fair value has not drifted enough to warrant a requote.
-                if matches!(self.state, State::Quoting) && !self.fv_drifted(fv) {
+                let touch_requote = matches!(self.state, State::Quoting) && self.near_touch(book);
+                let fv_requote = matches!(self.state, State::Quoting) && self.fv_drifted(fv);
+
+                // While quoting, requote only on FV drift or touch-risk.
+                if matches!(self.state, State::Quoting) && !(fv_requote || touch_requote) {
                     return vec![];
                 }
 
                 // Enforce minimum hold time — don't pull quotes just because FV
                 // twitched within drift range and back. Fill-triggered cancels bypass this.
-                if matches!(self.state, State::Quoting) {
+                // Touch-risk requotes bypass this guard.
+                if matches!(self.state, State::Quoting) && !touch_requote {
                     if let Some(placed_at) = self.last_place_time {
                         let hold = Duration::from_secs(self.params.min_quote_hold_secs);
                         if Instant::now() < placed_at + hold {
@@ -568,12 +695,23 @@ impl Strategy for PredictionQuoter {
                     }
                 }
 
-                // Calculate quote prices using the effective FV + predict.fun BBO crossing guards.
-                let prices = match pricing::calculate(
+                // Calculate per-side prices using conservative dual-FV pricing:
+                //   YES uses min(poly_fv, predict_mid) — below both YES mids
+                //   NO  uses 1 - max(poly_fv, predict_mid) — below both NO mids
+                // For touch-triggered requotes, enforce retreat from top-of-book.
+                let retreat_cents = if touch_requote {
+                    self.params.touch_retreat_cents
+                } else {
+                    Decimal::ZERO
+                };
+
+                let pricing = match pricing::calculate(
                     book,
-                    fv,
+                    fv,  // poly_fv (or predict_mid when poly not configured)
+                    mid, // predict.fun book mid
                     self.params.spread_cents,
-                    self.params.join_cents,
+                    retreat_cents,
+                    self.params.spread_threshold_v,
                     self.decimal_precision,
                 ) {
                     Some(p) => p,
@@ -582,13 +720,25 @@ impl Strategy for PredictionQuoter {
                             target: "quoter",
                             strategy = %self.id,
                             fv = %fv,
-                            "pricing returned None (thin book) — skipping cycle",
+                            "pricing returned None (empty/crossed book) — skipping tick",
                         );
                         return vec![];
                     }
                 };
 
-                self.requote(mid, fv, prices, "drift")
+                if pricing.is_empty() {
+                    tracing::debug!(
+                        target: "quoter",
+                        strategy     = %self.id,
+                        fv           = %fv,
+                        predict_mid  = %mid,
+                        "both sides skipped by pricing — not requoting",
+                    );
+                    return vec![];
+                }
+
+                let reason = if touch_requote { "touch" } else { "drift" };
+                self.requote(mid, fv, pricing, reason)
             }
 
             Event::Fill {
@@ -688,16 +838,17 @@ impl Strategy for PredictionQuoter {
             yes_instrument = %self.yes_instrument,
             no_instrument  = %self.no_instrument,
             polymarket_fv  = ?self.polymarket_fv_instrument,
-            spread_cents = %self.params.spread_cents,
-            join_cents = ?self.params.join_cents,
-            decimal_precision = self.decimal_precision,
-            order_size_usdt    = %self.params.order_size_usdt,
-            drift_cents        = %self.params.drift_cents,
-            fill_pause_secs    = self.params.fill_pause_secs,
+            spread_cents        = %self.params.spread_cents,
+            decimal_precision   = self.decimal_precision,
+            order_size_usdt     = %self.params.order_size_usdt,
+            drift_cents         = %self.params.drift_cents,
+            touch_trigger_cents = %self.params.touch_trigger_cents,
+            touch_retreat_cents = %self.params.touch_retreat_cents,
+            fill_pause_secs     = self.params.fill_pause_secs,
             max_position_tokens = %self.params.max_position_tokens,
             spread_threshold_v  = %self.params.spread_threshold_v,
             min_shares_per_side = %self.params.min_shares_per_side,
-            fv_stale_secs = POLY_FV_STALE_SECS,
+            fv_stale_secs       = self.params.fv_stale_secs,
             "INIT",
         );
 
@@ -731,8 +882,10 @@ impl Strategy for PredictionQuoter {
 
         for c in &self.cycles {
             let t = Decimal::try_from(c.on_book_secs).unwrap_or(Decimal::ZERO);
-            est_yes_score_raw += c.score_factor * c.yes_qty * t;
-            est_no_score_raw += c.score_factor * c.no_qty * t;
+            let sf_yes = self.score_factor(c.yes_spread_from_mid);
+            let sf_no = self.score_factor(c.no_spread_from_mid);
+            est_yes_score_raw += sf_yes * c.yes_qty * t;
+            est_no_score_raw += sf_no * c.no_qty * t;
             total_on_book_secs += c.on_book_secs;
         }
 
@@ -766,14 +919,17 @@ impl Strategy for PredictionQuoter {
             .iter()
             .map(|c| {
                 serde_json::json!({
-                    "on_book_secs":    (c.on_book_secs * 10.0).round() / 10.0,
-                    "yes_qty":         c.yes_qty,
-                    "no_qty":          c.no_qty,
-                    "yes_bid":         c.yes_bid,
-                    "no_bid":          c.no_bid,
-                    "spread_from_mid": c.spread_from_mid,
-                    "score_factor":    c.score_factor,
-                    "ended_by":        c.ended_by,
+                    "on_book_secs":        (c.on_book_secs * 10.0).round() / 10.0,
+                    "yes_qty":             c.yes_qty,
+                    "no_qty":              c.no_qty,
+                    "yes_bid":             c.yes_bid,
+                    "no_bid":              c.no_bid,
+                    "yes_placed":          c.yes_placed,
+                    "no_placed":           c.no_placed,
+                    "yes_spread_from_mid": c.yes_spread_from_mid,
+                    "no_spread_from_mid":  c.no_spread_from_mid,
+                    "score_factor":        c.score_factor,
+                    "ended_by":            c.ended_by,
                 })
             })
             .collect();

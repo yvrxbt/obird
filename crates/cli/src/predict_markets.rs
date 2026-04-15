@@ -296,7 +296,7 @@ async fn print_market(
     );
     println!("  spread_threshold_v  = \"{spread_threshold_cfg}\"");
     println!("  min_shares_per_side = \"{min_shares_cfg}\"");
-    println!("  # join_cents        = \"0.01\"  # optional manual join depth from predict mid");
+    println!("  # spread_cents tuning: see PREDICT_QUOTING_DESIGN.md (default 0.02 = 44% score, moderate fills)");
     println!("  ────────────────────────────────────────────────────────────");
 
     if write_configs {
@@ -391,15 +391,15 @@ fn render_market_toml(
     ));
 
     out.push_str("[strategies.params]\n");
-    out.push_str("spread_cents         = \"0.02\"\n");
-    out.push_str(
-        "# join_cents         = \"0.01\"  # optional manual join depth from predict mid\n",
-    );
+    out.push_str("spread_cents         = \"0.02\"  # distance from poly FV per side — see PREDICT_QUOTING_DESIGN.md\n");
     out.push_str(&format!("order_size_usdt      = \"{}\"\n", order_size_usdt));
     out.push_str("max_position_tokens  = \"500.0\"\n");
     out.push_str("drift_cents          = \"0.02\"\n");
+    out.push_str("touch_trigger_cents  = \"0.00\"  # defensive requote when quote reaches top-of-book (0 = at touch)\n");
+    out.push_str("touch_retreat_cents  = \"0.02\"  # after touch trigger, requote this far behind top-of-book\n");
     out.push_str("min_quote_hold_secs  = 10\n");
     out.push_str("fill_pause_secs      = 5\n");
+    out.push_str("fv_stale_secs        = 90       # must be > 60 (WS recv-timeout); see PREDICT_QUOTING_DESIGN.md\n");
     out.push_str(&format!(
         "spread_threshold_v   = \"{}\"\n",
         spread_threshold_v

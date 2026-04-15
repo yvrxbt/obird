@@ -160,21 +160,38 @@ pub async fn run() -> anyhow::Result<()> {
         .mid_price()
         .map(|m| m.inner())
         .unwrap_or(rust_decimal_macros::dec!(0.5));
-    match pricing::calculate(&book, fv, spread_cents, None, decimal_precision) {
-        Some(prices) => {
-            let sum = prices.yes_bid.inner() + prices.no_bid.inner();
+    // In smoke-test mode: poly_fv = predict_mid (no external Polymarket feed).
+    // spread_threshold_v = 0.06 (typical ±6¢ market).
+    match pricing::calculate(
+        &book,
+        fv,
+        fv,
+        spread_cents,
+        dec!(0.02),
+        rust_decimal_macros::dec!(0.06),
+        decimal_precision,
+    ) {
+        Some(result) => {
             tracing::info!(
-                yes_bid = %prices.yes_bid,
-                no_bid  = %prices.no_bid,
-                sum     = %sum,
-                "✓ pricing::calculate returned valid prices (sum = yes+no = 1.00)",
+                yes_bid = ?result.yes_bid.map(|p| p.inner()),
+                no_bid  = ?result.no_bid.map(|p| p.inner()),
+                yes_placed = result.yes_bid.is_some(),
+                no_placed  = result.no_bid.is_some(),
+                "✓ pricing::calculate returned result (independent pricing: YES+NO < 1.00)",
             );
-            assert_eq!(sum, rust_decimal::Decimal::ONE, "yes+no must equal 1.00");
+            // Invariant: when both sides placed, sum must be < 1.00.
+            if let (Some(y), Some(n)) = (result.yes_bid, result.no_bid) {
+                let sum = y.inner() + n.inner();
+                assert!(
+                    sum < rust_decimal::Decimal::ONE,
+                    "yes+no must be < 1.00 (got {sum})"
+                );
+            }
         }
         None => {
             tracing::warn!(
-                "pricing::calculate returned None — book may be too narrow for \
-                 spread_cents={spread_cents} decimal_precision={decimal_precision}. This is OK in thin markets.",
+                "pricing::calculate returned None — book may be empty or crossed. \
+                 This is OK in thin markets.",
             );
         }
     }
