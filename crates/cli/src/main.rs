@@ -17,6 +17,7 @@ use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt, EnvFilte
 mod live;
 mod predict_approve;
 mod predict_check;
+mod predict_liquidate;
 mod predict_markets;
 
 #[tokio::main]
@@ -72,6 +73,12 @@ async fn main() -> anyhow::Result<()> {
             tracing::info!(config, all, "Setting on-chain approvals for predict.fun");
             predict_approve::run(config, all).await?;
         }
+        "predict-liquidate" => {
+            let config = flag_value(&args, "--config").unwrap_or("configs/predict_quoter.toml");
+            let dry_run = args.contains(&"--dry-run".to_string());
+            tracing::info!(config, dry_run, "Placing passive liquidation orders on predict.fun");
+            predict_liquidate::run(config, dry_run).await?;
+        }
         "backtest" => {
             tracing::info!("Starting backtest");
             // TODO: wire up BacktestHarness
@@ -93,6 +100,8 @@ async fn main() -> anyhow::Result<()> {
             println!("  predict-markets --fail-on-missing-poly-token       Exit non-zero if any selected market lacks polymarket_yes_token_id");
             println!("  predict-approve --config configs/predict_quoter.toml  Set on-chain USDT approvals (run once)");
             println!("  predict-approve --all --config ...                 Approve all 4 contract variants");
+            println!("  predict-liquidate --config configs/markets/NNN.toml Place passive SELL limits at current ask for held YES/NO positions");
+            println!("  predict-liquidate --dry-run --config ...           Preview prices/qty without placing orders");
             println!("  backtest        --config configs/example.toml     Run backtest");
             println!("  record          --config configs/example.toml     Record market data");
             println!();
