@@ -85,6 +85,7 @@ source .env && RUST_LOG=info PREDICT_MARKET_ID=21177 cargo run --bin trading-cli
 source .env && cargo run --bin trading-cli -- predict-markets
 source .env && cargo run --bin trading-cli -- predict-markets --all   # include non-boosted
 source .env && cargo run --bin trading-cli -- predict-markets --write-configs
+source .env && cargo run --bin trading-cli -- predict-markets --all --write-configs --fail-on-missing-poly-token
 
 # On-chain approval setup (one-time per wallet)
 source .env && cargo run --bin trading-cli -- predict-approve --all --config configs/predict_quoter.toml

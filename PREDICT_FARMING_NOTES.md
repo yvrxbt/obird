@@ -159,6 +159,7 @@ Use that rate to project future earnings and optimize spread/size tradeoffs.
 - Auto-fills `spread_threshold_v` and `min_shares_per_side` from the API
 - Resolves `polymarket_yes_token_id` from `polymarketConditionIds` via Gamma API
 - Supports `--write-configs` to emit ready-to-run files in `configs/markets/`
+- Supports `--fail-on-missing-poly-token` to hard-fail if any selected market lacks Polymarket linkage
 
 **Verified with tests:** 10 pricing tests including `one_cent_spread_precision3_market_quotes` (regression), `one_cent_spread_precision2_market_returns_none`, `two_cent_spread_precision2_market_quotes`.
 

@@ -12,8 +12,14 @@
 use chrono::{DateTime, Utc};
 use rust_decimal::Decimal;
 use rust_decimal_macros::dec;
+use std::collections::HashSet;
 
-pub async fn run(show_all: bool, write_configs: bool, output_dir: &str) -> anyhow::Result<()> {
+pub async fn run(
+    show_all: bool,
+    write_configs: bool,
+    output_dir: &str,
+    fail_on_missing_poly_token: bool,
+) -> anyhow::Result<()> {
     let _ = dotenvy::dotenv();
 
     let api_key =
@@ -49,7 +55,11 @@ pub async fn run(show_all: bool, write_configs: bool, output_dir: &str) -> anyho
     let mut boosted: Vec<&predict_sdk::PredictMarket> = Vec::new();
     let mut others: Vec<&predict_sdk::PredictMarket> = Vec::new();
 
+    let mut seen_market_ids = HashSet::new();
     for m in &markets {
+        if !seen_market_ids.insert(m.id) {
+            continue;
+        }
         if m.outcomes.len() < 2 {
             continue;
         }
@@ -64,19 +74,51 @@ pub async fn run(show_all: bool, write_configs: bool, output_dir: &str) -> anyho
     if boosted.is_empty() {
         println!("  None active right now. Check back soon — up to 6 markets are boosted at once.");
     }
+    let mut missing_poly = Vec::new();
+
     for m in &boosted {
-        print_market(m, &sdk, now, write_configs, output_dir).await?;
+        if let Some(label) = print_market(
+            m,
+            &sdk,
+            now,
+            write_configs,
+            output_dir,
+            fail_on_missing_poly_token,
+        )
+        .await?
+        {
+            missing_poly.push(label);
+        }
     }
 
     if show_all {
         println!("\n=== ALL OTHER OPEN MARKETS ({}) ===", others.len());
         for m in &others {
-            print_market(m, &sdk, now, write_configs, output_dir).await?;
+            if let Some(label) = print_market(
+                m,
+                &sdk,
+                now,
+                write_configs,
+                output_dir,
+                fail_on_missing_poly_token,
+            )
+            .await?
+            {
+                missing_poly.push(label);
+            }
         }
     } else if !others.is_empty() {
         println!(
             "\n({} non-boosted open markets — run with --all to see them)",
             others.len()
+        );
+    }
+
+    if fail_on_missing_poly_token && !missing_poly.is_empty() {
+        anyhow::bail!(
+            "missing polymarket_yes_token_id for {} market(s): {}",
+            missing_poly.len(),
+            missing_poly.join(", ")
         );
     }
 
@@ -111,7 +153,8 @@ async fn print_market(
     now: DateTime<Utc>,
     write_configs: bool,
     output_dir: &str,
-) -> anyhow::Result<()> {
+    fail_on_missing_poly_token: bool,
+) -> anyhow::Result<Option<String>> {
     let yes = &m.outcomes[0];
     let no = &m.outcomes[1];
 
@@ -209,6 +252,7 @@ async fn print_market(
 
     let poly_yes_token = poly_token_ids.as_ref().map(|(yes, _)| yes.as_str());
     let poly_no_token = poly_token_ids.as_ref().map(|(_, no)| no.as_str());
+    let missing_poly = poly_yes_token.is_none();
 
     println!();
     println!(
@@ -256,6 +300,11 @@ async fn print_market(
     println!("  ────────────────────────────────────────────────────────────");
 
     if write_configs {
+        if fail_on_missing_poly_token && missing_poly {
+            println!("  skipped write (missing polymarket_yes_token_id; strict mode enabled)");
+            return Ok(Some(format!("{}:{}", m.id, m.title)));
+        }
+
         let metrics_port = metrics_port_for_market(m.id);
         let toml = render_market_toml(
             m,
@@ -276,7 +325,11 @@ async fn print_market(
         println!("  wrote {}", path);
     }
 
-    Ok(())
+    if missing_poly {
+        Ok(Some(format!("{}:{}", m.id, m.title)))
+    } else {
+        Ok(None)
+    }
 }
 
 fn metrics_port_for_market(market_id: u64) -> u16 {

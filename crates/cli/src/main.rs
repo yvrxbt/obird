@@ -60,8 +60,11 @@ async fn main() -> anyhow::Result<()> {
         "predict-markets" => {
             let all = args.contains(&"--all".to_string());
             let write_configs = args.contains(&"--write-configs".to_string());
+            let fail_on_missing_poly_token =
+                args.contains(&"--fail-on-missing-poly-token".to_string());
             let output_dir = flag_value(&args, "--output-dir").unwrap_or("configs/markets");
-            predict_markets::run(all, write_configs, output_dir).await?;
+            predict_markets::run(all, write_configs, output_dir, fail_on_missing_poly_token)
+                .await?;
         }
         "predict-approve" => {
             let config = flag_value(&args, "--config").unwrap_or("configs/predict_quoter.toml");
@@ -87,6 +90,7 @@ async fn main() -> anyhow::Result<()> {
             println!("  predict-markets --all                              Include non-boosted open markets");
             println!("  predict-markets --write-configs                    Auto-write per-market TOML files");
             println!("  predict-markets --write-configs --output-dir DIR   Write configs to DIR (default configs/markets)");
+            println!("  predict-markets --fail-on-missing-poly-token       Exit non-zero if any selected market lacks polymarket_yes_token_id");
             println!("  predict-approve --config configs/predict_quoter.toml  Set on-chain USDT approvals (run once)");
             println!("  predict-approve --all --config ...                 Approve all 4 contract variants");
             println!("  backtest        --config configs/example.toml     Run backtest");
