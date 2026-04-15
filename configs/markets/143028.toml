@@ -1,0 +1,71 @@
+# predict.fun Points-Farming Quoter — per-market config template
+#
+# HOW TO USE:
+#   1. Run: source .env && cargo run --bin trading-cli -- predict-markets --write-configs
+#   2. Generated files appear in configs/markets/<market_id>.toml
+#   3. Run: ./scripts/farm.py (launches all configs in this directory)
+#
+# Secrets: PREDICT_API_KEY and PREDICT_PRIVATE_KEY in .env
+
+[engine]
+tick_interval_ms = 200
+
+[[exchanges]]
+name           = "predict_fun"
+api_key_env    = "PREDICT_API_KEY"
+secret_key_env = "PREDICT_PRIVATE_KEY"
+testnet        = false
+
+[exchanges.params]
+# ── Paste from `trading-cli predict-markets` output ──────────────────────────
+market_id        = 143028
+yes_outcome_name = "Yes"
+yes_token_id     = "88632176792205708175552212115019750624663026701991425037794038217700051469304"
+no_outcome_name  = "No"
+no_token_id      = "100760647293882693638751365626138407657360538060017390664563598193145574423450"
+is_neg_risk      = true
+is_yield_bearing = true
+fee_rate_bps     = 200
+# polymarket_yes_token_id = "..."  # Set to enable Polymarket CLOB WS as fair value source.
+#                                  # Run `trading-cli predict-markets` to get this token ID.
+
+[[strategies]]
+name           = "predict_points_v1"
+strategy_type  = "prediction_quoter"
+instruments = ["PredictFun.Binary.143028-Yes", "PredictFun.Binary.143028-No"]
+
+[strategies.params]
+# ── Spread ────────────────────────────────────────────────────────────────────
+# score_factor = ((spread_threshold_v - spread_from_mid) / spread_threshold_v)^2
+spread_cents     = "0.02"
+# Optional: when FV pricing lands <= best bid, attempt join at (predict_mid - join_cents)
+# before standard crossing guards.
+# join_cents     = "0.01"
+
+# ── Sizing ────────────────────────────────────────────────────────────────────
+# Must produce ≥ min_shares_per_side tokens per side to qualify for points.
+# Binding constraint is the NO side (higher price → fewer tokens per dollar).
+# At NO price 0.65: $70 buys 107 NO shares (just above 100 min).
+# At NO price 0.50: $50 buys 100 NO shares exactly.
+# Rule of thumb: order_size_usdt = ceil(min_shares × max(yes_price, no_price))
+order_size_usdt  = "70.0"             # TUNE — see rule above
+
+# ── Risk ──────────────────────────────────────────────────────────────────────
+# N YES + N NO tokens = guaranteed break-even at resolution.
+# Imbalance risk = |yes_tokens - no_tokens| × avg_price (small if fills are balanced).
+max_position_tokens = "500.0"
+
+# ── Timing ───────────────────────────────────────────────────────────────────
+drift_cents         = "0.02"
+min_quote_hold_secs = 10
+fill_pause_secs     = 5               # Short — fills are free (0% maker fee)
+
+# ── Points metadata ───────────────────────────────────────────────────────────
+# Auto-filled from API by `predict-markets --write-configs`.
+spread_threshold_v   = "0.06"
+min_shares_per_side  = "100"
+
+[telemetry]
+log_level      = "info"
+metrics_port   = 9091                 # stub — Prometheus not yet wired; value ignored at runtime
+enable_tracing = false
