@@ -126,6 +126,22 @@ pub struct PredictionQuoter {
     session_proceeds: Decimal,
     fill_count: u64,
 
+    /// Per-side fill counters for adversarial selection diagnosis.
+    /// Large yes_fills vs no_fills = consistently hit on YES = we are above poly FV on YES.
+    session_yes_fills: u64,
+    session_no_fills: u64,
+    /// Per-side filled quantity this session (shares).
+    session_yes_fill_qty: Decimal,
+    session_no_fill_qty: Decimal,
+    /// Cumulative notional (qty×price) per side this session.
+    session_yes_notional: Decimal,
+    session_no_notional: Decimal,
+    /// Running sum of (fill_price - poly_fv_at_fill) per YES fill.
+    /// Positive = we overpaid vs Polymarket ("adverse selection cost").
+    session_yes_adverse_cents_total: Decimal,
+    /// Same for NO.
+    session_no_adverse_cents_total: Decimal,
+
     /// Most recent YES mid (for fill P&L reporting).
     latest_mid: Option<Decimal>,
 
@@ -178,6 +194,14 @@ impl PredictionQuoter {
             session_cost: Decimal::ZERO,
             session_proceeds: Decimal::ZERO,
             fill_count: 0,
+            session_yes_fills: 0,
+            session_no_fills: 0,
+            session_yes_fill_qty: Decimal::ZERO,
+            session_no_fill_qty: Decimal::ZERO,
+            session_yes_notional: Decimal::ZERO,
+            session_no_notional: Decimal::ZERO,
+            session_yes_adverse_cents_total: Decimal::ZERO,
+            session_no_adverse_cents_total: Decimal::ZERO,
             latest_mid: None,
             session_started_at: None,
             cycle_placed_at: None,
@@ -477,6 +501,7 @@ impl PredictionQuoter {
         &mut self,
         predict_mid: Decimal,
         fv: Decimal,
+        yes_book: &trading_core::types::market_data::OrderbookSnapshot,
         pricing: pricing::PricingResult,
         ended_by: &'static str,
     ) -> Vec<Action> {
@@ -513,6 +538,17 @@ impl PredictionQuoter {
             .polymarket_mid
             .map(|p| (p - predict_mid).abs().round_dp(4));
 
+        let (yes_best_bid, yes_best_bid_qty) = yes_book
+            .best_bid()
+            .map(|(p, q)| (p.inner(), q.inner()))
+            .unwrap_or((Decimal::ZERO, Decimal::ZERO));
+        let (yes_best_ask, yes_best_ask_qty) = yes_book
+            .best_ask()
+            .map(|(p, q)| (p.inner(), q.inner()))
+            .unwrap_or((Decimal::ZERO, Decimal::ZERO));
+        let yes_spread = (yes_best_ask - yes_best_bid).max(Decimal::ZERO);
+        let no_ask_est = (Decimal::ONE - yes_best_bid).max(Decimal::ZERO);
+
         tracing::info!(
             target: "quoter",
             strategy        = %self.id,
@@ -521,6 +557,12 @@ impl PredictionQuoter {
             poly_divergence = ?poly_divergence,
             yes_fv_used     = %(fv.min(predict_mid)),
             no_fv_used      = %(Decimal::ONE - fv.max(predict_mid)),
+            yes_best_bid    = %yes_best_bid,
+            yes_best_bid_qty = %yes_best_bid_qty,
+            yes_best_ask    = %yes_best_ask,
+            yes_best_ask_qty = %yes_best_ask_qty,
+            yes_spread      = %yes_spread.round_dp(4),
+            no_ask_est      = %no_ask_est.round_dp(4),
             yes_bid         = ?pricing.yes_bid.map(|p| p.inner()),
             no_bid          = ?pricing.no_bid.map(|p| p.inner()),
             yes_qty    = %yes_qty,
@@ -530,6 +572,16 @@ impl PredictionQuoter {
             n_orders           = place.len(),
             yes_pos            = %self.yes_tokens,
             no_pos             = %self.no_tokens,
+            // Adverse selection health indicators:
+            // yes_pos_pct >70% + yes_fills_pct >70% = being adversely selected on YES
+            yes_pos_pct = %{
+                let total = self.yes_tokens + self.no_tokens;
+                if total.is_zero() { Decimal::ZERO }
+                else { (self.yes_tokens / total * Decimal::ONE_HUNDRED).round_dp(1) }
+            },
+            session_yes_fills  = self.session_yes_fills,
+            session_no_fills   = self.session_no_fills,
+            yes_adverse_total  = %self.session_yes_adverse_cents_total.round_dp(4),
             score_factor_yes   = %sf_yes.round_dp(4),
             score_factor_no    = %sf_no.round_dp(4),
             qualifies_yes,
@@ -750,37 +802,125 @@ impl Strategy for PredictionQuoter {
                 }
 
                 let reason = if touch_requote { "touch" } else { "drift" };
-                self.requote(mid, fv, pricing, reason)
+                self.requote(mid, fv, book, pricing, reason)
             }
 
             Event::Fill {
                 instrument, fill, ..
             } => {
+                let fill_price = fill.price.inner();
+                let fill_qty   = fill.quantity.inner();
+                let is_yes     = instrument == &self.yes_instrument;
+
                 // Track positions per outcome.
-                if instrument == &self.yes_instrument {
-                    self.yes_tokens += fill.quantity.inner();
+                if is_yes {
+                    self.yes_tokens           += fill_qty;
+                    self.session_yes_fills    += 1;
+                    self.session_yes_fill_qty += fill_qty;
+                    self.session_yes_notional += fill_price * fill_qty;
                 } else if instrument == &self.no_instrument {
-                    self.no_tokens += fill.quantity.inner();
+                    self.no_tokens           += fill_qty;
+                    self.session_no_fills    += 1;
+                    self.session_no_fill_qty += fill_qty;
+                    self.session_no_notional += fill_price * fill_qty;
                 }
 
-                self.fill_count += 1;
-                self.session_cost += fill.price.inner() * fill.quantity.inner();
+                self.fill_count   += 1;
+                self.session_cost += fill_price * fill_qty;
 
-                let mid = self.latest_mid.unwrap_or(fill.price.inner());
-                let open_value = self.yes_tokens * mid + self.no_tokens * (Decimal::ONE - mid);
-                let unrealized_pnl = open_value - self.session_cost + self.session_proceeds;
+                // ── Adverse selection accounting ──────────────────────────────
+                // How much did we overpay vs Polymarket fair value at fill time?
+                // Positive adverse_sel_cents = we paid above what Polymarket thinks
+                // (we are being filled by informed traders).
+                let adverse_sel_cents = self.polymarket_mid.map(|poly_fv| {
+                    if is_yes {
+                        fill_price - poly_fv           // paid above poly YES mid
+                    } else {
+                        fill_price - (Decimal::ONE - poly_fv)  // paid above poly NO mid
+                    }
+                });
+                if let Some(adv) = adverse_sel_cents {
+                    if is_yes {
+                        self.session_yes_adverse_cents_total += adv * fill_qty;
+                    } else {
+                        self.session_no_adverse_cents_total  += adv * fill_qty;
+                    }
+                }
+
+                // ── Mark-to-market ───────────────────────────────────────────
+                // Mark against poly FV if available (more reliable than predict mid).
+                // `session_pnl` = mark value of session fills - session cost.
+                // NOTE: does not include pre-existing position from prior sessions.
+                let mark_price = self.polymarket_mid.unwrap_or_else(||
+                    self.latest_mid.unwrap_or(fill_price)
+                );
+                let mid = self.latest_mid.unwrap_or(fill_price);
+                let open_value = self.yes_tokens * mark_price
+                    + self.no_tokens * (Decimal::ONE - mark_price);
+                let session_pnl = open_value - self.session_cost + self.session_proceeds;
+
+                // Imbalance: what fraction of total fill count is YES?
+                let yes_fill_pct = if self.fill_count > 0 {
+                    Decimal::from(self.session_yes_fills) * Decimal::ONE_HUNDRED
+                        / Decimal::from(self.fill_count)
+                } else {
+                    Decimal::ZERO
+                };
+
+                let yes_adv_per_share = if self.session_yes_fill_qty > Decimal::ZERO {
+                    self.session_yes_adverse_cents_total / self.session_yes_fill_qty
+                } else {
+                    Decimal::ZERO
+                };
+                let no_adv_per_share = if self.session_no_fill_qty > Decimal::ZERO {
+                    self.session_no_adverse_cents_total / self.session_no_fill_qty
+                } else {
+                    Decimal::ZERO
+                };
+
+                let cycle_side_placed = if is_yes {
+                    self.cycle_yes_placed
+                } else {
+                    self.cycle_no_placed
+                };
+                let cycle_bid = if is_yes {
+                    self.cycle_yes_bid
+                } else {
+                    self.cycle_no_bid
+                };
+                let fill_vs_cycle_bid = if cycle_side_placed {
+                    Some(fill_price - cycle_bid)
+                } else {
+                    None
+                };
+                let fill_age_ms = self.cycle_placed_at.map(|t| t.elapsed().as_millis() as u64);
 
                 tracing::info!(
                     target: "quoter",
-                    strategy = %self.id,
+                    strategy   = %self.id,
                     instrument = %instrument,
-                    side = ?fill.side,
-                    price = %fill.price.inner(),
-                    qty = %fill.quantity.inner(),
+                    order_id   = %fill.order_id,
+                    side       = ?fill.side,
+                    price      = %fill_price,
+                    qty        = %fill_qty,
+                    cycle_side_placed,
+                    cycle_bid = %cycle_bid,
+                    fill_vs_cycle_bid = ?fill_vs_cycle_bid.map(|v| v.round_dp(4)),
+                    fill_age_ms,
+                    // Position
                     yes_tokens = %self.yes_tokens,
                     no_tokens  = %self.no_tokens,
+                    yes_fill_pct = %yes_fill_pct.round_dp(1),  // >70% → yes adverse sel
+                    // P&L
+                    poly_fv_at_fill = ?self.polymarket_mid,
+                    adverse_sel_cents = ?adverse_sel_cents.map(|v| v.round_dp(4)),
                     session_cost = %self.session_cost.round_dp(4),
-                    unrealized_pnl = %unrealized_pnl.round_dp(4),
+                    session_pnl  = %session_pnl.round_dp(4),   // vs poly FV mark
+                    // Cumulative adverse selection cost this session
+                    yes_adverse_total = %self.session_yes_adverse_cents_total.round_dp(4),
+                    no_adverse_total  = %self.session_no_adverse_cents_total.round_dp(4),
+                    yes_adverse_per_share = %yes_adv_per_share.round_dp(4),
+                    no_adverse_per_share  = %no_adv_per_share.round_dp(4),
                     fill_count = self.fill_count,
                     pause_secs = self.params.fill_pause_secs,
                     "FILL",
@@ -875,7 +1015,9 @@ impl Strategy for PredictionQuoter {
         self.close_cycle("shutdown");
 
         let mid = self.latest_mid.unwrap_or(Decimal::ZERO);
-        let open_value = self.yes_tokens * mid + self.no_tokens * (Decimal::ONE - mid);
+        // Mark against poly FV if available (more reliable than predict mid).
+        let mark = self.polymarket_mid.unwrap_or(mid);
+        let open_value = self.yes_tokens * mark + self.no_tokens * (Decimal::ONE - mark);
         let unrealized_pnl = open_value - self.session_cost + self.session_proceeds;
         let runtime_secs = self
             .session_started_at
@@ -912,9 +1054,50 @@ impl Strategy for PredictionQuoter {
             strategy          = %self.id,
             yes_tokens        = %self.yes_tokens,
             no_tokens         = %self.no_tokens,
+            yes_no_ratio      = %{
+                let total = self.yes_tokens + self.no_tokens;
+                if total.is_zero() { Decimal::ZERO }
+                else { (self.yes_tokens / total * Decimal::ONE_HUNDRED).round_dp(1) }
+            },  // >70% = heavily yes-skewed = adverse selection signal
             fill_count        = self.fill_count,
+            session_yes_fills = self.session_yes_fills,
+            session_no_fills  = self.session_no_fills,
+            session_yes_fill_qty = %self.session_yes_fill_qty.round_dp(4),
+            session_no_fill_qty  = %self.session_no_fill_qty.round_dp(4),
+            session_yes_vwap = %{
+                if self.session_yes_fill_qty > Decimal::ZERO {
+                    (self.session_yes_notional / self.session_yes_fill_qty).round_dp(4)
+                } else {
+                    Decimal::ZERO
+                }
+            },
+            session_no_vwap = %{
+                if self.session_no_fill_qty > Decimal::ZERO {
+                    (self.session_no_notional / self.session_no_fill_qty).round_dp(4)
+                } else {
+                    Decimal::ZERO
+                }
+            },
             session_cost      = %self.session_cost.round_dp(4),
-            unrealized_pnl    = %unrealized_pnl.round_dp(4),
+            session_pnl_poly_mark = %unrealized_pnl.round_dp(4),
+            poly_mark_price   = ?self.polymarket_mid,
+            // Adverse selection: total USDT overpaid vs poly FV this session
+            yes_adverse_total_usdt = %self.session_yes_adverse_cents_total.round_dp(4),
+            no_adverse_total_usdt  = %self.session_no_adverse_cents_total.round_dp(4),
+            yes_adverse_per_share = %{
+                if self.session_yes_fill_qty > Decimal::ZERO {
+                    (self.session_yes_adverse_cents_total / self.session_yes_fill_qty).round_dp(4)
+                } else {
+                    Decimal::ZERO
+                }
+            },
+            no_adverse_per_share = %{
+                if self.session_no_fill_qty > Decimal::ZERO {
+                    (self.session_no_adverse_cents_total / self.session_no_fill_qty).round_dp(4)
+                } else {
+                    Decimal::ZERO
+                }
+            },
             runtime_secs,
             cycles            = self.cycles.len(),
             on_book_secs      = format!("{:.0}", total_on_book_secs),
