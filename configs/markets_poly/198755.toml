@@ -11,11 +11,11 @@ secret_key_env = "PREDICT_PRIVATE_KEY"
 testnet        = false
 
 [exchanges.params]
-market_id        = 142932
-yes_outcome_name = "$400"
-yes_token_id     = "17243469554685834536379491949337398091436808715198980486095553896878410201734"
-no_outcome_name  = "$800"
-no_token_id      = "73225943222283911930381170518610254875059844953849114200771123946856256402497"
+market_id        = 198755
+yes_outcome_name = "Yes"
+yes_token_id     = "63481722390895613496640908629235354970603526385290129998970417575885829714641"
+no_outcome_name  = "No"
+no_token_id      = "48578608326631641255340268634307291958856659617661641172767757968992332782842"
 is_neg_risk      = false
 is_yield_bearing = true
 fee_rate_bps     = 200
@@ -24,20 +24,22 @@ fee_rate_bps     = 200
 [[strategies]]
 name           = "predict_points_v1"
 strategy_type  = "prediction_quoter"
-instruments    = ["PredictFun.Binary.142932-$400", "PredictFun.Binary.142932-$800"]
+instruments    = ["PredictFun.Binary.198755-Yes", "PredictFun.Binary.198755-No"]
 
 [strategies.params]
-spread_cents         = "0.02"
-# join_cents         = "0.01"  # optional manual join depth from predict mid
-order_size_usdt      = "55"
+spread_cents         = "0.02"  # distance from poly FV per side — see PREDICT_QUOTING_DESIGN.md
+order_size_usdt      = "75"
 max_position_tokens  = "500.0"
 drift_cents          = "0.02"
+touch_trigger_cents  = "0.01"  # defensive requote when bid is within this distance of ask
+touch_retreat_cents  = "0.02"  # on touch trigger, requote to at least this distance from ask
 min_quote_hold_secs  = 10
 fill_pause_secs      = 15
+fv_stale_secs        = 90       # must be > 60 (WS recv-timeout); see PREDICT_QUOTING_DESIGN.md
 spread_threshold_v   = "0.06"
 min_shares_per_side  = "100"
 
 [telemetry]
 log_level      = "info"
-metrics_port   = 52932
+metrics_port   = 58755
 enable_tracing = false

@@ -33,7 +33,7 @@ order_size_usdt      = "180"
 max_position_tokens  = "500.0"
 drift_cents          = "0.02"
 min_quote_hold_secs  = 10
-fill_pause_secs      = 5
+fill_pause_secs      = 15
 spread_threshold_v   = "0.03"
 min_shares_per_side  = "200"
 

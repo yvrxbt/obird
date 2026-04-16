@@ -36,7 +36,7 @@ drift_cents          = "0.02"
 touch_trigger_cents  = "0.01"
 touch_retreat_cents  = "0.02"
 min_quote_hold_secs  = 10
-fill_pause_secs      = 5
+fill_pause_secs      = 15
 spread_threshold_v   = "0.06"
 min_shares_per_side  = "100"
 
