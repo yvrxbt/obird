@@ -3,6 +3,154 @@
 All notable iterations, experiments, and decisions are logged here.
 This file is designed to give LLMs context on what has been tried and why.
 
+## 2026-04-16 — Polymarket Hedge Execution Layer (Phase 2)
+
+**Branch:** `master`
+
+**What shipped:**
+
+### New crate: `crates/strategies/predict_hedger/`
+
+`PredictHedgeStrategy` — a second strategy that runs alongside `PredictionQuoter` in the same engine process. Its sole job is to hedge predict.fun fill exposure by placing opposite-side orders on Polymarket.
+
+**Core hedge logic:**
+- predict.fun is BUY-only (always buys outcome tokens)
+- When predict.fun fills YES → buy NO on Polymarket (YES + NO = $1, so both = flat delta)
+- When predict.fun fills NO → buy YES on Polymarket
+- Same quantity, opposite outcome token
+
+**Key implementation details:**
+
+- `MarketMapping` struct: wires `(predict_yes, predict_no, poly_yes_token, poly_no_token)` per market
+- `UnhedgedState` per (poly_instrument): accumulates qty + USDC notional of unhedged predict fills
+- Pricing: GTC limit at `best_ask` (taker fill, immediate execution)
+- Slippage guard: reference price = `1 - avg_predict_fill_price`. Skips if `poly_ask > reference + max_slippage_cents`
+- **Optimistic consume**: unhedged qty is consumed when `Action::PlaceOrder` is emitted (not on fill confirmation). On `Event::PlaceFailed`, qty is restored to `unhedged` for retry.
+- Urgency check on every `Event::Tick`: if `first_unhedged_ts` age > `max_unhedged_duration_secs`, triggers hedge regardless of min_notional
+- `HedgeParams` (all have defaults, no TOML required to get running):
+  - `hedge_min_notional` = 5 USDC — batches tiny fills before placing
+  - `max_unhedged_notional` = 100 USDC — (for future urgency-tier logic)
+  - `max_unhedged_duration_secs` = 60 — escalation timer
+  - `max_slippage_cents` = 0.05 — max acceptable price above reference
+  - `enabled` = true — kill-switch
+
+**Fill event routing**: predict.fun `Fill` events are published by `PredictFunMarketDataFeed` to the `MarketDataBus`. Since `PredictHedgeStrategy::subscriptions()` includes both predict instruments, these events are delivered via the existing `merged_md` stream — no new plumbing needed.
+
+---
+
+### New file: `crates/connectors/polymarket/src/execution.rs`
+
+`PolymarketExecutionClient` — implements `ExchangeConnector` for `Exchange::Polymarket`.
+
+**Auth model:**
+- REST auth: HMAC-SHA256 per request, using `POLY_API_KEY` / `POLY_SECRET` / `POLY_PASSPHRASE`
+- Order signing: EIP-712 per order, using `PREDICT_PRIVATE_KEY` (shared with predict.fun)
+- Uses pre-existing credentials via `Credentials::new(key_uuid, secret, passphrase)` — does NOT create new API keys
+- SDK: `polymarket-client-sdk = "0.4.4"` with `features = ["clob"]`
+
+**Order flow:**
+1. `limit_order()` builder → `.token_id(U256::from_str(&instrument.symbol))` → `.price()` → `.size()` → `.side(Side::Buy)` → `.order_type(OrderType::GTC)`
+2. `client.sign(&signer, signable_order)` — EIP-712 signed by `PrivateKeySigner`
+3. `client.post_order(signed_order)` → checks `resp.success`, tracks `resp.order_id` in `active_orders`
+
+**Key decisions:**
+- Token ID stored as `instrument.symbol` string (large decimal number like `"8501497..."`). Parsed to `U256` via `U256::from_str` (decimal-first, no `0x` prefix needed).
+- `PrivateKeySigner` stored directly in struct — avoids re-parsing the key on every sign call
+- `cancel_all`: cancels only our tracked orders (not account-wide), matching predict.fun pattern
+- `decimal_precision()` returns `Some(2)` — 0.01 tick is standard on Polymarket CLOB
+- `positions()` returns empty — position tracking done in strategy via fill events
+
+---
+
+### Modified: `crates/connectors/polymarket/src/lib.rs`
+
+Added `pub mod execution` alongside existing `client`, `market_data`, `normalize`.
+
+---
+
+### Modified: `crates/connectors/predict_fun/src/client.rs`
+
+Added `polymarket_no_token_id: Option<String>` to `PredictFunParams`.
+
+- Previously only YES token ID was stored (for FV subscription)
+- NO token ID is needed so the hedge strategy can: (a) subscribe to the NO book for pricing, (b) place buy orders on the NO token
+- Both fields optional — hedge is disabled if either is absent
+
+---
+
+### Modified: `crates/cli/src/live.rs` (run_predict)
+
+**New wiring in `run_predict`:**
+
+1. **NO token instrument** built from `polymarket_no_token_id` (same pattern as FV instrument)
+2. **Single WS feed** now subscribes to BOTH YES and NO tokens — `PolymarketMarketDataFeed::new(vec![(yes_token_id, yes_inst), (no_token_id, no_inst)])` — one connection handles both
+3. **Conditional hedge path**: if both `polymarket_yes_token_id` AND `polymarket_no_token_id` are set:
+   - Calls `PolymarketExecutionClient::from_env("POLY_API_KEY", "POLY_SECRET", "POLY_PASSPHRASE", secret_key_env)` — fails gracefully with a warning if env vars are absent
+   - Builds `PredictHedgeStrategy` with the market mapping
+   - Adds `Exchange::Polymarket → Box::new(poly_client)` to the connectors map
+   - Appends hedger to the strategies vec (both strategies share the same `EngineRunner`)
+4. If init fails: logs warning, continues with farming-only mode (no crash)
+
+**Required env vars**: none new. `PREDICT_PRIVATE_KEY` (already in `.env` for predict.fun) is sufficient.
+
+The SDK derives the Polymarket API key deterministically from the private key via `create_or_derive_api_key` — no separate `POLY_API_KEY` / `POLY_SECRET` / `POLY_PASSPHRASE` needed. Initially attempted to use pre-existing `POLY_*` creds but they returned 401 (likely stale/wrong address). Key derivation works and is the correct long-term approach.
+
+Verified working (`poly-check --live`): place + cancel on market 143028 NO token.
+
+---
+
+### Modified: `configs/markets_poly/143028.toml`
+
+Added:
+```toml
+polymarket_no_token_id  = "2527312495175492857904889758552137141356236738032676480522356889996545113869"
+```
+
+NO token ID derived via `GET gamma-api.polymarket.com/markets?clob_token_ids={yes_token_id}` — returns `clobTokenIds` array, index 0 = YES, index 1 = NO.
+
+Market 143028 poly tokens:
+- YES: `8501497159083948713316135768103773293754490207922884688769443031624417212426`
+- NO:  `2527312495175492857904889758552137141356236738032676480522356889996545113869`
+
+---
+
+### Modified: `crates/cli/src/predict_markets.rs`
+
+`render_market_toml` now accepts and writes `polymarket_no_token_id: Option<&str>` — future `--write-configs` runs will auto-populate both fields for all poly-linked markets.
+
+---
+
+**Operational notes:**
+- No new CLI flags — hedge auto-enables when both token IDs are present
+- `PREDICT_PRIVATE_KEY` only — no separate `POLY_API_KEY` / `POLY_SECRET` / `POLY_PASSPHRASE`; SDK derives key automatically
+- Prerequisite: USDC deposited on Polygon at `0xA27D22701Bf0f222467673F563e59aA0E38df847`
+- On shutdown: `cancel_all` fires for Polymarket tracked orders (same path as predict.fun)
+
+**First live run observations (2026-04-16):**
+
+1. **Poly FV timing gap**: initial book dump from Polymarket WS arrives before strategy subscribes to `MarketDataBus` (broadcast receivers don't see pre-subscription events). Strategy logs "Waiting for first Polymarket FV update before quoting" until the PONG re-publish fires (~10s). Fix: not needed — 10s startup lag is acceptable. Root cause documented here for awareness.
+
+2. **YES position above max**: Market 143028 had `yes_tokens=724.08` vs `max_position_tokens=500` at startup. Quoter correctly skips YES bids when YES ≥ max. Result: only NO bids placed. To resume YES quoting, either raise `max_position_tokens` to e.g. 800, or use `predict-liquidate` to sell down YES.
+
+3. **`poly-check --live` confirmed**: auth, books, order place+cancel all work end-to-end. Min order size on Polymarket CLOB is 5 shares (not 1).
+
+4. **Hedge is passive by design**: hedge strategy fires only on predict fills, not on every tick. This is correct — farming is the primary activity, hedging is reactive.
+
+5. **Slippage guard bug found and fixed**: Original slippage reference used `1 - predict_fill_price` (break-even check). When predict and Polymarket prices diverge (e.g. predict=0.67 vs poly=0.54), this always rejects. Fixed to use `poly_ask - poly_mid` (Polymarket half-spread check). Now the hedge fires regardless of venue divergence; the cost relative to predict fill price is logged as `HEDGE_COST_INFO` for auditing only. The `max_slippage_cents` parameter now means "max half-spread to cross on Polymarket" (not "max cost above break-even"). With Polymarket's tight 0.01 spreads this should never block a hedge.
+
+6. **min_notional silent skip**: First fill (9 shares, $4.18 notional) was silently skipped because it was below `hedge_min_notional=$5`. Now logs at DEBUG level so the batching is visible.
+
+**What's NOT done yet (Phase 3 / next session):**
+- Passive maker pricing (place at best_bid + tick, not best_ask)
+- Urgency price tiers (Tier A/B/C from architecture doc)
+- Polymarket user WS feed for real-time fill confirmation (currently optimistic)
+- Multi-market hedge support (currently one mapping per run_predict call)
+- Hedge ledger / structured audit log (HEDGE_SUMMARY etc.)
+- Kill-switch wired to config TOML (`[hedge] enabled = false`)
+- HedgeParams not yet loaded from config — defaults only
+
+---
+
 ## 2026-04-15 — Predict Ops Hardening, Liquidation CLI, Touch-Risk Requote
 
 **Commits:** `4b62a68`, `f44a8f8`, `049401c`, `3315ce0`, `eff1367`

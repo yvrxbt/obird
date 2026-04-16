@@ -1,7 +1,7 @@
 # Trading System Architecture
 
-> Last updated: 2026-04-15
-> Status: HL MM + predict.fun farming both live on mainnet.
+> Last updated: 2026-04-16
+> Status: HL MM + predict.fun farming + Polymarket hedge all live on mainnet.
 
 ---
 
@@ -86,17 +86,31 @@ ExchangeConnector (REST + WS per venue)
 - `ShutdownHandle` with `AtomicBool` — blocks new places, fires cancel on shutdown
 - Optimal deployment: **Tokyo (ap-northeast-1)**
 
-### Polymarket CLOB (`crates/connectors/polymarket`) ✅ Full
+### Polymarket CLOB (`crates/connectors/polymarket`) ✅ Full (market data + execution)
 
-**Purpose**: external fair-value signal for predict.fun quoting. NOT for execution.
+**Two purposes**: (1) external fair-value signal for predict.fun quoting, (2) execution venue for hedge orders.
 
-- `PolymarketMarketDataFeed` — single WS connection for all subscribed tokens
-  - Subscribes with `{"type": "market", "assets_ids": [...]}` — type must be **lowercase**
-  - Application-level PING/PONG: sends TEXT `"PING"` every 10s, handles TEXT `"PONG"`
-  - On PONG: re-publishes last known book state → strategy FV stays fresh on quiet markets
-  - Reconnects with exponential backoff (1s → 2s → 4s → max 30s)
-  - Timestamps are milliseconds (not seconds)
-- `PolymarketGammaClient` — REST client for condition ID → token ID resolution
+**`market_data.rs` — `PolymarketMarketDataFeed`**
+- Single WS connection handles all subscribed tokens (YES + NO for each market)
+- Subscribes with `{"type": "market", "assets_ids": [...]}` — type must be **lowercase**
+- Application-level PING/PONG: sends TEXT `"PING"` every 10s, handles TEXT `"PONG"`
+- On PONG: re-publishes last known book state → strategy FV stays fresh on quiet markets
+- Reconnects with exponential backoff (1s → 2s → 4s → max 30s)
+- Timestamps are milliseconds (not seconds)
+
+**`client.rs` — `PolymarketGammaClient`**
+- REST client for condition ID → token ID resolution
+- `GET /markets?clob_token_ids={token}` also works to get both tokens given either one
+
+**`execution.rs` — `PolymarketExecutionClient`** (added 2026-04-16)
+- Implements `ExchangeConnector` for `Exchange::Polymarket`
+- Auth: pre-existing `POLY_API_KEY`/`POLY_SECRET`/`POLY_PASSPHRASE` via HMAC per request
+- Order signing: EIP-712 per order using `PREDICT_PRIVATE_KEY` (shared with predict.fun)
+- SDK: `polymarket-client-sdk = "0.4.4"` with `features = ["clob"]`
+- `place_order`: GTC limit order → SDK builder → `client.sign(&signer, order)` → `client.post_order(signed)`
+- `cancel_all`: cancels only tracked active order IDs (not account-wide)
+- Token IDs stored as `instrument.symbol` (large decimal string, `U256::from_str` parses decimal)
+- `decimal_precision()` returns `Some(2)` (0.01 tick standard on Polymarket CLOB)
 
 **Critical bugs fixed (2026-04-15)**:
 1. PING was WS protocol-level frames — Polymarket uses TEXT "PING"/"PONG"
@@ -163,6 +177,50 @@ Key parameters:
 
 See `PREDICT_QUOTING_DESIGN.md` for full decision tree.
 
+### PredictHedgeStrategy (`crates/strategies/predict_hedger`) ✅ Live (added 2026-04-16)
+
+**Core design**: parallel risk-reduction strategy running alongside `PredictionQuoter` in the same engine instance. Reacts to predict.fun fills by placing opposite-side orders on Polymarket.
+
+**Hedge identity** (binary market invariant):
+```
+long YES on predict + long NO on Polymarket = $1 certain at resolution (delta neutral)
+long NO on predict  + long YES on Polymarket = $1 certain at resolution (delta neutral)
+```
+
+**hedge_map** (built at construction from `MarketMapping`):
+```
+predict_yes_instrument → poly_no_instrument   (YES fill → buy poly NO)
+predict_no_instrument  → poly_yes_instrument  (NO fill  → buy poly YES)
+```
+
+**Trigger flow**:
+1. `Event::Fill` from `Exchange::PredictFun` → `on_predict_fill` → accumulate `UnhedgedState`
+2. `try_hedge(poly_inst)` checks: notional threshold, poly BBO available, slippage guard, min qty
+3. On approval: optimistically `consume_all()`, emit `Action::PlaceOrder(poly_inst, Buy, best_ask, qty, GTC)`
+4. `Event::PlaceFailed` from `Exchange::Polymarket` → `restore(qty)` to retry next tick
+5. `Event::Tick` → `check_urgency()` → bypasses min_notional if `first_unhedged_ts` age > `max_unhedged_duration_secs`
+
+**Optimistic position tracking**: unhedged qty is consumed when the `Action::PlaceOrder` is emitted (not on confirmation). Safe because GTC at best_ask = taker order = immediate fill. Failure path is `PlaceFailed` → restore.
+
+**Key design invariant**: both `PredictionQuoter` and `PredictHedgeStrategy` are separate `StrategyInstance` entries — they are entirely independent and do not share state. The engine delivers fills and book updates to both via the `MarketDataBus` `select_all` merge stream.
+
+**Subscriptions** (returned by `subscriptions()`):
+- All predict YES instruments (to receive fills)
+- All predict NO instruments (to receive fills)
+- All poly YES token instruments (for book updates → BBO cache)
+- All poly NO token instruments (for book updates → BBO cache + hedge target)
+
+**HedgeParams defaults** (TOML loading not yet wired — Phase 3):
+```
+hedge_min_notional      = 5 USDC    (batch small fills)
+max_unhedged_notional   = 100 USDC  (future: urgency tier threshold)
+max_unhedged_duration   = 60 sec    (urgency escalation timer)
+max_slippage_cents      = 0.05      (max poly ask above reference price)
+enabled                 = true      (kill-switch)
+```
+
+See `POLY_HEDGING_ARCHITECTURE.md` for full design rationale, token ID lookup procedure, and Phase 3 roadmap.
+
 ---
 
 ## 7. Fair Value Architecture
@@ -183,8 +241,8 @@ is the only current FV consumer. Revisit when pair_trader needs cross-exchange F
 ## 8. Config and CLI
 
 ```
-trading-cli live             --config <market.toml>     # single market (HL or predict.fun)
-trading-cli predict-markets  [--all] [--write-configs]  # discover + generate configs
+trading-cli live             --config <market.toml>     # single market (HL or predict.fun + hedge)
+trading-cli predict-markets  [--all] [--write-configs]  # discover + generate configs (writes both poly token IDs)
 trading-cli predict-check                               # smoke-test auth + pricing
 trading-cli predict-approve  --all                      # on-chain ERC-1155 + USDT approvals (one-time)
 trading-cli predict-liquidate --dry-run --config ...    # passive SELL unwind preview
@@ -194,6 +252,24 @@ trading-cli record           (stub)
 
 Config format: `configs/markets_poly/<market_id>.toml` (auto-generated by `predict-markets`).
 Secrets loaded from env (set via `source .env` before running).
+
+**Env vars required for hedge** (in addition to existing predict.fun vars):
+```
+POLY_API_KEY=<uuid>       # Polymarket CLOB API key
+POLY_SECRET=<string>      # HMAC signing secret
+POLY_PASSPHRASE=<string>  # API key passphrase
+```
+`PREDICT_PRIVATE_KEY` doubles as the Polymarket EIP-712 signing key.
+
+**live.rs dispatch (`prediction_quoter` type)**:
+1. Builds `PredictFunClient` + `PredictionQuoter` (always)
+2. If `polymarket_yes_token_id` set: spins up `PolymarketMarketDataFeed` (YES token for FV)
+3. If BOTH `polymarket_yes_token_id` AND `polymarket_no_token_id` set:
+   - Adds NO token to same WS feed subscription
+   - Builds `PolymarketExecutionClient` (graceful fallback on auth failure)
+   - Builds `PredictHedgeStrategy` as second `StrategyInstance`
+   - Registers `Exchange::Polymarket` connector in engine
+4. Engine runs both strategies concurrently against shared `MarketDataBus`
 
 ---
 

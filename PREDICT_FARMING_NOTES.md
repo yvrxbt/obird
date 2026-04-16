@@ -244,7 +244,7 @@ pricing::calculate(book, poly_fv, predict_mid, spread_cents, spread_threshold_v,
 ### 15. farm.py improvements
 **File:** `scripts/farm.py`
 
-- Default config dir changed from `configs/markets/` to `configs/markets_poly/`
+- Canonical config dir is `configs/markets_poly/` (legacy `configs/markets/` removed to avoid split state)
 - `--dir` argument for flexibility
 - `--dry-run` flag to preview without starting
 - Crash-loop protection: 3 restarts in 120s → 5-minute backoff

@@ -11,36 +11,33 @@ secret_key_env = "PREDICT_PRIVATE_KEY"
 testnet        = false
 
 [exchanges.params]
-market_id        = 143028
+market_id        = 189660
 yes_outcome_name = "Yes"
-yes_token_id     = "88632176792205708175552212115019750624663026701991425037794038217700051469304"
+yes_token_id     = "79418568721156673980449669862873945690917705735450010331525507300426562205635"
 no_outcome_name  = "No"
-no_token_id      = "100760647293882693638751365626138407657360538060017390664563598193145574423450"
+no_token_id      = "17152329457399727443319948550778366110691306495080604819493558270194089852174"
 is_neg_risk      = true
 is_yield_bearing = true
 fee_rate_bps     = 200
-polymarket_yes_token_id = "8501497159083948713316135768103773293754490207922884688769443031624417212426"
-polymarket_no_token_id  = "2527312495175492857904889758552137141356236738032676480522356889996545113869"
+# polymarket_yes_token_id = ""  # unavailable from Gamma lookup for this market
 
 [[strategies]]
 name           = "predict_points_v1"
 strategy_type  = "prediction_quoter"
-instruments    = ["PredictFun.Binary.143028-Yes", "PredictFun.Binary.143028-No"]
+instruments    = ["PredictFun.Binary.189660-Yes", "PredictFun.Binary.189660-No"]
 
 [strategies.params]
 spread_cents         = "0.02"
 # join_cents         = "0.01"  # optional manual join depth from predict mid
-order_size_usdt      = "65"
+order_size_usdt      = "165"
 max_position_tokens  = "500.0"
 drift_cents          = "0.02"
-touch_trigger_cents  = "0.01"
-touch_retreat_cents  = "0.02"
 min_quote_hold_secs  = 10
 fill_pause_secs      = 5
-spread_threshold_v   = "0.06"
-min_shares_per_side  = "100"
+spread_threshold_v   = "0.03"
+min_shares_per_side  = "200"
 
 [telemetry]
 log_level      = "info"
-metrics_port   = 53028
+metrics_port   = 49660
 enable_tracing = false

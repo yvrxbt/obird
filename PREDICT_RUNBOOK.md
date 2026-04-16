@@ -1,16 +1,17 @@
 # predict.fun Points Farming — Runbook
 
-> Operations guide for the `prediction_quoter` strategy.
-> Companion to `RUNBOOK.md` (HL MM). Last updated: 2026-04-15.
+> Operations guide for the `prediction_quoter` + `predict_hedger` strategies.
+> Companion to `RUNBOOK.md` (HL MM). Last updated: 2026-04-16.
 >
 > Before modifying any pricing or strategy logic, read (in order):
 > 1. `PREDICT_QUOTING_DESIGN.md` — decision tree, FV logic, all tuning knobs
 > 2. `PREDICT_FARMING_NOTES.md` — full build history and why things are designed as they are
-> 3. `POLY_HEDGING_ARCHITECTURE.md` — planned hedge layer and risk model direction
+> 3. `POLY_HEDGING_ARCHITECTURE.md` — hedge layer design, implementation, and Phase 3 roadmap
 >
 > **Current design summary**: conservative dual-FV pricing. YES anchored to `min(poly,predict)`,
 > NO anchored to `1-max(poly,predict)`. Sides outside the scoring window are skipped.
 > Polymarket FV is required — no fallback to predict.fun mid.
+> Hedge strategy runs alongside quoter: predict fills → Polymarket opposite-side orders.
 
 ---
 
@@ -41,6 +42,12 @@ Ctrl+C for graceful shutdown — cancels all resting orders before exit.
 # Set all 4 on-chain USDT + ERC-1155 approvals (covers all contract variants)
 source .env && cargo run --bin trading-cli -- predict-approve --all --config configs/predict_quoter.toml
 ```
+
+**Polymarket hedge prerequisite** (NOT yet confirmed done — check before running):
+- Deposit USDC on Polygon at address `0xA27D22701Bf0f222467673F563e59aA0E38df847` (derived from `PREDICT_PRIVATE_KEY`)
+- The SDK signs orders with this key — the on-chain maker address must hold USDC
+- Without USDC balance, orders will be accepted by the CLOB (200 OK) but won't actually settle on-chain
+- Auth uses `PREDICT_PRIVATE_KEY` only — no separate `POLY_API_KEY` / `POLY_SECRET` / `POLY_PASSPHRASE` needed
 
 Contracts approved on `0xA27D22701Bf0f222467673F563e59aA0E38df847`:
 - Standard CTFExchange (`0x8BC0...`) — ERC-1155 + USDT ✓
@@ -205,7 +212,7 @@ Output example (when a boost is active):
     [0] Yes → 12345...abcd
     [1] No  → 98765...efgh
 
-  ── configs/markets/12345.toml ──────────────────────────────
+  ── configs/markets_poly/12345.toml ─────────────────────────
   [exchanges.params]
   market_id        = 12345
   yes_outcome_name = "Yes"
@@ -277,11 +284,114 @@ INFO quoter: CYCLE_END ended_by=fill on_book_secs=14.2
 
 **Healthy behavior**: REQUOTE once per 10-30s, fills occasionally, ROUNDTRIP < 500ms.
 
+**Startup timing note**: The Polymarket WS initial book dump often arrives before the strategy task subscribes. You'll see `Waiting for first Polymarket FV update before quoting` on the first few predict.fun ticks. The PONG heartbeat (every 10s) re-publishes the last known book state — quoting starts within ~10s. This is normal.
+
 **Red flags:**
 - `REQUOTE poly_fv=None` → FV gate broken (should never happen; check quoter.rs)
 - `ROUNDTRIP` every <200ms → drift_cents or min_quote_hold_secs too low
 - `Polymarket FV stale` repeating → genuine feed outage (check Polymarket status page)
 - `PLACE_FAILED` → USDT balance, API key, or order validation issue
+- `ROUNDTRIP n_orders=0` at startup → normal (init CancelAll with no resting orders), not an error
+
+---
+
+## Hedge Operations (PredictHedgeStrategy)
+
+### How the hedge activates
+
+The hedge strategy co-runs with `PredictionQuoter` whenever both `polymarket_yes_token_id` AND `polymarket_no_token_id` are set in `[exchanges.params]` AND the three `POLY_*` env vars are exported. No new CLI flags needed.
+
+Startup log sequence (healthy):
+```
+INFO  PolymarketExecutionClient ready address=0xA27D...  ← signing key loaded
+INFO  Polymarket CLOB WS feed spawned yes_inst=... no_inst=...  ← WS subscribes both tokens
+INFO  PredictHedgeStrategy initialized id=predict_points_v1_hedge markets=2 enabled=true
+```
+
+### Hedge log sequence (normal fill → hedge cycle)
+
+```
+# Predict fill triggers hedge accumulation
+INFO quoter: HEDGE_TRIGGER predict_inst=PredictFun.Binary.143028-Yes
+             poly_inst=Polymarket.Binary.2527312... fill_qty=50 fill_price=0.42
+
+# Hedge plan computed (notional=50*0.58=29 USDC > min 5)
+INFO quoter: HEDGE_PLAN poly_inst=Polymarket.Binary.2527312...
+             hedge_qty=50.00 hedge_price=0.58 hedge_notional=29.00 urgent=false
+
+# Order lands on Polymarket CLOB
+INFO quoter: POLY_PLACE instrument=Polymarket.Binary.2527312...
+             order_id=0xabc... side=Buy price=0.58 qty=50.00 status=matched
+
+# Fill confirmed (Polymarket WS fill or PlaceFailed — see below)
+INFO quoter: HEDGE_FILL confirmed poly_inst=... filled_qty=50 fill_price=0.58
+```
+
+### Hedge skip reasons and actions
+
+| Log | Cause | Action |
+|-----|-------|--------|
+| `HEDGE_SKIP no poly book` | NO token WS feed not delivering updates | Check `Polymarket CLOB WS feed spawned` at startup; verify NO token ID is correct |
+| `HEDGE_SKIP Polymarket spread too wide` | poly bid-ask spread wider than `max_slippage_cents` (unusual — Polymarket is normally tight) | Check poly market liquidity; `max_slippage_cents=0.05` allows 5 ticks of spread, should never trigger normally |
+| `HEDGE_SKIP poly ask above 0.99` | Market near resolution or illiquid | Nothing; skip is correct |
+| `HEDGE_SKIP qty < 1 share` | Too small to place | Normal batching; next fill will accumulate |
+| `HEDGE_BATCH not enough notional yet` | Below `hedge_min_notional` (5 USDC) | Normal; waiting for more fills |
+| `HEDGE_REJECT placement failed` | `POLY_PLACE` returned error | Check `POLY_*` env vars, USDC balance, API key validity |
+| `HEDGE_URGENT time threshold breached` | >60s of unhedged position | Normal escalation; hedge should fire even if below min_notional |
+
+### Disabling hedge at runtime
+
+No runtime kill-switch is wired yet (Phase 3). To disable:
+1. Remove `polymarket_no_token_id` from the market config
+2. Restart the bot
+
+Or: unset `POLY_API_KEY` from env — the `PolymarketExecutionClient::from_env` will fail gracefully and hedge will be disabled with a warning log.
+
+### Checking hedge effectiveness
+
+```bash
+# All hedge actions in a session
+grep -E "HEDGE_TRIGGER|HEDGE_PLAN|HEDGE_FILL|HEDGE_REJECT|HEDGE_SKIP" logs/farm/143028.log
+
+# Hedge fill rate (plan vs reject)
+grep HEDGE_PLAN logs/farm/143028.log | wc -l
+grep HEDGE_REJECT logs/farm/143028.log | wc -l
+
+# What slippage we're seeing
+grep HEDGE_PLAN logs/farm/143028.log | grep -o "hedge_price=[0-9.]*"
+
+# Poly orders placed
+grep POLY_PLACE logs/farm/143028.log
+```
+
+### Token IDs for market 143028
+
+```
+predict YES: 88632176792205708175552212115019750624663026701991425037794038217700051469304
+predict NO:  100760647293882693638751365626138407657360538060017390664563598193145574423450
+poly YES:    8501497159083948713316135768103773293754490207922884688769443031624417212426
+poly NO:     2527312495175492857904889758552137141356236738032676480522356889996545113869
+```
+
+Hedge mapping for this market:
+```
+predict YES fill → buy poly NO  (token: 2527312...)
+predict NO fill  → buy poly YES (token: 8501497...)
+```
+
+### Adding hedge to a new market
+
+1. Run `predict-markets --write-configs` — now writes both `polymarket_yes_token_id` AND `polymarket_no_token_id` if the Gamma API resolves the market
+2. Ensure `POLY_API_KEY`, `POLY_SECRET`, `POLY_PASSPHRASE` are in `.env`
+3. Start the bot — hedge auto-enables
+
+If `predict-markets` can't resolve the poly token IDs:
+```bash
+# Manual: get both token IDs from any known token ID
+curl "https://gamma-api.polymarket.com/markets?clob_token_ids=<yes_or_no_token_id>" \
+  | python3 -c "import sys,json; m=json.load(sys.stdin)[0]; print(json.loads(m['clobTokenIds']))"
+# Returns: ['<yes_token_id>', '<no_token_id>']
+```
 
 ---
 
@@ -305,6 +415,10 @@ Based on community research (X/Twitter, Grok research, April 2026):
 
 6. **Fills are free (0 maker fee)** — accumulating tokens is the only risk.
    With max_position_tokens=500, exposure is capped at ~$180/outcome.
+   If a position builds above max, that side stops quoting automatically.
+   Use `predict-liquidate` to sell down, or raise `max_position_tokens` in config.
+
+7. **Position state at startup**: The quoter reads existing YES/NO token balances from `positions()` on startup. If you restarted after heavy fills, your position will already be partially maxed. Market 143028 example: YES=724 tokens at start of 2026-04-16 session — only NO bids placed.
 
 ---
 
@@ -340,17 +454,43 @@ Pre-rank markets by expected score to tell you which boosted market to prioritiz
 Currently requires 3 separate bot instances.
 **Fix needed**: Multi-market support (see above) + NegRiskAdapter position conversion logic.
 
-### Enhancement: Polymarket integration
-**Goal**: Same strategy on Polymarket for USDC rewards ($5M/month pool, April 2026).
-**Architecture**: Copy `connector_predict_fun` pattern. Polymarket uses:
-- CLOB API (off-chain order matching, similar to predict.fun)
-- CTF contracts on Polygon
-- Same EIP-712 order signing
-- REST API: `https://clob.polymarket.com`
-- WS feed for orderbook
+### Hedge Phase 3 items
+
+**Passive maker pricing** (not yet built):
+- Currently: buy at `best_ask` (taker, immediate fill, guaranteed execution)
+- Phase 3: buy at `best_bid + 1 tick` (passive maker, lower cost, may not fill)
+- Tier selection: based on `unhedged_notional / max_unhedged_notional` ratio
+- When Tier A (passive) fails to fill within timeout, escalate to Tier B/C
+
+**HedgeParams TOML wiring** (not yet built):
+- Params are currently hardcoded defaults in `HedgeParams::default()`
+- Phase 3: add `[hedge]` section to market TOML and deserialize via `strategy_cfg.params`
+- Fields: `enabled`, `hedge_min_notional`, `max_unhedged_notional`, `max_unhedged_duration_secs`, `max_slippage_cents`
+
+**Polymarket user WS feed** (not yet built):
+- Currently: optimistic position tracking (assume fill on placement)
+- Phase 3: subscribe to `wss://ws-subscriptions-clob.polymarket.com/ws/user` with API credentials
+- Receives real-time `order` and `trade` events for authenticated user
+- Would enable real-time hedge confirmation instead of optimistic accounting
+
+**Hedge ledger** (not yet built):
+- Append-only JSONL at `logs/data/hedges-YYYY-MM-DD.jsonl`
+- One record per hedge attempt: trigger reason, predict fill price, poly ask price, slippage, outcome
+- Daily `HEDGE_SUMMARY` log with: predict exposure, hedged fraction, avg slippage, net MTM
+
+**Kill-switch** (not yet wired to TOML):
+- `HedgeParams.enabled = false` exists in code
+- Phase 3: wire to `[hedge] enabled = false` in TOML; read at startup like other params
+- Workaround: remove `polymarket_no_token_id` from config and restart
+
+### Enhancement: Polymarket quoting (separate from hedging)
+**Goal**: Same farming strategy on Polymarket for USDC rewards ($5M/month pool, April 2026).
+**Architecture**: Polymarket execution connector is now built (as hedge layer). Adapting it for full quoting requires:
+- `PolymarketQuoter` strategy (copy `PredictionQuoter` pattern, wire Polymarket book as FV)
+- Position tracking via user WS feed
+- Polymarket rewards API to verify scoring eligibility
 **Reward formula**: Same quadratic scoring as predict.fun (predict.fun copied Polymarket).
-**Min incentive size** and **max incentive spread** are per-market params from the CLOB API.
-Priority: after multi-market is working on predict.fun.
+Priority: after multi-market + hedge ledger are working.
 
 ---
 
@@ -379,6 +519,19 @@ Priority: after multi-market is working on predict.fun.
 - If BBO spread < 2 ticks (e.g. 1-cent spread on a precision=2 market), the cycle is skipped with a log message
 
 ### Engine wiring (`crates/cli/src/live.rs`)
-- Dispatches on `strategy_type` field in config
-- `prediction_quoter` → `PredictFunClient + PredictFunMarketDataFeed + PredictionQuoter`
-- `hl_spread_quoter` → existing HL path (unchanged)
+
+Dispatches on `strategy_type` field in config.
+
+`prediction_quoter` path (updated 2026-04-16):
+1. Always: `PredictFunClient + PredictFunMarketDataFeed + PredictionQuoter`
+2. If `polymarket_yes_token_id` set: adds YES token to `PolymarketMarketDataFeed`
+3. If BOTH poly token IDs set:
+   - Adds NO token to same WS connection (single feed handles both)
+   - Builds `PolymarketExecutionClient::from_env("POLY_API_KEY", "POLY_SECRET", "POLY_PASSPHRASE", secret_key_env)`
+   - Builds `PredictHedgeStrategy` with `MarketMapping` for this market
+   - Registers `Exchange::Polymarket` in `connectors` HashMap
+   - Appends hedger to `strategies` Vec → both run in same `EngineRunner`
+   - If `from_env` fails (missing env var): logs warning, continues farming-only
+4. `EngineRunner::new(connectors, strategies, md_bus)` — both strategies share the bus
+
+`hl_spread_quoter` → existing HL path (unchanged)

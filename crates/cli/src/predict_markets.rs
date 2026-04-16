@@ -7,7 +7,7 @@
 //!   source .env && cargo run --bin trading-cli -- predict-markets
 //!   source .env && cargo run --bin trading-cli -- predict-markets --all
 //!   source .env && cargo run --bin trading-cli -- predict-markets --write-configs
-//!   source .env && cargo run --bin trading-cli -- predict-markets --write-configs --output-dir configs/markets
+//!   source .env && cargo run --bin trading-cli -- predict-markets --write-configs --output-dir configs/markets_poly
 
 use chrono::{DateTime, Utc};
 use rust_decimal::Decimal;
@@ -256,7 +256,7 @@ async fn print_market(
 
     println!();
     println!(
-        "  ── configs/markets/{}.toml ─────────────────────────────────",
+        "  ── configs/markets_poly/{}.toml ────────────────────────────",
         m.id
     );
     println!("  [exchanges.params]");
@@ -318,6 +318,7 @@ async fn print_market(
             spread_threshold_cfg,
             min_shares_cfg,
             poly_yes_token,
+            poly_no_token,
             metrics_port,
         );
         let path = format!("{output_dir}/{}.toml", m.id);
@@ -350,6 +351,7 @@ fn render_market_toml(
     spread_threshold_v: Decimal,
     min_shares_per_side: Decimal,
     polymarket_yes_token_id: Option<&str>,
+    polymarket_no_token_id: Option<&str>,
     metrics_port: u16,
 ) -> String {
     let mut out = String::new();
@@ -379,6 +381,9 @@ fn render_market_toml(
         out.push_str(
             "# polymarket_yes_token_id = \"\"  # unavailable from Gamma lookup for this market\n",
         );
+    }
+    if let Some(tok) = polymarket_no_token_id {
+        out.push_str(&format!("polymarket_no_token_id  = {:?}\n", tok));
     }
     out.push('\n');
 
