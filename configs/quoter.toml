@@ -21,12 +21,15 @@ instruments = ["Hyperliquid.Perpetual.ETH"]
 [strategies.params]
 # Quote two levels on each side. Total 4 resting orders.
 # ETH perp szDecimals=4, min size=0.0001. Using 0.01 to start.
-level_bps        = [5, 10, 100]       # each level's half-spread in bps
+level_bps        = [50, 100]       # each level's half-spread in bps
 order_size       = "0.05"        # size per level per side
 
-# Pull all quotes if mid drifts more than this many bps from last quoted mid
-drift_bps        = 3
-drift_pause_secs = 3             # seconds to wait before requoting after drift
+# Pull all quotes if mid drifts more than this many bps from last quoted mid.
+# With level_bps=[50,100], a 3 bps mid move barely affects order quality — the
+# orders are still 47-97 bps from mid. Use 15 bps so we only cancel when the market
+# has actually moved enough to matter. This cuts request rate ~5× vs drift_bps=3.
+drift_bps        = 15
+drift_pause_secs = 5             # seconds to wait before requoting after drift
 
 # After a fill on any level, pause this many seconds before requoting
 fill_pause_secs  = 10

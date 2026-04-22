@@ -1,10 +1,10 @@
 //! Simulated market data feed for backtesting.
 //! Replays recorded market data from newline-delimited JSON files.
 
-use trading_core::Event;
 use std::path::{Path, PathBuf};
-use tokio::io::{AsyncBufReadExt, BufReader};
 use tokio::fs::File;
+use tokio::io::{AsyncBufReadExt, BufReader};
+use trading_core::Event;
 
 /// Replays recorded market data from a directory of NDJSON files.
 pub struct SimMarketDataFeed {

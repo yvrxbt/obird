@@ -1,0 +1,595 @@
+{
+  "nodes": [
+    {
+      "id": "pair_trader_params_PairTraderParams",
+      "label": "PairTraderParams",
+      "file_type": "code",
+      "source_file": "crates/strategies/pair_trader/src/params.rs",
+      "source_location": "line 5",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "pair_trader_spread_model_SpreadModel",
+      "label": "SpreadModel (Rolling Z-Score)",
+      "file_type": "code",
+      "source_file": "crates/strategies/pair_trader/src/spread_model.rs",
+      "source_location": "line 4",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "pair_trader_trader_PairTrader",
+      "label": "PairTrader Strategy",
+      "file_type": "code",
+      "source_file": "crates/strategies/pair_trader/src/trader.rs",
+      "source_location": "line 9",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "prediction_quoter_params_QuoterParams",
+      "label": "QuoterParams",
+      "file_type": "code",
+      "source_file": "crates/strategies/prediction_quoter/src/params.rs",
+      "source_location": "line 7",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "prediction_quoter_quoter_PredictionQuoter",
+      "label": "PredictionQuoter Strategy",
+      "file_type": "code",
+      "source_file": "crates/strategies/prediction_quoter/src/quoter.rs",
+      "source_location": "line 8",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "fair_value_service_main_FairValueServiceMain",
+      "label": "Fair Value Service Entry Point",
+      "file_type": "code",
+      "source_file": "crates/fair_value_service/src/main.rs",
+      "source_location": "line 7",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "fair_value_service_publisher_FairValuePublisher",
+      "label": "FairValuePublisher (UDS Broadcaster)",
+      "file_type": "code",
+      "source_file": "crates/fair_value_service/src/publisher.rs",
+      "source_location": "line 30",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "fair_value_service_publisher_FairValueMessage",
+      "label": "FairValueMessage (Wire Format)",
+      "file_type": "code",
+      "source_file": "crates/fair_value_service/src/publisher.rs",
+      "source_location": "line 17",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "fair_value_service_data_source_PriceAggregator",
+      "label": "PriceAggregator (Multi-Exchange Feature Extractor)",
+      "file_type": "code",
+      "source_file": "crates/fair_value_service/src/data_source.rs",
+      "source_location": "line 11",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "fair_value_service_model_FairValueModel",
+      "label": "FairValueModel (Probability Estimator)",
+      "file_type": "code",
+      "source_file": "crates/fair_value_service/src/model.rs",
+      "source_location": "line 6",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "telemetry_trade_log_TradeLogger",
+      "label": "TradeLogger (JSONL Fill Logger)",
+      "file_type": "code",
+      "source_file": "crates/telemetry/src/trade_log.rs",
+      "source_location": "line 9",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "telemetry_audit_AuditLogger",
+      "label": "AuditLogger (Decision Rationale Trail)",
+      "file_type": "code",
+      "source_file": "crates/telemetry/src/audit.rs",
+      "source_location": "line 28",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "telemetry_audit_AuditEntry",
+      "label": "AuditEntry (Structured Decision Record)",
+      "file_type": "code",
+      "source_file": "crates/telemetry/src/audit.rs",
+      "source_location": "line 20",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "telemetry_metrics_TradingMetrics",
+      "label": "TradingMetrics (Prometheus Metrics Schema)",
+      "file_type": "code",
+      "source_file": "crates/telemetry/src/metrics.rs",
+      "source_location": "line 1",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "telemetry_tracing_setup_init_tracing",
+      "label": "init_tracing (Structured Log Setup)",
+      "file_type": "code",
+      "source_file": "crates/telemetry/src/tracing_setup.rs",
+      "source_location": "line 8",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "backtest_sim_market_data_SimMarketDataFeed",
+      "label": "SimMarketDataFeed (NDJSON Event Replayer)",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/sim_market_data.rs",
+      "source_location": "line 12",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "backtest_recorder_MarketDataRecorder",
+      "label": "MarketDataRecorder (Broadcast-to-JSONL Writer)",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/recorder.rs",
+      "source_location": "line 16",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "backtest_report_BacktestReport",
+      "label": "BacktestReport (PnL/Sharpe/Drawdown Report)",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/report.rs",
+      "source_location": "line 7",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "backtest_matching_engine_MatchingEngine",
+      "label": "MatchingEngine (Simulated Order Matcher)",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/matching_engine.rs",
+      "source_location": "line 34",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "backtest_matching_engine_FillModel",
+      "label": "FillModel (Optimistic vs TradeThrough)",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/matching_engine.rs",
+      "source_location": "line 17",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "backtest_harness_BacktestHarness",
+      "label": "BacktestHarness (Strategy Replay Driver)",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/harness.rs",
+      "source_location": "line 15",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "trading_core_traits_Strategy",
+      "label": "Strategy Trait",
+      "file_type": "code",
+      "source_file": "crates/strategies/pair_trader/src/trader.rs",
+      "source_location": "line 3",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "trading_core_Event_FairValueUpdate",
+      "label": "Event::FairValueUpdate",
+      "file_type": "code",
+      "source_file": "crates/strategies/prediction_quoter/src/quoter.rs",
+      "source_location": "line 36",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    }
+  ],
+  "edges": [
+    {
+      "source": "pair_trader_trader_PairTrader",
+      "target": "pair_trader_params_PairTraderParams",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/strategies/pair_trader/src/trader.rs",
+      "source_location": "line 6",
+      "weight": 1.0
+    },
+    {
+      "source": "pair_trader_trader_PairTrader",
+      "target": "pair_trader_spread_model_SpreadModel",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/strategies/pair_trader/src/trader.rs",
+      "source_location": "line 22",
+      "weight": 1.0
+    },
+    {
+      "source": "pair_trader_trader_PairTrader",
+      "target": "trading_core_traits_Strategy",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/strategies/pair_trader/src/trader.rs",
+      "source_location": "line 28",
+      "weight": 1.0
+    },
+    {
+      "source": "pair_trader_spread_model_SpreadModel",
+      "target": "pair_trader_params_PairTraderParams",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/strategies/pair_trader/src/trader.rs",
+      "source_location": "line 22",
+      "weight": 0.9
+    },
+    {
+      "source": "prediction_quoter_quoter_PredictionQuoter",
+      "target": "prediction_quoter_params_QuoterParams",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/strategies/prediction_quoter/src/quoter.rs",
+      "source_location": "line 11",
+      "weight": 1.0
+    },
+    {
+      "source": "prediction_quoter_quoter_PredictionQuoter",
+      "target": "trading_core_traits_Strategy",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/strategies/prediction_quoter/src/quoter.rs",
+      "source_location": "line 29",
+      "weight": 1.0
+    },
+    {
+      "source": "prediction_quoter_quoter_PredictionQuoter",
+      "target": "trading_core_Event_FairValueUpdate",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/strategies/prediction_quoter/src/quoter.rs",
+      "source_location": "line 36",
+      "weight": 1.0
+    },
+    {
+      "source": "fair_value_service_publisher_FairValueMessage",
+      "target": "trading_core_Event_FairValueUpdate",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.88,
+      "source_file": "crates/fair_value_service/src/publisher.rs",
+      "source_location": "line 17",
+      "weight": 0.88
+    },
+    {
+      "source": "fair_value_service_publisher_FairValuePublisher",
+      "target": "fair_value_service_publisher_FairValueMessage",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/fair_value_service/src/publisher.rs",
+      "source_location": "line 44",
+      "weight": 1.0
+    },
+    {
+      "source": "fair_value_service_main_FairValueServiceMain",
+      "target": "fair_value_service_publisher_FairValuePublisher",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "crates/fair_value_service/src/main.rs",
+      "source_location": "line 14",
+      "weight": 0.9
+    },
+    {
+      "source": "fair_value_service_main_FairValueServiceMain",
+      "target": "fair_value_service_model_FairValueModel",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "crates/fair_value_service/src/main.rs",
+      "source_location": "line 16",
+      "weight": 0.9
+    },
+    {
+      "source": "fair_value_service_main_FairValueServiceMain",
+      "target": "fair_value_service_data_source_PriceAggregator",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "crates/fair_value_service/src/main.rs",
+      "source_location": "line 15",
+      "weight": 0.9
+    },
+    {
+      "source": "fair_value_service_data_source_PriceAggregator",
+      "target": "fair_value_service_model_FairValueModel",
+      "relation": "calls",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "crates/fair_value_service/src/data_source.rs",
+      "source_location": "line 33",
+      "weight": 0.85
+    },
+    {
+      "source": "fair_value_service_model_FairValueModel",
+      "target": "fair_value_service_publisher_FairValueMessage",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "crates/fair_value_service/src/model.rs",
+      "source_location": "line 14",
+      "weight": 0.85
+    },
+    {
+      "source": "telemetry_audit_AuditLogger",
+      "target": "telemetry_audit_AuditEntry",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/telemetry/src/audit.rs",
+      "source_location": "line 37",
+      "weight": 1.0
+    },
+    {
+      "source": "telemetry_audit_AuditEntry",
+      "target": "pair_trader_trader_PairTrader",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "crates/telemetry/src/audit.rs",
+      "source_location": "line 1",
+      "weight": 0.75
+    },
+    {
+      "source": "telemetry_trade_log_TradeLogger",
+      "target": "telemetry_audit_AuditLogger",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.78,
+      "source_file": "crates/telemetry/src/lib.rs",
+      "source_location": "line 1",
+      "weight": 0.78
+    },
+    {
+      "source": "backtest_harness_BacktestHarness",
+      "target": "backtest_sim_market_data_SimMarketDataFeed",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/backtest/src/harness.rs",
+      "source_location": "line 36",
+      "weight": 1.0
+    },
+    {
+      "source": "backtest_harness_BacktestHarness",
+      "target": "backtest_report_BacktestReport",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/backtest/src/harness.rs",
+      "source_location": "line 80",
+      "weight": 1.0
+    },
+    {
+      "source": "backtest_harness_BacktestHarness",
+      "target": "trading_core_traits_Strategy",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/backtest/src/harness.rs",
+      "source_location": "line 9",
+      "weight": 1.0
+    },
+    {
+      "source": "backtest_harness_BacktestHarness",
+      "target": "backtest_matching_engine_MatchingEngine",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/backtest/src/harness.rs",
+      "source_location": "line 79",
+      "weight": 1.0
+    },
+    {
+      "source": "backtest_matching_engine_MatchingEngine",
+      "target": "backtest_matching_engine_FillModel",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/backtest/src/matching_engine.rs",
+      "source_location": "line 38",
+      "weight": 1.0
+    },
+    {
+      "source": "backtest_report_BacktestReport",
+      "target": "backtest_matching_engine_MatchingEngine",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.88,
+      "source_file": "crates/backtest/src/report.rs",
+      "source_location": "line 17",
+      "weight": 0.88
+    },
+    {
+      "source": "backtest_recorder_MarketDataRecorder",
+      "target": "backtest_sim_market_data_SimMarketDataFeed",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "crates/backtest/src/recorder.rs",
+      "source_location": "line 1",
+      "weight": 0.9
+    },
+    {
+      "source": "pair_trader_spread_model_SpreadModel",
+      "target": "fair_value_service_model_FairValueModel",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.65,
+      "source_file": "crates/strategies/pair_trader/src/spread_model.rs",
+      "source_location": "line 1",
+      "weight": 0.65
+    },
+    {
+      "source": "prediction_quoter_quoter_PredictionQuoter",
+      "target": "fair_value_service_publisher_FairValueMessage",
+      "relation": "shares_data_with",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "crates/strategies/prediction_quoter/src/quoter.rs",
+      "source_location": "line 36",
+      "weight": 0.85
+    },
+    {
+      "source": "telemetry_tracing_setup_init_tracing",
+      "target": "telemetry_metrics_TradingMetrics",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.7,
+      "source_file": "crates/telemetry/src/lib.rs",
+      "source_location": "line 1",
+      "weight": 0.7
+    },
+    {
+      "source": "pair_trader_trader_PairTrader",
+      "target": "prediction_quoter_quoter_PredictionQuoter",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.82,
+      "source_file": "crates/strategies/pair_trader/src/trader.rs",
+      "source_location": "line 28",
+      "weight": 0.82
+    },
+    {
+      "source": "telemetry_audit_AuditEntry",
+      "target": "fair_value_service_publisher_FairValueMessage",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.63,
+      "source_file": "crates/telemetry/src/audit.rs",
+      "source_location": "line 20",
+      "weight": 0.63
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "fair_value_pipeline",
+      "label": "Fair Value Computation Pipeline",
+      "nodes": [
+        "fair_value_service_data_source_PriceAggregator",
+        "fair_value_service_model_FairValueModel",
+        "fair_value_service_publisher_FairValuePublisher",
+        "prediction_quoter_quoter_PredictionQuoter"
+      ],
+      "relation": "participate_in",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "crates/fair_value_service/src/main.rs"
+    },
+    {
+      "id": "backtest_replay_loop",
+      "label": "Backtest Replay Loop",
+      "nodes": [
+        "backtest_harness_BacktestHarness",
+        "backtest_sim_market_data_SimMarketDataFeed",
+        "backtest_matching_engine_MatchingEngine",
+        "backtest_report_BacktestReport"
+      ],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.95,
+      "source_file": "crates/backtest/src/harness.rs"
+    },
+    {
+      "id": "telemetry_observability_stack",
+      "label": "Telemetry and Observability Stack",
+      "nodes": [
+        "telemetry_trade_log_TradeLogger",
+        "telemetry_audit_AuditLogger",
+        "telemetry_metrics_TradingMetrics",
+        "telemetry_tracing_setup_init_tracing"
+      ],
+      "relation": "form",
+      "confidence": "INFERRED",
+      "confidence_score": 0.88,
+      "source_file": "crates/telemetry/src/lib.rs"
+    }
+  ],
+  "input_tokens": 0,
+  "output_tokens": 0
+}

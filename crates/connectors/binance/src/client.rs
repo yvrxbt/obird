@@ -16,7 +16,6 @@ use hmac::{Hmac, Mac};
 use sha2::Sha256;
 use tokio::sync::mpsc;
 use trading_core::{
-    Price, Quantity,
     error::ConnectorError,
     traits::ExchangeConnector,
     types::{
@@ -24,9 +23,12 @@ use trading_core::{
         order::{OpenOrder, OrderId, OrderRequest, OrderSide, OrderUpdate, TimeInForce},
         position::Position,
     },
+    Price, Quantity,
 };
 
-use crate::normalize::{self, BatchOrderResult, OpenOrderResponse, PlaceOrderResponse, PositionRiskResponse};
+use crate::normalize::{
+    self, BatchOrderResult, OpenOrderResponse, PlaceOrderResponse, PositionRiskResponse,
+};
 
 type HmacSha256 = Hmac<Sha256>;
 
@@ -57,12 +59,10 @@ impl BinanceClient {
         symbol: &str,
         testnet: bool,
     ) -> Result<Self, ConnectorError> {
-        let api_key = std::env::var(api_key_env).map_err(|_| {
-            ConnectorError::AuthFailed(format!("missing env var: {api_key_env}"))
-        })?;
-        let secret = std::env::var(secret_env).map_err(|_| {
-            ConnectorError::AuthFailed(format!("missing env var: {secret_env}"))
-        })?;
+        let api_key = std::env::var(api_key_env)
+            .map_err(|_| ConnectorError::AuthFailed(format!("missing env var: {api_key_env}")))?;
+        let secret = std::env::var(secret_env)
+            .map_err(|_| ConnectorError::AuthFailed(format!("missing env var: {secret_env}")))?;
 
         let http = reqwest::Client::builder()
             .build()
@@ -86,10 +86,18 @@ impl BinanceClient {
         })
     }
 
-    pub fn instrument(&self) -> InstrumentId { self.instrument.clone() }
-    pub fn api_key(&self) -> &str { &self.api_key }
-    pub fn symbol(&self) -> &str { &self.symbol }
-    pub fn testnet(&self) -> bool { self.base_url == TESTNET_REST }
+    pub fn instrument(&self) -> InstrumentId {
+        self.instrument.clone()
+    }
+    pub fn api_key(&self) -> &str {
+        &self.api_key
+    }
+    pub fn symbol(&self) -> &str {
+        &self.symbol
+    }
+    pub fn testnet(&self) -> bool {
+        self.base_url == TESTNET_REST
+    }
 
     // ── Signing ───────────────────────────────────────────────────────────────
 
@@ -123,9 +131,12 @@ impl BinanceClient {
         let sig = self.sign(&query);
         let url = format!("{}/{}?{}&signature={}", self.base_url, path, query, sig);
 
-        let resp = self.http.get(&url)
+        let resp = self
+            .http
+            .get(&url)
             .header("X-MBX-APIKEY", &self.api_key)
-            .send().await
+            .send()
+            .await
             .context("GET request failed")?
             .error_for_status()
             .context("GET returned error status")?;
@@ -144,11 +155,14 @@ impl BinanceClient {
         let full_body = format!("{body_ts}&signature={sig}");
         let url = format!("{}/{}", self.base_url, path);
 
-        let resp = self.http.post(&url)
+        let resp = self
+            .http
+            .post(&url)
             .header("X-MBX-APIKEY", &self.api_key)
             .header("Content-Type", "application/x-www-form-urlencoded")
             .body(full_body)
-            .send().await
+            .send()
+            .await
             .context("POST request failed")?
             .error_for_status()
             .context("POST returned error status")?;
@@ -166,9 +180,12 @@ impl BinanceClient {
         let sig = self.sign(&query);
         let url = format!("{}/{}?{}&signature={}", self.base_url, path, query, sig);
 
-        let resp = self.http.delete(&url)
+        let resp = self
+            .http
+            .delete(&url)
             .header("X-MBX-APIKEY", &self.api_key)
-            .send().await
+            .send()
+            .await
             .context("DELETE request failed")?
             .error_for_status()
             .context("DELETE returned error status")?;
@@ -179,7 +196,10 @@ impl BinanceClient {
     // ── Order helpers ─────────────────────────────────────────────────────────
 
     fn side_str(side: OrderSide) -> &'static str {
-        match side { OrderSide::Buy => "BUY", OrderSide::Sell => "SELL" }
+        match side {
+            OrderSide::Buy => "BUY",
+            OrderSide::Sell => "SELL",
+        }
     }
 
     /// GTX = Good Till Crossing (post-only, rejected if it would take liquidity).
@@ -207,12 +227,16 @@ impl BinanceClient {
 
 #[async_trait]
 impl ExchangeConnector for BinanceClient {
-    fn exchange(&self) -> Exchange { Exchange::Binance }
+    fn exchange(&self) -> Exchange {
+        Exchange::Binance
+    }
 
     async fn place_order(&self, req: &OrderRequest) -> Result<OrderId, ConnectorError> {
         let body = self.build_order_params(req);
 
-        let resp: PlaceOrderResponse = self.post_signed("fapi/v1/order", &body).await
+        let resp: PlaceOrderResponse = self
+            .post_signed("fapi/v1/order", &body)
+            .await
             .map_err(|e| ConnectorError::Other(e))?;
 
         tracing::info!(
@@ -249,34 +273,45 @@ impl ExchangeConnector for BinanceClient {
         }
 
         // Serialize orders as JSON array for the batchOrders param.
-        let orders_json: Vec<serde_json::Value> = reqs.iter().map(|req| {
-            serde_json::json!({
-                "symbol": self.symbol,
-                "side": Self::side_str(req.side),
-                "type": "LIMIT",
-                "timeInForce": Self::tif_str(req.tif),
-                "quantity": req.quantity.inner().to_string(),
-                "price": req.price.inner().to_string(),
+        let orders_json: Vec<serde_json::Value> = reqs
+            .iter()
+            .map(|req| {
+                serde_json::json!({
+                    "symbol": self.symbol,
+                    "side": Self::side_str(req.side),
+                    "type": "LIMIT",
+                    "timeInForce": Self::tif_str(req.tif),
+                    "quantity": req.quantity.inner().to_string(),
+                    "price": req.price.inner().to_string(),
+                })
             })
-        }).collect();
+            .collect();
 
         let batch_str = serde_json::to_string(&orders_json).unwrap_or_default();
         // URL-encode the JSON array for the form body
         let encoded = urlencoding_simple(&batch_str);
         let body = format!("batchOrders={encoded}");
 
-        let results: Vec<BatchOrderResult> = match self.post_signed("fapi/v1/batchOrders", &body).await {
-            Ok(r) => r,
-            Err(e) => {
-                let err_str = e.to_string();
-                return reqs.iter().map(|_| {
-                    Err(ConnectorError::Other(anyhow::anyhow!("batch place: {err_str}")))
-                }).collect();
-            }
-        };
+        let results: Vec<BatchOrderResult> =
+            match self.post_signed("fapi/v1/batchOrders", &body).await {
+                Ok(r) => r,
+                Err(e) => {
+                    let err_str = e.to_string();
+                    return reqs
+                        .iter()
+                        .map(|_| {
+                            Err(ConnectorError::Other(anyhow::anyhow!(
+                                "batch place: {err_str}"
+                            )))
+                        })
+                        .collect();
+                }
+            };
 
-        results.into_iter().zip(reqs.iter()).map(|(result, req)| {
-            match result {
+        results
+            .into_iter()
+            .zip(reqs.iter())
+            .map(|(result, req)| match result {
                 BatchOrderResult::Ok(resp) => {
                     tracing::info!(
                         order_id = resp.order_id,
@@ -294,8 +329,8 @@ impl ExchangeConnector for BinanceClient {
                     tracing::error!(code, %msg, "BINANCE_BATCH_ORDER_REJECTED");
                     Err(ConnectorError::OrderRejected(format!("code={code}: {msg}")))
                 }
-            }
-        }).collect()
+            })
+            .collect()
     }
 
     async fn cancel_order(
@@ -305,7 +340,9 @@ impl ExchangeConnector for BinanceClient {
     ) -> Result<(), ConnectorError> {
         let params = format!("symbol={}&orderId={}", self.symbol, order_id);
         // Returns cancelled order details — we ignore them
-        let _: serde_json::Value = self.delete_signed("fapi/v1/order", &params).await
+        let _: serde_json::Value = self
+            .delete_signed("fapi/v1/order", &params)
+            .await
             .map_err(|e| ConnectorError::Other(e))?;
 
         tracing::info!(order_id, "BINANCE_CANCEL");
@@ -315,7 +352,9 @@ impl ExchangeConnector for BinanceClient {
     /// Cancel all open orders for this symbol in one call.
     async fn cancel_all(&self, _instrument: &InstrumentId) -> Result<(), ConnectorError> {
         let params = format!("symbol={}", self.symbol);
-        let _: serde_json::Value = self.delete_signed("fapi/v1/allOpenOrders", &params).await
+        let _: serde_json::Value = self
+            .delete_signed("fapi/v1/allOpenOrders", &params)
+            .await
             .map_err(|e| ConnectorError::Other(e))?;
 
         tracing::info!(symbol = %self.symbol, "BINANCE_CANCEL_ALL");
@@ -340,7 +379,9 @@ impl ExchangeConnector for BinanceClient {
             new_qty.inner(),
             new_price.inner(),
         );
-        let resp: PlaceOrderResponse = self.post_signed("fapi/v1/order", &body).await
+        let resp: PlaceOrderResponse = self
+            .post_signed("fapi/v1/order", &body)
+            .await
             .map_err(|e| ConnectorError::Other(e))?;
 
         tracing::info!(old_order_id = %order_id, new_order_id = resp.order_id, "BINANCE_MODIFY");
@@ -349,20 +390,29 @@ impl ExchangeConnector for BinanceClient {
 
     async fn positions(&self) -> Result<Vec<Position>, ConnectorError> {
         let params = format!("symbol={}", self.symbol);
-        let resp: Vec<PositionRiskResponse> = self.get_signed("fapi/v2/positionRisk", &params).await
+        let resp: Vec<PositionRiskResponse> = self
+            .get_signed("fapi/v2/positionRisk", &params)
+            .await
             .map_err(|e| ConnectorError::Other(e))?;
 
-        Ok(resp.iter()
+        Ok(resp
+            .iter()
             .filter_map(|p| normalize::position_from_risk(&self.instrument, p))
             .collect())
     }
 
-    async fn open_orders(&self, _instrument: &InstrumentId) -> Result<Vec<OpenOrder>, ConnectorError> {
+    async fn open_orders(
+        &self,
+        _instrument: &InstrumentId,
+    ) -> Result<Vec<OpenOrder>, ConnectorError> {
         let params = format!("symbol={}", self.symbol);
-        let resp: Vec<OpenOrderResponse> = self.get_signed("fapi/v1/openOrders", &params).await
+        let resp: Vec<OpenOrderResponse> = self
+            .get_signed("fapi/v1/openOrders", &params)
+            .await
             .map_err(|e| ConnectorError::Other(e))?;
 
-        Ok(resp.iter()
+        Ok(resp
+            .iter()
             .map(|o| normalize::open_order_from_rest(&self.instrument, o))
             .collect())
     }
@@ -380,8 +430,16 @@ fn urlencoding_simple(s: &str) -> String {
     let mut out = String::with_capacity(s.len() * 2);
     for byte in s.bytes() {
         match byte {
-            b'A'..=b'Z' | b'a'..=b'z' | b'0'..=b'9'
-            | b'-' | b'_' | b'.' | b'~' | b',' | b':' | b'"' => {
+            b'A'..=b'Z'
+            | b'a'..=b'z'
+            | b'0'..=b'9'
+            | b'-'
+            | b'_'
+            | b'.'
+            | b'~'
+            | b','
+            | b':'
+            | b'"' => {
                 out.push(byte as char);
             }
             other => {

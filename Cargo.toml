@@ -10,6 +10,7 @@ members = [
     "crates/strategies/prediction_quoter",
     "crates/strategies/pair_trader",
     "crates/strategies/hl_spread_quoter",
+    "crates/strategies/predict_hedger",
     "crates/engine",
     "crates/fair_value_service",
     "crates/backtest",
@@ -31,3 +32,4 @@ tracing-subscriber = { version = "0.3", features = ["json", "env-filter"] }
 chrono = { version = "0.4", features = ["serde"] }
 toml = "0.8"
 uuid = { version = "1", features = ["v4", "serde"] }
+predict-sdk = { path = "/home/ubuntu/.openclaw/workspace/predict-sdk" }

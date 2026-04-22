@@ -327,15 +327,21 @@ impl PredictionQuoter {
 
     /// Return the raw Polymarket mid, or `None` to pause quoting.
     ///
-    /// Returns `Some(predict_mid)` when Polymarket is not configured (no-poly mode).
-    /// Returns `None` when poly is configured but the feed is unavailable or stale
-    /// — quoting pauses until the feed recovers.
+    /// Invariant #5: no quoting without fresh Polymarket FV — never fall back to
+    /// predict.fun mid. If Polymarket is unconfigured, the feed is waiting for its
+    /// first update, or the last update is stale, this returns `None` and the
+    /// caller pauses/cancels quotes.
     ///
     /// The per-side min/max FV logic that keeps bids within the scoring window lives
     /// in `pricing::calculate`, not here. This function is purely a freshness gate.
-    fn poly_fv(&self, predict_mid: Decimal) -> Option<Decimal> {
+    fn poly_fv(&self, _predict_mid: Decimal) -> Option<Decimal> {
         if self.polymarket_fv_instrument.is_none() {
-            return Some(predict_mid);
+            tracing::warn!(
+                target: "quoter",
+                strategy = %self.id,
+                "Polymarket FV not configured — refusing to quote (invariant #5)",
+            );
+            return None;
         }
 
         match (self.polymarket_mid, self.polymarket_mid_ts) {
@@ -673,7 +679,7 @@ impl Strategy for PredictionQuoter {
                     if let Some(m) = book.mid_price() {
                         self.polymarket_mid = Some(m.inner());
                         self.polymarket_mid_ts = Some(Instant::now());
-                        tracing::debug!(
+                        tracing::info!(
                             target: "quoter",
                             strategy = %self.id,
                             poly_mid = %m.inner(),
@@ -967,10 +973,14 @@ impl Strategy for PredictionQuoter {
     async fn initialize(&mut self, state: &StrategyState) -> Vec<Action> {
         self.session_started_at = Some(Instant::now());
 
-        // Set price precision from the exchange connector (via StrategyState).
-        // Default to 3 (0.001 ticks) if not provided — safer for unknown markets.
-        if let Some(prec) = state.decimal_precision {
-            self.decimal_precision = prec;
+        // Set price precision for our YES quoting instrument from StrategyState.
+        // We look up by the YES instrument (not NO or the Polymarket FV leg) so
+        // a multi-connector engine can never hand us a different venue's tick
+        // size. Default to 3 (0.001 ticks) if not present — safer for unknown
+        // markets, and the predict.fun connector always registers a value so
+        // the default is only hit in tests / backtest.
+        if let Some(prec) = state.decimal_precisions.get(&self.yes_instrument) {
+            self.decimal_precision = *prec;
         }
 
         // Load any existing positions (in case of restart).

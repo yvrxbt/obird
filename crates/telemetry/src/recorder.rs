@@ -17,11 +17,11 @@
 //! Fills are flushed immediately; BBO is flushed every BBO_FLUSH_INTERVAL records
 //! and on shutdown.
 
-use tokio::io::{AsyncWriteExt, BufWriter};
+use chrono::Utc;
 use tokio::fs::OpenOptions;
+use tokio::io::{AsyncWriteExt, BufWriter};
 use tokio::sync::broadcast;
 use trading_core::Event;
-use chrono::Utc;
 
 /// Flush the BBO buffer after this many records to bound data loss on crash.
 const BBO_FLUSH_INTERVAL: usize = 500;
@@ -39,14 +39,22 @@ impl DataRecorder {
         let date = Utc::now().format("%Y-%m-%d");
         std::fs::create_dir_all("logs/data")?;
 
-        let bbo_path   = format!("logs/data/bbo-{date}.jsonl");
+        let bbo_path = format!("logs/data/bbo-{date}.jsonl");
         let fills_path = format!("logs/data/fills-{date}.jsonl");
 
         let mut bbo_writer = BufWriter::new(
-            OpenOptions::new().create(true).append(true).open(&bbo_path).await?
+            OpenOptions::new()
+                .create(true)
+                .append(true)
+                .open(&bbo_path)
+                .await?,
         );
         let mut fills_writer = BufWriter::new(
-            OpenOptions::new().create(true).append(true).open(&fills_path).await?
+            OpenOptions::new()
+                .create(true)
+                .append(true)
+                .open(&fills_path)
+                .await?,
         );
 
         tracing::info!(bbo = %bbo_path, fills = %fills_path, "DataRecorder started");
@@ -55,9 +63,18 @@ impl DataRecorder {
 
         loop {
             match self.rx.recv().await {
-                Ok(Event::BookUpdate { instrument, book, exchange_ts_ns, local_ts_ns }) => {
-                    let Some((bid_px, bid_sz)) = book.best_bid() else { continue };
-                    let Some((ask_px, ask_sz)) = book.best_ask() else { continue };
+                Ok(Event::BookUpdate {
+                    instrument,
+                    book,
+                    exchange_ts_ns,
+                    local_ts_ns,
+                }) => {
+                    let Some((bid_px, bid_sz)) = book.best_bid() else {
+                        continue;
+                    };
+                    let Some((ask_px, ask_sz)) = book.best_ask() else {
+                        continue;
+                    };
 
                     let line = serde_json::json!({
                         "exchange_ts_ns": exchange_ts_ns,

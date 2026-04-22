@@ -5,9 +5,21 @@ edition = "2021"
 
 [dependencies]
 trading-core = { path = "../../core" }
-tokio = { workspace = true }
-serde = { workspace = true }
-serde_json = { workspace = true }
-anyhow = { workspace = true }
-async-trait = { workspace = true }
-tracing = { workspace = true }
+tokio          = { workspace = true }
+serde          = { workspace = true }
+serde_json     = { workspace = true }
+anyhow         = { workspace = true }
+async-trait    = { workspace = true }
+tracing        = { workspace = true }
+rust_decimal   = { workspace = true }
+
+# HTTP client for Gamma API lookups
+reqwest = { version = "0.12", features = ["json"] }
+
+# WebSocket client for CLOB market data feed
+tokio-tungstenite = { version = "0.24", features = ["native-tls"] }
+futures-util = "0.3"
+polymarket-client-sdk = { version = "0.4.4", features = ["clob"] }
+alloy = { version = "1.6", features = ["signer-local"], default-features = false }
+uuid = { version = "1", features = ["v4"] }
+rust_decimal_macros = { workspace = true }

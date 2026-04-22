@@ -1,7 +1,7 @@
 //! Backtest report generation — PnL, Sharpe, drawdown analysis.
 
-use trading_core::types::position::Position;
 use rust_decimal::Decimal;
+use trading_core::types::position::Position;
 
 #[derive(Debug)]
 pub struct BacktestReport {

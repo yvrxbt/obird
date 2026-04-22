@@ -8,7 +8,10 @@ pub struct SpreadModel {
 
 impl SpreadModel {
     pub fn new(lookback: usize) -> Self {
-        Self { observations: Vec::with_capacity(lookback), lookback }
+        Self {
+            observations: Vec::with_capacity(lookback),
+            lookback,
+        }
     }
 
     pub fn update(&mut self, spread: f64) {
@@ -19,13 +22,20 @@ impl SpreadModel {
     }
 
     pub fn zscore(&self) -> Option<f64> {
-        if self.observations.len() < 2 { return None; }
+        if self.observations.len() < 2 {
+            return None;
+        }
         let mean = self.observations.iter().sum::<f64>() / self.observations.len() as f64;
-        let variance = self.observations.iter()
+        let variance = self
+            .observations
+            .iter()
             .map(|x| (x - mean).powi(2))
-            .sum::<f64>() / (self.observations.len() - 1) as f64;
+            .sum::<f64>()
+            / (self.observations.len() - 1) as f64;
         let std = variance.sqrt();
-        if std < 1e-10 { return None; }
+        if std < 1e-10 {
+            return None;
+        }
         let latest = *self.observations.last()?;
         Some((latest - mean) / std)
     }

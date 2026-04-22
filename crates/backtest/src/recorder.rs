@@ -4,10 +4,10 @@
 //! events as newline-delimited JSON. If the recorder lags behind,
 //! it logs a warning and skips — acceptable for recording.
 
-use trading_core::Event;
-use tokio::sync::broadcast;
-use tokio::io::AsyncWriteExt;
 use std::path::{Path, PathBuf};
+use tokio::io::AsyncWriteExt;
+use tokio::sync::broadcast;
+use trading_core::Event;
 
 pub struct MarketDataRecorder {
     output_dir: PathBuf,
@@ -50,7 +50,11 @@ impl MarketDataRecorder {
                     event_count += 1;
                     if event_count % 10_000 == 0 {
                         file.flush().await?;
-                        tracing::debug!(events = event_count, lags = lag_count, "Recording progress");
+                        tracing::debug!(
+                            events = event_count,
+                            lags = lag_count,
+                            "Recording progress"
+                        );
                     }
                 }
                 Err(broadcast::error::RecvError::Lagged(n)) => {

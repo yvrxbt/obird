@@ -7,10 +7,17 @@ use serde::{Deserialize, Serialize};
 pub type OrderId = String;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
-pub enum OrderSide { Buy, Sell }
+pub enum OrderSide {
+    Buy,
+    Sell,
+}
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
-pub enum TimeInForce { Gtc, Ioc, PostOnly }
+pub enum TimeInForce {
+    Gtc,
+    Ioc,
+    PostOnly,
+}
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct OrderRequest {

@@ -12,5 +12,5 @@ pub mod client;
 pub mod market_data;
 pub mod normalize;
 
-pub use client::{HyperliquidClient, ResolvedMarket, ShutdownHandle, resolve_symbol};
+pub use client::{resolve_symbol, HyperliquidClient, ResolvedMarket, ShutdownHandle};
 pub use market_data::{AssetInfo, HlMarketDataFeed};

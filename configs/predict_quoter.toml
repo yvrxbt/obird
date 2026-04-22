@@ -1,0 +1,100 @@
+# predict.fun Points-Farming Quoter — mainnet config
+#
+# One connector covers the whole market (YES + NO outcomes).
+# Both quotes are placed as BUY orders: BUY YES at P, BUY NO at 1-P.
+#
+# Secrets: PREDICT_API_KEY and PREDICT_PRIVATE_KEY in .env (never here).
+# Token IDs: GET /v1/markets → outcomes[].onChainId
+# Fee rate:  GET /v1/markets → feeRateBps
+
+[engine]
+tick_interval_ms = 200
+
+[[exchanges]]
+name           = "predict_fun"
+api_key_env    = "PREDICT_API_KEY"
+secret_key_env = "PREDICT_PRIVATE_KEY"
+testnet        = false
+
+[exchanges.params]
+# Market: "Will Bitcoin hit $60k or $80k first?" (id=21177)
+# Chosen for highest orderbook depth (22k) and tightest spread (0.36/0.37) among open markets.
+market_id        = 21177
+yes_outcome_name = "$60k"
+yes_token_id     = "54985943733898839799521127253641919685801703511880833326334755710420304390436"
+no_outcome_name  = "$80k"
+no_token_id      = "51822232599503307314730441672959065592850700331549578202278980845781802088534"
+is_neg_risk      = false
+is_yield_bearing = true
+fee_rate_bps     = 200                        # from market.feeRateBps
+
+[[strategies]]
+name           = "predict_points_v1"
+strategy_type  = "prediction_quoter"
+# Both YES and NO instruments must be listed so the engine subscribes to both.
+instruments    = ["PredictFun.Binary.21177-$60k", "PredictFun.Binary.21177-$80k"]
+
+[strategies.params]
+# ── Spread / quote placement ─────────────────────────────────────────────────
+# Points scoring is quadratic: S = ((v - spread) / v)^2 × size.
+# With spreadThreshold (v) = 0.06 for market 21177:
+#   spread=0.01 → score factor = ((0.06-0.01)/0.06)^2 = 0.694 (69% of max)
+#   spread=0.02 → score factor = ((0.06-0.02)/0.06)^2 = 0.444 (44% of max)
+#   spread=0.03 → score factor = ((0.06-0.03)/0.06)^2 = 0.250 (25% of max)
+#
+# Binary market constraint: no_bid = 1 - yes_bid, so we can't post yes_bid <
+# BBO_bid without crossing the NO ask. On a tight market (BBO spread < spread_cents)
+# the quote clamps to best_bid + join_cents. spread_cents only bites when the
+# BBO spread ≥ spread_cents. Set to 0.02 — good score factor, stays well within
+# the ±6¢ max spread for this market.
+spread_cents     = "0.02"
+
+# join_cents: fallback depth when spread_cents causes a clamp.
+# Constraint: BBO spread must be ≥ 2 × join_cents or the cycle is skipped.
+join_cents       = "0.01"
+
+# ── Sizing ───────────────────────────────────────────────────────────────────
+# CRITICAL: market minimum is 100 shares per order side.
+# At YES ~0.35: need $35 to buy 100 YES shares.
+# At NO  ~0.65: need $65 to buy 100 NO shares.  ← binding constraint
+# $70 buys ~200 YES (well over min) and ~107 NO (just over min).
+# Both sides qualify → points activate.
+# Total per cycle = $140. Max exposure = max_position_tokens × ~$0.50 per side.
+order_size_usdt  = "70.0"
+
+# ── Risk limits ──────────────────────────────────────────────────────────────
+# Hard stop per outcome side. Imbalance risk = |yes_tokens - no_tokens| × price.
+# At 300 tokens per side and price ~0.50, max imbalance exposure ≈ $150.
+# N YES + N NO tokens = exactly break-even at resolution regardless of outcome.
+max_position_tokens = "300.0"
+
+# ── Timing ───────────────────────────────────────────────────────────────────
+# Requote when YES mid drifts this far from last quoted mid.
+drift_cents      = "0.02"
+
+# Minimum hold before a drift-triggered requote (suppress micro-thrashing).
+min_quote_hold_secs = 10
+
+# After a fill, how long to sit off-book before requoting.
+# Maker fee = 0%, so fills are free. Keep this short — every second off-book
+# earns zero points. Pause is just to let the book settle after a match.
+fill_pause_secs  = 5
+
+# ── Points farming metadata ───────────────────────────────────────────────────
+# NOT available via the API. Read manually from the predict.fun UI:
+#   Hover over "Activate Points" or "Points Active" badge in the orderbook.
+#   The tooltip shows: "Max spread ±Nc | Min. shares: M"
+
+# Max spread window (v) from the tooltip "Max spread ±6¢" → 0.06.
+# Score formula: score_factor = ((v - spread_from_mid) / v)^2
+# Orders beyond v earn zero points regardless of size.
+spread_threshold_v   = "0.06"
+
+# Minimum shares per order side from the tooltip "Min. shares: 100".
+# Orders below this size earn zero points (they don't qualify).
+min_shares_per_side  = "100"
+
+[telemetry]
+log_level      = "info"
+metrics_port   = 9091
+enable_tracing = false

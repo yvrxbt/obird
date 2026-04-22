@@ -2,12 +2,12 @@
 
 use chrono::Utc;
 use trading_core::{
-    InstrumentId, Price, Quantity,
     types::{
         market_data::OrderbookSnapshot,
         order::{OrderId, OrderSide, OrderStatus, OrderUpdate},
         position::Fill,
     },
+    InstrumentId, Price, Quantity,
 };
 
 use hypersdk::hypercore::types::{
@@ -18,10 +18,7 @@ use hypersdk::hypercore::types::{
 // ── Timestamps ────────────────────────────────────────────────────────────────
 
 pub fn now_ns() -> u64 {
-    Utc::now()
-        .timestamp_nanos_opt()
-        .unwrap_or_default()
-        .max(0) as u64
+    Utc::now().timestamp_nanos_opt().unwrap_or_default().max(0) as u64
 }
 
 // ── Order book ────────────────────────────────────────────────────────────────
@@ -31,7 +28,11 @@ pub fn now_ns() -> u64 {
 pub fn l2book_to_snapshot(book: &HlL2Book, exchange_ts_ns: u64) -> OrderbookSnapshot {
     let bids = book.bids().iter().map(level_to_pair).collect();
     let asks = book.asks().iter().map(level_to_pair).collect();
-    OrderbookSnapshot { bids, asks, timestamp_ns: exchange_ts_ns }
+    OrderbookSnapshot {
+        bids,
+        asks,
+        timestamp_ns: exchange_ts_ns,
+    }
 }
 
 fn level_to_pair(l: &BookLevel) -> (Price, Quantity) {
@@ -41,7 +42,11 @@ fn level_to_pair(l: &BookLevel) -> (Price, Quantity) {
 // ── Fills ─────────────────────────────────────────────────────────────────────
 
 pub fn fill(instrument: &InstrumentId, hl: &HlFill) -> Fill {
-    let side = if hl.side == HlSide::Bid { OrderSide::Buy } else { OrderSide::Sell };
+    let side = if hl.side == HlSide::Bid {
+        OrderSide::Buy
+    } else {
+        OrderSide::Sell
+    };
     Fill {
         order_id: hl.oid.to_string(),
         instrument: instrument.clone(),
@@ -77,7 +82,9 @@ pub fn order_update(instrument: &InstrumentId, hl: &HlOrderUpdate<WsBasicOrder>)
         _ => OrderStatus::Acknowledged,
     };
 
-    let filled_qty = hl.order.orig_sz
+    let filled_qty = hl
+        .order
+        .orig_sz
         .checked_sub(hl.order.sz)
         .unwrap_or(rust_decimal::Decimal::ZERO);
 
@@ -103,5 +110,6 @@ pub fn order_id_from_oid(oid: u64) -> OrderId {
 }
 
 pub fn oid_from_order_id(id: &OrderId) -> anyhow::Result<u64> {
-    id.parse::<u64>().map_err(|e| anyhow::anyhow!("invalid oid '{}': {}", id, e))
+    id.parse::<u64>()
+        .map_err(|e| anyhow::anyhow!("invalid oid '{}': {}", id, e))
 }

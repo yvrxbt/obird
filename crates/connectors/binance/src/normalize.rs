@@ -4,19 +4,16 @@ use chrono::Utc;
 use rust_decimal::Decimal;
 use serde::Deserialize;
 use trading_core::{
-    InstrumentId, Price, Quantity,
     types::{
         market_data::OrderbookSnapshot,
         order::{OpenOrder, OrderSide, OrderStatus, OrderUpdate},
         position::{Fill, Position},
     },
+    InstrumentId, Price, Quantity,
 };
 
 pub fn now_ns() -> u64 {
-    Utc::now()
-        .timestamp_nanos_opt()
-        .unwrap_or_default()
-        .max(0) as u64
+    Utc::now().timestamp_nanos_opt().unwrap_or_default().max(0) as u64
 }
 
 // ── WebSocket message types ───────────────────────────────────────────────────
@@ -183,7 +180,11 @@ pub fn order_status(s: &str) -> OrderStatus {
 }
 
 pub fn order_side(s: &str) -> OrderSide {
-    if s == "BUY" { OrderSide::Buy } else { OrderSide::Sell }
+    if s == "BUY" {
+        OrderSide::Buy
+    } else {
+        OrderSide::Sell
+    }
 }
 
 /// Convert a REST place response to an OrderUpdate for the strategy update channel.
@@ -250,10 +251,7 @@ pub fn position_from_risk(
     })
 }
 
-pub fn open_order_from_rest(
-    instrument: &InstrumentId,
-    resp: &OpenOrderResponse,
-) -> OpenOrder {
+pub fn open_order_from_rest(instrument: &InstrumentId, resp: &OpenOrderResponse) -> OpenOrder {
     OpenOrder {
         order_id: resp.order_id.to_string(),
         instrument: instrument.clone(),

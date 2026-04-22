@@ -1,0 +1,852 @@
+{
+  "nodes": [
+    {
+      "id": "sim_connector_SimConnector",
+      "label": "SimConnector",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": "line 19",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "sim_connector_on_market_data",
+      "label": "SimConnector::on_market_data",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": "line 39",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "sim_connector_ExchangeConnector_impl",
+      "label": "ExchangeConnector impl for SimConnector",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": "line 53",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "lighter_LighterClient",
+      "label": "LighterClient (stub)",
+      "file_type": "code",
+      "source_file": "crates/connectors/lighter/src/client.rs",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "lighter_market_data",
+      "label": "Lighter Market Data Module",
+      "file_type": "code",
+      "source_file": "crates/connectors/lighter/src/market_data.rs",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "lighter_normalize",
+      "label": "Lighter Normalize Module",
+      "file_type": "code",
+      "source_file": "crates/connectors/lighter/src/normalize.rs",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "lighter_lib",
+      "label": "Lighter Connector Crate Root",
+      "file_type": "code",
+      "source_file": "crates/connectors/lighter/src/lib.rs",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hyperliquid_HyperliquidClient",
+      "label": "HyperliquidClient",
+      "file_type": "code",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "line 25",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hyperliquid_ExchangeConnector_impl",
+      "label": "ExchangeConnector impl for HyperliquidClient",
+      "file_type": "code",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "line 116",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hyperliquid_market_data",
+      "label": "Hyperliquid Market Data Module",
+      "file_type": "code",
+      "source_file": "crates/connectors/hyperliquid/src/market_data.rs",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hyperliquid_normalize",
+      "label": "Hyperliquid Normalize Module",
+      "file_type": "code",
+      "source_file": "crates/connectors/hyperliquid/src/normalize.rs",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hyperliquid_lib",
+      "label": "Hyperliquid Connector Crate Root",
+      "file_type": "code",
+      "source_file": "crates/connectors/hyperliquid/src/lib.rs",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "polymarket_PolymarketClient",
+      "label": "PolymarketClient (stub)",
+      "file_type": "code",
+      "source_file": "crates/connectors/polymarket/src/client.rs",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "polymarket_market_data",
+      "label": "Polymarket Market Data Module",
+      "file_type": "code",
+      "source_file": "crates/connectors/polymarket/src/market_data.rs",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "polymarket_normalize",
+      "label": "Polymarket Normalize Module",
+      "file_type": "code",
+      "source_file": "crates/connectors/polymarket/src/normalize.rs",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "polymarket_lib",
+      "label": "Polymarket Connector Crate Root",
+      "file_type": "code",
+      "source_file": "crates/connectors/polymarket/src/lib.rs",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "predict_fun_PredictFunClient",
+      "label": "Predict.fun Client (stub)",
+      "file_type": "code",
+      "source_file": "crates/connectors/predict_fun/src/client.rs",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "predict_fun_market_data",
+      "label": "Predict.fun Market Data Module",
+      "file_type": "code",
+      "source_file": "crates/connectors/predict_fun/src/market_data.rs",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "predict_fun_normalize",
+      "label": "Predict.fun Normalize Module",
+      "file_type": "code",
+      "source_file": "crates/connectors/predict_fun/src/normalize.rs",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "predict_fun_lib",
+      "label": "Predict.fun Connector Crate Root",
+      "file_type": "code",
+      "source_file": "crates/connectors/predict_fun/src/lib.rs",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "binance_BinanceClient",
+      "label": "BinanceClient (stub)",
+      "file_type": "code",
+      "source_file": "crates/connectors/binance/src/client.rs",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "binance_market_data",
+      "label": "Binance Market Data Module",
+      "file_type": "code",
+      "source_file": "crates/connectors/binance/src/market_data.rs",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "binance_normalize",
+      "label": "Binance Normalize Module",
+      "file_type": "code",
+      "source_file": "crates/connectors/binance/src/normalize.rs",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "binance_lib",
+      "label": "Binance Connector Crate Root",
+      "file_type": "code",
+      "source_file": "crates/connectors/binance/src/lib.rs",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "trading_core_ExchangeConnector",
+      "label": "ExchangeConnector Trait",
+      "file_type": "code",
+      "source_file": "crates/trading-core/src/traits.rs",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "trading_core_ConnectorError",
+      "label": "ConnectorError",
+      "file_type": "code",
+      "source_file": "crates/trading-core/src/error.rs",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "trading_core_OrderUpdate",
+      "label": "OrderUpdate",
+      "file_type": "code",
+      "source_file": "crates/trading-core/src/types/order.rs",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "backtest_MatchingEngine",
+      "label": "MatchingEngine",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/matching_engine.rs",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hyperliquid_sdk_ExchangeClient",
+      "label": "hyperliquid_sdk ExchangeClient (external)",
+      "file_type": "code",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "line 9",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hyperliquid_sdk_InfoClient",
+      "label": "hyperliquid_sdk InfoClient (external)",
+      "file_type": "code",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "line 9",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    }
+  ],
+  "edges": [
+    {
+      "source": "sim_connector_SimConnector",
+      "target": "trading_core_ExchangeConnector",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": "line 53",
+      "weight": 1.0
+    },
+    {
+      "source": "sim_connector_SimConnector",
+      "target": "backtest_MatchingEngine",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": "line 21",
+      "weight": 1.0
+    },
+    {
+      "source": "sim_connector_on_market_data",
+      "target": "backtest_MatchingEngine",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": "line 41",
+      "weight": 1.0
+    },
+    {
+      "source": "sim_connector_SimConnector",
+      "target": "trading_core_OrderUpdate",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": "line 64",
+      "weight": 1.0
+    },
+    {
+      "source": "sim_connector_SimConnector",
+      "target": "trading_core_ConnectorError",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": "line 13",
+      "weight": 1.0
+    },
+    {
+      "source": "hyperliquid_HyperliquidClient",
+      "target": "trading_core_ExchangeConnector",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "line 116",
+      "weight": 1.0
+    },
+    {
+      "source": "hyperliquid_HyperliquidClient",
+      "target": "hyperliquid_sdk_ExchangeClient",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "line 9",
+      "weight": 1.0
+    },
+    {
+      "source": "hyperliquid_HyperliquidClient",
+      "target": "hyperliquid_sdk_InfoClient",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "line 9",
+      "weight": 1.0
+    },
+    {
+      "source": "hyperliquid_HyperliquidClient",
+      "target": "trading_core_OrderUpdate",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "line 161",
+      "weight": 1.0
+    },
+    {
+      "source": "hyperliquid_HyperliquidClient",
+      "target": "trading_core_ConnectorError",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "line 15",
+      "weight": 1.0
+    },
+    {
+      "source": "hyperliquid_lib",
+      "target": "hyperliquid_HyperliquidClient",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/connectors/hyperliquid/src/lib.rs",
+      "source_location": "line 9",
+      "weight": 1.0
+    },
+    {
+      "source": "lighter_LighterClient",
+      "target": "trading_core_ExchangeConnector",
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "crates/connectors/lighter/src/lib.rs",
+      "source_location": "line 9 (TODO comment)",
+      "weight": 0.85
+    },
+    {
+      "source": "polymarket_PolymarketClient",
+      "target": "trading_core_ExchangeConnector",
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "crates/connectors/polymarket/src/lib.rs",
+      "source_location": "line 9 (TODO comment)",
+      "weight": 0.85
+    },
+    {
+      "source": "predict_fun_PredictFunClient",
+      "target": "trading_core_ExchangeConnector",
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "crates/connectors/predict_fun/src/lib.rs",
+      "source_location": "line 9 (TODO comment)",
+      "weight": 0.85
+    },
+    {
+      "source": "binance_BinanceClient",
+      "target": "trading_core_ExchangeConnector",
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "crates/connectors/binance/src/lib.rs",
+      "source_location": "line 9 (TODO comment)",
+      "weight": 0.85
+    },
+    {
+      "source": "sim_connector_SimConnector",
+      "target": "hyperliquid_HyperliquidClient",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": null,
+      "weight": 0.9
+    },
+    {
+      "source": "hyperliquid_HyperliquidClient",
+      "target": "lighter_LighterClient",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.88,
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": null,
+      "weight": 0.88
+    },
+    {
+      "source": "hyperliquid_HyperliquidClient",
+      "target": "polymarket_PolymarketClient",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": null,
+      "weight": 0.85
+    },
+    {
+      "source": "hyperliquid_HyperliquidClient",
+      "target": "predict_fun_PredictFunClient",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": null,
+      "weight": 0.85
+    },
+    {
+      "source": "hyperliquid_HyperliquidClient",
+      "target": "binance_BinanceClient",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": null,
+      "weight": 0.85
+    },
+    {
+      "source": "lighter_lib",
+      "target": "lighter_LighterClient",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/connectors/lighter/src/lib.rs",
+      "source_location": "line 5",
+      "weight": 1.0
+    },
+    {
+      "source": "lighter_lib",
+      "target": "lighter_market_data",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/connectors/lighter/src/lib.rs",
+      "source_location": "line 6",
+      "weight": 1.0
+    },
+    {
+      "source": "lighter_lib",
+      "target": "lighter_normalize",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/connectors/lighter/src/lib.rs",
+      "source_location": "line 7",
+      "weight": 1.0
+    },
+    {
+      "source": "polymarket_lib",
+      "target": "polymarket_PolymarketClient",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/connectors/polymarket/src/lib.rs",
+      "source_location": "line 5",
+      "weight": 1.0
+    },
+    {
+      "source": "polymarket_lib",
+      "target": "polymarket_market_data",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/connectors/polymarket/src/lib.rs",
+      "source_location": "line 6",
+      "weight": 1.0
+    },
+    {
+      "source": "polymarket_lib",
+      "target": "polymarket_normalize",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/connectors/polymarket/src/lib.rs",
+      "source_location": "line 7",
+      "weight": 1.0
+    },
+    {
+      "source": "predict_fun_lib",
+      "target": "predict_fun_PredictFunClient",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/connectors/predict_fun/src/lib.rs",
+      "source_location": "line 5",
+      "weight": 1.0
+    },
+    {
+      "source": "predict_fun_lib",
+      "target": "predict_fun_market_data",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/connectors/predict_fun/src/lib.rs",
+      "source_location": "line 6",
+      "weight": 1.0
+    },
+    {
+      "source": "predict_fun_lib",
+      "target": "predict_fun_normalize",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/connectors/predict_fun/src/lib.rs",
+      "source_location": "line 7",
+      "weight": 1.0
+    },
+    {
+      "source": "binance_lib",
+      "target": "binance_BinanceClient",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/connectors/binance/src/lib.rs",
+      "source_location": "line 5",
+      "weight": 1.0
+    },
+    {
+      "source": "binance_lib",
+      "target": "binance_market_data",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/connectors/binance/src/lib.rs",
+      "source_location": "line 6",
+      "weight": 1.0
+    },
+    {
+      "source": "binance_lib",
+      "target": "binance_normalize",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/connectors/binance/src/lib.rs",
+      "source_location": "line 7",
+      "weight": 1.0
+    },
+    {
+      "source": "hyperliquid_lib",
+      "target": "hyperliquid_market_data",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/connectors/hyperliquid/src/lib.rs",
+      "source_location": "line 6",
+      "weight": 1.0
+    },
+    {
+      "source": "hyperliquid_lib",
+      "target": "hyperliquid_normalize",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/connectors/hyperliquid/src/lib.rs",
+      "source_location": "line 7",
+      "weight": 1.0
+    },
+    {
+      "source": "sim_connector_SimConnector",
+      "target": "lighter_LighterClient",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.82,
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": null,
+      "weight": 0.82
+    },
+    {
+      "source": "sim_connector_SimConnector",
+      "target": "polymarket_PolymarketClient",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.80,
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": null,
+      "weight": 0.80
+    },
+    {
+      "source": "sim_connector_SimConnector",
+      "target": "predict_fun_PredictFunClient",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.80,
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": null,
+      "weight": 0.80
+    },
+    {
+      "source": "sim_connector_SimConnector",
+      "target": "binance_BinanceClient",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.80,
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": null,
+      "weight": 0.80
+    },
+    {
+      "source": "lighter_normalize",
+      "target": "hyperliquid_normalize",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.88,
+      "source_file": "crates/connectors/lighter/src/normalize.rs",
+      "source_location": null,
+      "weight": 0.88
+    },
+    {
+      "source": "polymarket_normalize",
+      "target": "hyperliquid_normalize",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.88,
+      "source_file": "crates/connectors/polymarket/src/normalize.rs",
+      "source_location": null,
+      "weight": 0.88
+    },
+    {
+      "source": "predict_fun_normalize",
+      "target": "hyperliquid_normalize",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.88,
+      "source_file": "crates/connectors/predict_fun/src/normalize.rs",
+      "source_location": null,
+      "weight": 0.88
+    },
+    {
+      "source": "binance_normalize",
+      "target": "hyperliquid_normalize",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.88,
+      "source_file": "crates/connectors/binance/src/normalize.rs",
+      "source_location": null,
+      "weight": 0.88
+    },
+    {
+      "source": "lighter_market_data",
+      "target": "hyperliquid_market_data",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.87,
+      "source_file": "crates/connectors/lighter/src/market_data.rs",
+      "source_location": null,
+      "weight": 0.87
+    },
+    {
+      "source": "polymarket_market_data",
+      "target": "hyperliquid_market_data",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.87,
+      "source_file": "crates/connectors/polymarket/src/market_data.rs",
+      "source_location": null,
+      "weight": 0.87
+    },
+    {
+      "source": "predict_fun_market_data",
+      "target": "hyperliquid_market_data",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.87,
+      "source_file": "crates/connectors/predict_fun/src/market_data.rs",
+      "source_location": null,
+      "weight": 0.87
+    },
+    {
+      "source": "binance_market_data",
+      "target": "hyperliquid_market_data",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.87,
+      "source_file": "crates/connectors/binance/src/market_data.rs",
+      "source_location": null,
+      "weight": 0.87
+    },
+    {
+      "source": "sim_connector_SimConnector",
+      "target": "trading_core_ExchangeConnector",
+      "relation": "rationale_for",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": "line 1-4 (doc comment: strategy sees same trait interface in live and backtest)",
+      "weight": 0.9
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "exchange_connector_trait_implementations",
+      "label": "All ExchangeConnector Implementations (live + sim)",
+      "nodes": [
+        "hyperliquid_HyperliquidClient",
+        "sim_connector_SimConnector",
+        "lighter_LighterClient",
+        "polymarket_PolymarketClient",
+        "predict_fun_PredictFunClient",
+        "binance_BinanceClient"
+      ],
+      "relation": "implement",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "crates/connectors/hyperliquid/src/client.rs"
+    },
+    {
+      "id": "connector_module_tripartite_pattern",
+      "label": "Connector Tripartite Module Pattern (client + market_data + normalize)",
+      "nodes": [
+        "hyperliquid_HyperliquidClient",
+        "hyperliquid_market_data",
+        "hyperliquid_normalize"
+      ],
+      "relation": "form",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.95,
+      "source_file": "crates/connectors/hyperliquid/src/lib.rs"
+    },
+    {
+      "id": "sim_connector_matching_engine_order_flow",
+      "label": "SimConnector + MatchingEngine + OrderUpdate Backtest Flow",
+      "nodes": [
+        "sim_connector_SimConnector",
+        "backtest_MatchingEngine",
+        "trading_core_OrderUpdate"
+      ],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.95,
+      "source_file": "crates/backtest/src/sim_connector.rs"
+    }
+  ],
+  "input_tokens": 0,
+  "output_tokens": 0
+}

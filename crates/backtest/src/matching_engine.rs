@@ -4,14 +4,14 @@
 //! - TradeThrough: fills when a trade occurs at/through our price (realistic)
 //! - Optimistic: fills immediately on price cross (overstates PnL)
 
+use rust_decimal::Decimal;
+use std::collections::HashMap;
 use trading_core::types::decimal::{Price, Quantity};
 use trading_core::types::instrument::InstrumentId;
 use trading_core::types::order::{
     OpenOrder, OrderId, OrderRequest, OrderSide, OrderStatus, OrderUpdate,
 };
 use trading_core::types::position::Position;
-use rust_decimal::Decimal;
-use std::collections::HashMap;
 
 #[derive(Debug, Clone)]
 pub enum FillModel {

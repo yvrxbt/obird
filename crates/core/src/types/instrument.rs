@@ -40,6 +40,10 @@ impl fmt::Display for InstrumentId {
 
 impl InstrumentId {
     pub fn new(exchange: Exchange, kind: InstrumentKind, symbol: impl Into<String>) -> Self {
-        Self { exchange, kind, symbol: symbol.into() }
+        Self {
+            exchange,
+            kind,
+            symbol: symbol.into(),
+        }
     }
 }

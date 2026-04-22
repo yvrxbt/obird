@@ -4,8 +4,10 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-trading-core = { path = "../../core" }
-serde = { workspace = true }
-rust_decimal = { workspace = true }
-async-trait = { workspace = true }
-tracing = { workspace = true }
+trading-core         = { path = "../../core" }
+serde                = { workspace = true }
+serde_json           = { workspace = true }
+rust_decimal         = { workspace = true }
+rust_decimal_macros  = { workspace = true }
+async-trait          = { workspace = true }
+tracing              = { workspace = true }

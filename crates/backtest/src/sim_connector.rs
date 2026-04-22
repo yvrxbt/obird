@@ -3,6 +3,10 @@
 //! Routes orders to a MatchingEngine instead of a real exchange.
 //! The strategy sees exactly the same trait interface as in live trading.
 
+use crate::matching_engine::MatchingEngine;
+use std::sync::{Arc, Mutex};
+use tokio::sync::mpsc;
+use trading_core::error::ConnectorError;
 use trading_core::traits::ExchangeConnector;
 use trading_core::types::decimal::{Price, Quantity};
 use trading_core::types::instrument::{Exchange, InstrumentId};
@@ -10,10 +14,6 @@ use trading_core::types::order::{
     OpenOrder, OrderId, OrderRequest, OrderSide, OrderStatus, OrderUpdate,
 };
 use trading_core::types::position::Position;
-use trading_core::error::ConnectorError;
-use crate::matching_engine::MatchingEngine;
-use tokio::sync::mpsc;
-use std::sync::{Arc, Mutex};
 use uuid::Uuid;
 
 pub struct SimConnector {

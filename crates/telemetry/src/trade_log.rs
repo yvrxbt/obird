@@ -1,10 +1,10 @@
 //! Structured trade logging.
 //! Writes every fill and order update to a JSONL file for post-trade analysis.
 
+use std::path::Path;
+use tokio::io::AsyncWriteExt;
 use trading_core::types::order::OrderUpdate;
 use trading_core::types::position::Fill;
-use tokio::io::AsyncWriteExt;
-use std::path::Path;
 
 pub struct TradeLogger {
     // TODO: async file writer

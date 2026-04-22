@@ -19,7 +19,8 @@ no_token_id      = "518222325995033073147304416729590655928507003315495782022789
 is_neg_risk      = false
 is_yield_bearing = true
 fee_rate_bps     = 200
-polymarket_yes_token_id = "8501497159083948713316135768103773293754490207922884688769443031624417212426"
+polymarket_yes_token_id = "24333473224916192918679957636871366353131859312827185519741670680043968396693"
+polymarket_no_token_id  = "52264184750808714077065191720092387784789350907021071620965397522474875066301"
 
 [[strategies]]
 name           = "predict_points_v1"
@@ -27,13 +28,15 @@ strategy_type  = "prediction_quoter"
 instruments    = ["PredictFun.Binary.21177-$60k", "PredictFun.Binary.21177-$80k"]
 
 [strategies.params]
-spread_cents         = "0.02"
-# join_cents         = "0.01"  # optional manual join depth from predict mid
-order_size_usdt      = "65"
+spread_cents         = "0.02"  # distance from poly FV per side — see PREDICT_QUOTING_DESIGN.md
+order_size_usdt      = "70"
 max_position_tokens  = "500.0"
 drift_cents          = "0.02"
+touch_trigger_cents  = "0.01"  # defensive requote when bid is within this distance of ask
+touch_retreat_cents  = "0.02"  # on touch trigger, requote to at least this distance from ask
 min_quote_hold_secs  = 10
-fill_pause_secs      = 15
+fill_pause_secs      = 5
+fv_stale_secs        = 90       # must be > 60 (WS recv-timeout); see PREDICT_QUOTING_DESIGN.md
 spread_threshold_v   = "0.06"
 min_shares_per_side  = "100"
 

@@ -61,7 +61,10 @@ pub async fn run(config_path: &str, dry_run: bool) -> anyhow::Result<()> {
         .collect();
 
     if !cancel_ids.is_empty() {
-        tracing::info!(n = cancel_ids.len(), "Cancelling existing open orders on this market");
+        tracing::info!(
+            n = cancel_ids.len(),
+            "Cancelling existing open orders on this market"
+        );
         if !dry_run {
             client
                 .cancel_orders(&cancel_ids)
@@ -95,7 +98,10 @@ pub async fn run(config_path: &str, dry_run: bool) -> anyhow::Result<()> {
     }
 
     if yes_qty <= Decimal::ZERO && no_qty <= Decimal::ZERO {
-        tracing::info!(market_id = market_params.market_id, "No position to liquidate");
+        tracing::info!(
+            market_id = market_params.market_id,
+            "No position to liquidate"
+        );
         return Ok(());
     }
 
@@ -126,15 +132,17 @@ pub async fn run(config_path: &str, dry_run: bool) -> anyhow::Result<()> {
         .map(|(p, _)| *p)
         .ok_or_else(|| anyhow::anyhow!("orderbook has no asks"))?;
 
-    let yes_sell_price = yes_ask
-        .max(yes_bid + tick)
-        .round_dp_with_strategy(decimal_precision, rust_decimal::RoundingStrategy::AwayFromZero);
+    let yes_sell_price = yes_ask.max(yes_bid + tick).round_dp_with_strategy(
+        decimal_precision,
+        rust_decimal::RoundingStrategy::AwayFromZero,
+    );
 
     let no_bid = Decimal::ONE - yes_ask;
     let no_ask = Decimal::ONE - yes_bid;
-    let no_sell_price = no_ask
-        .max(no_bid + tick)
-        .round_dp_with_strategy(decimal_precision, rust_decimal::RoundingStrategy::AwayFromZero);
+    let no_sell_price = no_ask.max(no_bid + tick).round_dp_with_strategy(
+        decimal_precision,
+        rust_decimal::RoundingStrategy::AwayFromZero,
+    );
 
     tracing::info!(
         market_id = market_params.market_id,

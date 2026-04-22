@@ -32,7 +32,12 @@ pub struct BinanceMarketDataFeed {
 
 impl BinanceMarketDataFeed {
     pub fn new(symbol: String, instrument: InstrumentId, api_key: String, testnet: bool) -> Self {
-        Self { symbol, instrument, api_key, testnet }
+        Self {
+            symbol,
+            instrument,
+            api_key,
+            testnet,
+        }
     }
 
     pub async fn run(self, sink: Arc<dyn MarketDataSink>) {
@@ -44,7 +49,11 @@ impl BinanceMarketDataFeed {
         let instrument_md = self.instrument.clone();
         let instrument_ud = self.instrument.clone();
         let ws_base = if self.testnet { TESTNET_WS } else { MAINNET_WS };
-        let rest_base = if self.testnet { TESTNET_REST } else { MAINNET_REST };
+        let rest_base = if self.testnet {
+            TESTNET_REST
+        } else {
+            MAINNET_REST
+        };
         let api_key = self.api_key.clone();
 
         // Task 1: public bookTicker feed
@@ -54,7 +63,15 @@ impl BinanceMarketDataFeed {
 
         // Task 2: private user data stream (fills + order updates)
         let ud_handle = tokio::spawn(async move {
-            run_user_data(ws_base, rest_base, &api_key, &symbol_ud, instrument_ud, sink_ud).await;
+            run_user_data(
+                ws_base,
+                rest_base,
+                &api_key,
+                &symbol_ud,
+                instrument_ud,
+                sink_ud,
+            )
+            .await;
         });
 
         let _ = tokio::join!(md_handle, ud_handle);
@@ -93,7 +110,9 @@ async fn run_book_ticker_once(
     while let Some(msg) = read.next().await {
         let text = match msg? {
             Message::Text(t) => t,
-            Message::Ping(_) | Message::Pong(_) | Message::Binary(_) | Message::Frame(_) => continue,
+            Message::Ping(_) | Message::Pong(_) | Message::Binary(_) | Message::Frame(_) => {
+                continue
+            }
             Message::Close(_) => break,
         };
 
@@ -171,7 +190,9 @@ async fn run_user_data_once(
         interval.tick().await; // skip first immediate tick
         loop {
             interval.tick().await;
-            if let Err(e) = renew_listen_key(&rest_base_owned, &api_key_owned, &listen_key_owned).await {
+            if let Err(e) =
+                renew_listen_key(&rest_base_owned, &api_key_owned, &listen_key_owned).await
+            {
                 tracing::warn!(error = %e, "listenKey renewal failed");
             } else {
                 tracing::debug!("listenKey renewed");
@@ -189,7 +210,9 @@ async fn run_user_data_once(
     while let Some(msg) = read.next().await {
         let text = match msg? {
             Message::Text(t) => t,
-            Message::Ping(_) | Message::Pong(_) | Message::Binary(_) | Message::Frame(_) => continue,
+            Message::Ping(_) | Message::Pong(_) | Message::Binary(_) | Message::Frame(_) => {
+                continue
+            }
             Message::Close(_) => break,
         };
 
@@ -257,9 +280,11 @@ async fn create_listen_key(rest_base: &str, api_key: &str) -> anyhow::Result<Str
     let http = reqwest::Client::new();
     let url = format!("{}/fapi/v1/listenKey", rest_base);
 
-    let resp = http.post(&url)
+    let resp = http
+        .post(&url)
         .header("X-MBX-APIKEY", api_key)
-        .send().await?
+        .send()
+        .await?
         .error_for_status()?;
 
     let body: normalize::ListenKeyResponse = resp.json().await?;
@@ -273,7 +298,8 @@ async fn renew_listen_key(rest_base: &str, api_key: &str, listen_key: &str) -> a
     http.put(&url)
         .header("X-MBX-APIKEY", api_key)
         .query(&[("listenKey", listen_key)])
-        .send().await?
+        .send()
+        .await?
         .error_for_status()?;
 
     Ok(())

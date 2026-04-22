@@ -1,25 +1,24 @@
 //! Hyperliquid ExchangeConnector backed by hypersdk.
 
 use std::str::FromStr;
+use std::sync::atomic::{AtomicBool, Ordering};
 
 use anyhow::Context;
 use hypersdk::{
-    Address,
     hypercore::{
         self as hypercore,
-        BatchCancel, BatchModify, Cancel, Cloid, Modify, NonceHandler, OidOrCloid,
-        PerpMarket, PriceTick, SpotMarket,
         types::{
             BatchOrder, OrderGrouping, OrderRequest as HlOrderRequest, OrderResponseStatus,
             OrderTypePlacement, Side, TimeInForce as HlTif,
         },
-        PrivateKeySigner,
+        BatchCancel, BatchModify, Cancel, Cloid, Modify, NonceHandler, OidOrCloid, PerpMarket,
+        PriceTick, PrivateKeySigner, SpotMarket,
     },
+    Address,
 };
 use rust_decimal::{Decimal, MathematicalOps, RoundingStrategy};
 use tokio::sync::mpsc;
 use trading_core::{
-    Price, Quantity,
     error::ConnectorError,
     traits::ExchangeConnector,
     types::{
@@ -29,15 +28,26 @@ use trading_core::{
         },
         position::Position,
     },
+    Price, Quantity,
 };
 
 use crate::{market_data::AssetInfo, normalize};
 
 // ── Shutdown handle ───────────────────────────────────────────────────────────
 
-/// Handle for emergency cancel-all on process shutdown.
+/// Handle for graceful shutdown: blocks new places, drains in-flight, then cancels.
+///
 /// Extracted from HyperliquidClient before it moves into the engine runner.
 /// Creates a fresh HttpClient on use (not hot path, called once on exit).
+///
+/// Shutdown sequence (coordinated with EngineRunner):
+///   1. Call `set_shutting_down()` — place_batch checks this flag at entry and
+///      returns immediately without touching the network. Any place already past
+///      the check continues to completion.
+///   2. EngineRunner drops the action_tx and awaits the router task — the router
+///      drains its queue (skipped places) and the one in-flight join_all resolves,
+///      populating active_oids with the just-confirmed OIDs.
+///   3. Call `cancel_all()` — BatchCancel on the now-complete active_oids, awaits ack.
 pub struct ShutdownHandle {
     pub signer: PrivateKeySigner,
     pub nonce: std::sync::Arc<NonceHandler>,
@@ -48,13 +58,33 @@ pub struct ShutdownHandle {
     /// Shared OID set from HyperliquidClient — lets shutdown cancel specific orders
     /// instead of relying on scheduleCancel (which requires $1M traded volume).
     pub active_oids: std::sync::Arc<std::sync::Mutex<std::collections::HashSet<u64>>>,
+    /// Shared with HyperliquidClient.place_batch — when true, place_batch returns
+    /// immediately without hitting the network. Set this before draining the router.
+    pub shutting_down: std::sync::Arc<AtomicBool>,
+}
+
+impl ShutdownHandle {
+    /// Signal the connector to stop accepting new place requests.
+    /// Safe to call from any thread. Must be called before draining the router.
+    pub fn set_shutting_down(&self) {
+        self.shutting_down.store(true, Ordering::Release);
+        tracing::info!(instrument = %self.instrument, "SHUTDOWN flag set — new places will be rejected");
+    }
 }
 
 impl ShutdownHandle {
     /// Cancel all tracked resting orders via per-OID BatchCancel.
-    /// Falls back to scheduleCancel if OID set is empty (nothing was placed this session).
+    ///
+    /// Call this AFTER the EngineRunner has drained (router_handle.await), which
+    /// guarantees any in-flight place_batch has completed and populated active_oids.
+    /// This function awaits the cancel HTTP response, so the caller is unblocked only
+    /// after HL confirms the cancels (or errors).
     pub async fn cancel_all(&self) -> anyhow::Result<()> {
-        let http = if self.testnet { hypercore::testnet() } else { hypercore::mainnet() };
+        let http = if self.testnet {
+            hypercore::testnet()
+        } else {
+            hypercore::mainnet()
+        };
 
         let oids: Vec<u64> = {
             let lock = self.active_oids.lock().unwrap();
@@ -66,14 +96,19 @@ impl ShutdownHandle {
             return Ok(());
         }
 
-        let cancels: Vec<Cancel> = oids.iter()
-            .map(|&oid| Cancel { asset: self.market_index, oid })
+        let cancels: Vec<Cancel> = oids
+            .iter()
+            .map(|&oid| Cancel {
+                asset: self.market_index,
+                oid,
+            })
             .collect();
 
         tracing::info!(
             instrument = %self.instrument,
             n_oids = oids.len(),
-            "SHUTDOWN BatchCancel resting orders"
+            oids = ?oids,
+            "SHUTDOWN BatchCancel submitted — awaiting ack"
         );
 
         http.cancel(
@@ -82,9 +117,11 @@ impl ShutdownHandle {
             self.nonce.next(),
             None,
             None,
-        ).await.context("BatchCancel on shutdown")?;
+        )
+        .await
+        .context("BatchCancel on shutdown")?;
 
-        tracing::info!(instrument = %self.instrument, "SHUTDOWN all orders cancelled");
+        tracing::info!(instrument = %self.instrument, n_oids = oids.len(), "SHUTDOWN cancel ack received — all orders cancelled");
         Ok(())
     }
 }
@@ -165,11 +202,17 @@ pub async fn resolve_symbol(
         tracing::info!(symbol, index = m.index, "Resolved as spot (base token)");
         return Ok(ResolvedMarket::Spot(m.clone()));
     }
-    if let Some(m) = spots.iter().find(|s| s.name == symbol || s.symbol() == symbol) {
+    if let Some(m) = spots
+        .iter()
+        .find(|s| s.name == symbol || s.symbol() == symbol)
+    {
         tracing::info!(symbol, index = m.index, "Resolved as spot (pair name)");
         return Ok(ResolvedMarket::Spot(m.clone()));
     }
-    if let Some(n) = symbol.strip_prefix('@').and_then(|s| s.parse::<usize>().ok()) {
+    if let Some(n) = symbol
+        .strip_prefix('@')
+        .and_then(|s| s.parse::<usize>().ok())
+    {
         if let Some(m) = spots.into_iter().find(|s| s.index == 10_000 + n) {
             tracing::info!(symbol, index = m.index, "Resolved as spot (@N)");
             return Ok(ResolvedMarket::Spot(m));
@@ -200,6 +243,11 @@ pub struct HyperliquidClient {
     /// Shared with ShutdownHandle so graceful shutdown can do per-OID cancel
     /// without requiring the $1M scheduleCancel volume threshold.
     active_oids: std::sync::Arc<std::sync::Mutex<std::collections::HashSet<u64>>>,
+    /// Set by ShutdownHandle::set_shutting_down(). Checked at the top of place_batch
+    /// so that orders queued after Ctrl+C never hit the network. Any place_batch call
+    /// that has already passed this check continues to completion (its OIDs will be
+    /// in active_oids by the time cancel_all runs).
+    shutting_down: std::sync::Arc<AtomicBool>,
 }
 
 impl HyperliquidClient {
@@ -215,21 +263,22 @@ impl HyperliquidClient {
         let signer = PrivateKeySigner::from_str(pk.trim())
             .map_err(|e| ConnectorError::AuthFailed(format!("invalid private key: {e}")))?;
 
-        let http = if testnet { hypercore::testnet() } else { hypercore::mainnet() };
+        let http = if testnet {
+            hypercore::testnet()
+        } else {
+            hypercore::mainnet()
+        };
         let market = resolve_symbol(&http, symbol)
             .await
             .map_err(ConnectorError::Other)?;
 
-        let instrument = InstrumentId::new(
-            Exchange::Hyperliquid,
-            market.instrument_kind(),
-            symbol,
-        );
+        let instrument = InstrumentId::new(Exchange::Hyperliquid, market.instrument_kind(), symbol);
 
         let (update_tx, update_rx) = mpsc::unbounded_channel();
 
         tracing::info!(
-            symbol, testnet,
+            symbol,
+            testnet,
             index = market.index(),
             sz_decimals = market.sz_decimals(),
             "HyperliquidClient ready"
@@ -238,7 +287,10 @@ impl HyperliquidClient {
         Ok(Self {
             http,
             signer,
-            active_oids: std::sync::Arc::new(std::sync::Mutex::new(std::collections::HashSet::new())),
+            active_oids: std::sync::Arc::new(std::sync::Mutex::new(
+                std::collections::HashSet::new(),
+            )),
+            shutting_down: std::sync::Arc::new(AtomicBool::new(false)),
             market,
             instrument,
             nonce: std::sync::Arc::new(NonceHandler::default()),
@@ -248,8 +300,12 @@ impl HyperliquidClient {
         })
     }
 
-    pub fn instrument(&self) -> InstrumentId { self.instrument.clone() }
-    pub fn wallet_address(&self) -> Address { self.signer.address() }
+    pub fn instrument(&self) -> InstrumentId {
+        self.instrument.clone()
+    }
+    pub fn wallet_address(&self) -> Address {
+        self.signer.address()
+    }
 
     /// Extract a cancel handle BEFORE moving this connector into the engine runner.
     /// Use it to cancel all open orders on Ctrl+C shutdown.
@@ -262,6 +318,7 @@ impl HyperliquidClient {
             mids_key: self.market.mids_key(),
             testnet,
             active_oids: self.active_oids.clone(),
+            shutting_down: self.shutting_down.clone(),
         }
     }
 
@@ -282,7 +339,7 @@ impl HyperliquidClient {
         let strategy = if is_buy {
             RoundingStrategy::ToNegativeInfinity // bid: round down (better price for maker)
         } else {
-            RoundingStrategy::ToPositiveInfinity  // ask: round up
+            RoundingStrategy::ToPositiveInfinity // ask: round up
         };
         let rounded = price.round_dp_with_strategy(dp, strategy);
         tracing::debug!(
@@ -306,7 +363,9 @@ impl HyperliquidClient {
 
 #[async_trait::async_trait]
 impl ExchangeConnector for HyperliquidClient {
-    fn exchange(&self) -> Exchange { Exchange::Hyperliquid }
+    fn exchange(&self) -> Exchange {
+        Exchange::Hyperliquid
+    }
 
     async fn place_order(&self, req: &OrderRequest) -> Result<OrderId, ConnectorError> {
         let is_buy = normalize::to_hl_side(req.side);
@@ -319,16 +378,19 @@ impl ExchangeConnector for HyperliquidClient {
         if rounded_size < self.market.min_size() {
             return Err(ConnectorError::OrderRejected(format!(
                 "size {} < min {}",
-                rounded_size, self.market.min_size()
+                rounded_size,
+                self.market.min_size()
             )));
         }
 
-        let cloid = req.client_order_id
+        let cloid = req
+            .client_order_id
             .as_ref()
             .and_then(|s| s.parse::<Cloid>().ok())
             .unwrap_or_else(Cloid::random);
 
-        let resp = self.http
+        let resp = self
+            .http
             .place(
                 &self.signer,
                 BatchOrder {
@@ -390,9 +452,27 @@ impl ExchangeConnector for HyperliquidClient {
 
     /// HL-native batch placement — submits all orders in a single `BatchOrder` call.
     /// Far more efficient than N sequential place_order calls.
+    ///
+    /// Returns immediately with errors if `shutting_down` is set — prevents new orders
+    /// from being placed after Ctrl+C while the engine is draining its action queue.
+    /// Any call that has already passed this check proceeds to completion; its OIDs
+    /// will be recorded in active_oids before cancel_all runs.
     async fn place_batch(&self, reqs: &[OrderRequest]) -> Vec<Result<OrderId, ConnectorError>> {
         if reqs.is_empty() {
             return vec![];
+        }
+
+        if self.shutting_down.load(Ordering::Acquire) {
+            tracing::info!(
+                target: "quoter",
+                instrument = %self.instrument,
+                n = reqs.len(),
+                "PLACE_SKIPPED shutting down — order not sent to exchange"
+            );
+            return reqs
+                .iter()
+                .map(|_| Err(ConnectorError::OrderRejected("shutting down".into())))
+                .collect();
         }
 
         // Build HL order requests
@@ -405,20 +485,31 @@ impl ExchangeConnector for HyperliquidClient {
                 Some(p) => p,
                 None => {
                     // Can't batch if any price fails; fall back handled by returning errors
-                    return reqs.iter().map(|_| {
-                        Err(ConnectorError::Other(anyhow::anyhow!("price rounding failed")))
-                    }).collect();
+                    return reqs
+                        .iter()
+                        .map(|_| {
+                            Err(ConnectorError::Other(anyhow::anyhow!(
+                                "price rounding failed"
+                            )))
+                        })
+                        .collect();
                 }
             };
             let rounded_size = self.round_size(req.quantity.inner());
             if rounded_size < self.market.min_size() {
-                return reqs.iter().map(|r| {
-                    Err(ConnectorError::OrderRejected(format!(
-                        "size {} < min {}", rounded_size, self.market.min_size()
-                    )))
-                }).collect();
+                return reqs
+                    .iter()
+                    .map(|r| {
+                        Err(ConnectorError::OrderRejected(format!(
+                            "size {} < min {}",
+                            rounded_size,
+                            self.market.min_size()
+                        )))
+                    })
+                    .collect();
             }
-            let cloid = req.client_order_id
+            let cloid = req
+                .client_order_id
                 .as_ref()
                 .and_then(|s| s.parse::<Cloid>().ok())
                 .unwrap_or_else(Cloid::random);
@@ -429,15 +520,21 @@ impl ExchangeConnector for HyperliquidClient {
                 limit_px: rounded_price,
                 sz: rounded_size,
                 reduce_only: false,
-                order_type: OrderTypePlacement::Limit { tif: Self::to_hl_tif(req.tif) },
+                order_type: OrderTypePlacement::Limit {
+                    tif: Self::to_hl_tif(req.tif),
+                },
                 cloid,
             });
         }
 
-        let resp = match self.http
+        let resp = match self
+            .http
             .place(
                 &self.signer,
-                BatchOrder { orders: hl_reqs, grouping: OrderGrouping::Na },
+                BatchOrder {
+                    orders: hl_reqs,
+                    grouping: OrderGrouping::Na,
+                },
                 self.nonce.next(),
                 self.vault_address,
                 None,
@@ -447,49 +544,58 @@ impl ExchangeConnector for HyperliquidClient {
             Ok(r) => r,
             Err(e) => {
                 let err_str = e.to_string();
-                return reqs.iter().map(|_| {
-                    Err(ConnectorError::Other(anyhow::anyhow!("batch place: {}", err_str)))
-                }).collect();
+                return reqs
+                    .iter()
+                    .map(|_| {
+                        Err(ConnectorError::Other(anyhow::anyhow!(
+                            "batch place: {}",
+                            err_str
+                        )))
+                    })
+                    .collect();
             }
         };
 
         // Map each response status back to the corresponding request.
         // Track Resting OIDs so cancel_all can BatchCancel them by ID.
         let mut oids_lock = self.active_oids.lock().unwrap();
-        resp.into_iter().zip(reqs.iter()).map(|(status, req)| {
-            match status {
-                OrderResponseStatus::Resting { oid, .. } => {
-                    let id = normalize::order_id_from_oid(oid);
-                    oids_lock.insert(oid); // track for BatchCancel
-                    let _ = self.update_tx.send(OrderUpdate {
-                        instrument: req.instrument.clone(),
-                        order_id: id.clone(),
-                        status: OrderStatus::Acknowledged,
-                        filled_qty: Quantity::zero(),
-                        remaining_qty: req.quantity,
-                        avg_fill_price: None,
-                        timestamp_ns: normalize::now_ns(),
-                    });
-                    Ok(id)
+        resp.into_iter()
+            .zip(reqs.iter())
+            .map(|(status, req)| {
+                match status {
+                    OrderResponseStatus::Resting { oid, .. } => {
+                        let id = normalize::order_id_from_oid(oid);
+                        oids_lock.insert(oid); // track for BatchCancel
+                        let _ = self.update_tx.send(OrderUpdate {
+                            instrument: req.instrument.clone(),
+                            order_id: id.clone(),
+                            status: OrderStatus::Acknowledged,
+                            filled_qty: Quantity::zero(),
+                            remaining_qty: req.quantity,
+                            avg_fill_price: None,
+                            timestamp_ns: normalize::now_ns(),
+                        });
+                        Ok(id)
+                    }
+                    OrderResponseStatus::Filled { oid, avg_px, .. } => {
+                        // Filled immediately on placement — not resting, no OID to track
+                        let id = normalize::order_id_from_oid(oid);
+                        let _ = self.update_tx.send(OrderUpdate {
+                            instrument: req.instrument.clone(),
+                            order_id: id.clone(),
+                            status: OrderStatus::Filled,
+                            filled_qty: req.quantity,
+                            remaining_qty: Quantity::zero(),
+                            avg_fill_price: Some(Price::new(avg_px)),
+                            timestamp_ns: normalize::now_ns(),
+                        });
+                        Ok(id)
+                    }
+                    OrderResponseStatus::Success => Ok(cloids[0].to_string()),
+                    OrderResponseStatus::Error(msg) => Err(ConnectorError::OrderRejected(msg)),
                 }
-                OrderResponseStatus::Filled { oid, avg_px, .. } => {
-                    // Filled immediately on placement — not resting, no OID to track
-                    let id = normalize::order_id_from_oid(oid);
-                    let _ = self.update_tx.send(OrderUpdate {
-                        instrument: req.instrument.clone(),
-                        order_id: id.clone(),
-                        status: OrderStatus::Filled,
-                        filled_qty: req.quantity,
-                        remaining_qty: Quantity::zero(),
-                        avg_fill_price: Some(Price::new(avg_px)),
-                        timestamp_ns: normalize::now_ns(),
-                    });
-                    Ok(id)
-                }
-                OrderResponseStatus::Success => Ok(cloids[0].to_string()),
-                OrderResponseStatus::Error(msg) => Err(ConnectorError::OrderRejected(msg)),
-            }
-        }).collect()
+            })
+            .collect()
     }
 
     async fn cancel_order(
@@ -502,7 +608,12 @@ impl ExchangeConnector for HyperliquidClient {
         self.http
             .cancel(
                 &self.signer,
-                BatchCancel { cancels: vec![Cancel { asset: self.market.index(), oid }] },
+                BatchCancel {
+                    cancels: vec![Cancel {
+                        asset: self.market.index(),
+                        oid,
+                    }],
+                },
                 self.nonce.next(),
                 self.vault_address,
                 None,
@@ -544,8 +655,12 @@ impl ExchangeConnector for HyperliquidClient {
             return Ok(());
         }
 
-        let cancels: Vec<Cancel> = oids.iter()
-            .map(|&oid| Cancel { asset: self.market.index(), oid })
+        let cancels: Vec<Cancel> = oids
+            .iter()
+            .map(|&oid| Cancel {
+                asset: self.market.index(),
+                oid,
+            })
             .collect();
 
         tracing::info!(
@@ -581,14 +696,23 @@ impl ExchangeConnector for HyperliquidClient {
     ) -> Result<OrderId, ConnectorError> {
         let oid = normalize::oid_from_order_id(order_id).map_err(ConnectorError::Other)?;
 
+        // TODO(modify_side): HL's modify action requires passing the original order side.
+        // The ExchangeConnector trait currently doesn't carry side through modify_order,
+        // so we can't determine it here. This function should NOT be used until `side` is
+        // added to the trait signature and all connector impls are updated. Current callers:
+        // none (the quoter strategy uses cancel+replace, not modify). Tracking as a known
+        // limitation — add `side: OrderSide` parameter before enabling BatchModify path.
+        let is_buy = true; // placeholder: wrong for sell orders — see TODO above
+
         let rounded_price = self
-            .round_price(new_price.inner(), true) // conservative neutral rounding for modify
+            .round_price(new_price.inner(), is_buy)
             .ok_or_else(|| ConnectorError::Other(anyhow::anyhow!("price rounding failed")))?;
 
         let rounded_size = self.round_size(new_qty.inner());
         let new_cloid = Cloid::random();
 
-        let resp = self.http
+        let resp = self
+            .http
             .modify(
                 &self.signer,
                 BatchModify {
@@ -596,7 +720,7 @@ impl ExchangeConnector for HyperliquidClient {
                         oid: OidOrCloid::Left(oid),
                         order: HlOrderRequest {
                             asset: self.market.index(),
-                            is_buy: true, // side must be passed — engine preserves original
+                            is_buy,
                             limit_px: rounded_price,
                             sz: rounded_size,
                             reduce_only: false,
@@ -618,17 +742,22 @@ impl ExchangeConnector for HyperliquidClient {
                 Ok(normalize::order_id_from_oid(new_oid))
             }
             Some(OrderResponseStatus::Error(msg)) => Err(ConnectorError::OrderRejected(msg)),
-            _ => Err(ConnectorError::OrderRejected("unexpected modify response".into())),
+            _ => Err(ConnectorError::OrderRejected(
+                "unexpected modify response".into(),
+            )),
         }
     }
 
     async fn positions(&self) -> Result<Vec<Position>, ConnectorError> {
-        let state = self.http
+        let state = self
+            .http
             .clearinghouse_state(self.signer.address(), None)
             .await
             .map_err(|e| ConnectorError::Other(anyhow::anyhow!("clearinghouse_state: {e}")))?;
 
-        let positions = state.asset_positions.into_iter()
+        let positions = state
+            .asset_positions
+            .into_iter()
             .filter(|ap| !ap.position.szi.is_zero())
             .map(|ap| {
                 let coin = &ap.position.coin;
@@ -649,19 +778,28 @@ impl ExchangeConnector for HyperliquidClient {
         Ok(positions)
     }
 
-    async fn open_orders(&self, _instrument: &InstrumentId) -> Result<Vec<OpenOrder>, ConnectorError> {
-        let orders = self.http
+    async fn open_orders(
+        &self,
+        _instrument: &InstrumentId,
+    ) -> Result<Vec<OpenOrder>, ConnectorError> {
+        let orders = self
+            .http
             .open_orders(self.signer.address(), None)
             .await
             .map_err(|e| ConnectorError::Other(anyhow::anyhow!("open_orders: {e}")))?;
 
         let my_coin = self.market.mids_key();
-        let open = orders.into_iter()
+        let open = orders
+            .into_iter()
             .filter(|o| o.coin == my_coin)
             .map(|o| OpenOrder {
                 order_id: o.oid.to_string(),
                 instrument: self.instrument.clone(),
-                side: if o.side == Side::Bid { OrderSide::Buy } else { OrderSide::Sell },
+                side: if o.side == Side::Bid {
+                    OrderSide::Buy
+                } else {
+                    OrderSide::Sell
+                },
                 price: Price::new(o.limit_px),
                 quantity: Quantity::new(o.sz),
                 filled_qty: Quantity::zero(),

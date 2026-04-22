@@ -9,7 +9,16 @@ trading-engine  = { path = "../engine" }
 trading-backtest = { path = "../backtest" }
 trading-telemetry = { path = "../telemetry" }
 connector-hyperliquid = { path = "../connectors/hyperliquid" }
+connector-predict_fun        = { path = "../connectors/predict_fun" }
+connector-polymarket         = { path = "../connectors/polymarket" }
+predict-sdk                  = { workspace = true }
+strategy-prediction-quoter   = { path = "../strategies/prediction_quoter" }
+rust_decimal_macros          = { workspace = true }
 strategy-hl-spread-quoter = { path = "../strategies/hl_spread_quoter" }
+strategy-predict-hedger   = { path = "../strategies/predict_hedger" }
+polymarket-client-sdk     = { version = "0.4.4", features = ["clob"] }
+alloy                     = { version = "1.6", features = ["signer-local"], default-features = false }
+uuid                      = { version = "1", features = ["v4"] }
 
 tokio       = { workspace = true }
 anyhow      = { workspace = true }
@@ -20,3 +29,4 @@ rust_decimal = { workspace = true }
 toml        = { workspace = true }
 serde       = { workspace = true }
 dotenvy     = "0.15"
+chrono      = { workspace = true }

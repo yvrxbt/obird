@@ -4,15 +4,33 @@
 //! This contract enables live trading, backtesting, and paper trading
 //! with IDENTICAL strategy code — no mode flags, no cfg gates.
 
-use crate::{Action, Event, InstrumentId};
-use crate::types::position::Position;
+use std::collections::HashMap;
+
 use crate::types::order::OpenOrder;
+use crate::types::position::Position;
+use crate::{Action, Event, InstrumentId};
 
 /// Initial state provided to a strategy at startup.
 #[derive(Debug, Clone)]
 pub struct StrategyState {
     pub positions: Vec<Position>,
     pub open_orders: Vec<OpenOrder>,
+    /// Price tick precision per instrument, populated by the engine from each
+    /// connector's `ExchangeConnector::decimal_precision(instrument)` call for
+    /// every instrument this strategy subscribes to.
+    ///
+    /// Value is `n` where `10^-n` is the minimum price increment (e.g. `2` → 0.01).
+    /// Missing entries mean the connector returned `None` (e.g. Hyperliquid uses
+    /// sig-fig rounding, computed per-price via `PriceTick`).
+    ///
+    /// ## Why per-instrument (not per-exchange or a single scalar)
+    ///
+    /// - The same exchange can host instruments with different tick sizes
+    ///   (Binance ETH vs BTC; Polymarket CLOB markets vary by market; Kalshi similar).
+    /// - A strategy quoting on venue A while reading FV from venue B must never
+    ///   pick up B's precision — the lookup key `self.quoting_instrument` makes
+    ///   that structurally impossible.
+    pub decimal_precisions: HashMap<InstrumentId, u32>,
 }
 
 #[async_trait::async_trait]

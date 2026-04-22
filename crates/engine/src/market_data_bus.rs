@@ -66,8 +66,7 @@ impl Default for MarketDataBus {
 }
 
 /// The in-process sink implementation — events go into broadcast channels.
-/// To go distributed, replace this `Arc<MarketDataBus>` with a NATS/Redis publisher
-/// that also implements `MarketDataSink`.
+/// To go distributed, replace this with a NATS/Redis publisher that also implements `MarketDataSink`.
 impl MarketDataSink for MarketDataBus {
     fn publish(&self, instrument: &InstrumentId, event: Event) {
         if let Some(tx) = self.channels.read().unwrap().get(instrument) {

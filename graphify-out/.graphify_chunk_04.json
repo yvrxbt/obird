@@ -1,0 +1,1469 @@
+{
+  "nodes": [
+    {
+      "id": "lib_engine_lib",
+      "label": "Engine Crate Root (lib.rs)",
+      "file_type": "code",
+      "source_file": "crates/engine/src/lib.rs",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "runner_EngineRunner",
+      "label": "EngineRunner",
+      "file_type": "code",
+      "source_file": "crates/engine/src/runner.rs",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "runner_StrategyInstance",
+      "label": "StrategyInstance",
+      "file_type": "code",
+      "source_file": "crates/engine/src/runner.rs",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "market_data_bus_MarketDataBus",
+      "label": "MarketDataBus",
+      "file_type": "code",
+      "source_file": "crates/engine/src/market_data_bus.rs",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "order_router_OrderRouter",
+      "label": "OrderRouter",
+      "file_type": "code",
+      "source_file": "crates/engine/src/order_router.rs",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "order_router_StrategyId",
+      "label": "StrategyId (type alias)",
+      "file_type": "code",
+      "source_file": "crates/engine/src/order_router.rs",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "engine_OrderManager",
+      "label": "OrderManager",
+      "file_type": "code",
+      "source_file": "crates/engine/src/runner.rs",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "engine_UnifiedRiskManager",
+      "label": "UnifiedRiskManager",
+      "file_type": "code",
+      "source_file": "crates/engine/src/runner.rs",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "core_ExchangeConnector",
+      "label": "ExchangeConnector Trait",
+      "file_type": "code",
+      "source_file": "crates/core/CONTEXT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "core_Strategy",
+      "label": "Strategy Trait",
+      "file_type": "code",
+      "source_file": "crates/core/CONTEXT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "core_StrategyState",
+      "label": "StrategyState",
+      "file_type": "code",
+      "source_file": "crates/engine/src/runner.rs",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "core_Action",
+      "label": "Action Enum",
+      "file_type": "code",
+      "source_file": "crates/core/CONTEXT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "core_Event",
+      "label": "Event Enum",
+      "file_type": "code",
+      "source_file": "crates/core/CONTEXT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "core_Exchange",
+      "label": "Exchange Enum",
+      "file_type": "code",
+      "source_file": "crates/engine/src/runner.rs",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "core_InstrumentId",
+      "label": "InstrumentId",
+      "file_type": "code",
+      "source_file": "crates/core/CONTEXT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "core_RiskRejection",
+      "label": "RiskRejection Error",
+      "file_type": "code",
+      "source_file": "crates/engine/src/order_router.rs",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "readme_TradingSystem",
+      "label": "Trading System README",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "architecture_Architecture",
+      "label": "Architecture Document",
+      "file_type": "document",
+      "source_file": "ARCHITECTURE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "changelog_Changelog",
+      "label": "Changelog",
+      "file_type": "document",
+      "source_file": "CHANGELOG.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "adr001_SingleBinaryMultiExchange",
+      "label": "ADR-001: Single Binary Multi-Exchange",
+      "file_type": "document",
+      "source_file": "decisions/001-single-binary-multi-exchange.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "adr002_BroadcastChannelsNotNats",
+      "label": "ADR-002: Broadcast Channels Not NATS",
+      "file_type": "document",
+      "source_file": "decisions/002-broadcast-channels-not-nats.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "adr003_TraitBasedStrategy",
+      "label": "ADR-003: Trait-Based Strategy Abstraction",
+      "file_type": "document",
+      "source_file": "decisions/003-trait-based-strategy.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "adr004_FairValueSeparateService",
+      "label": "ADR-004: Fair Value as Separate Service",
+      "file_type": "document",
+      "source_file": "decisions/004-fair-value-separate-service.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "adr005_UnifiedRisk",
+      "label": "ADR-005: Unified Risk Management",
+      "file_type": "document",
+      "source_file": "decisions/005-unified-risk.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "adr006_OtelTelemetry",
+      "label": "ADR-006: OpenTelemetry + Prometheus Telemetry",
+      "file_type": "document",
+      "source_file": "decisions/006-otel-telemetry.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "adr_template_Template",
+      "label": "ADR Template",
+      "file_type": "document",
+      "source_file": "decisions/template.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "pair_trader_context_PairTrader",
+      "label": "Pair Trader Strategy (CONTEXT)",
+      "file_type": "document",
+      "source_file": "crates/strategies/pair_trader/CONTEXT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "prediction_quoter_context_PredictionQuoter",
+      "label": "Prediction Quoter Strategy (CONTEXT)",
+      "file_type": "document",
+      "source_file": "crates/strategies/prediction_quoter/CONTEXT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "fair_value_context_FairValueService",
+      "label": "Fair Value Service (CONTEXT)",
+      "file_type": "document",
+      "source_file": "crates/fair_value_service/CONTEXT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "backtest_context_BacktestHarness",
+      "label": "Backtest Harness (CONTEXT)",
+      "file_type": "document",
+      "source_file": "crates/backtest/CONTEXT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "hyperliquid_context_HyperliquidConnector",
+      "label": "Hyperliquid Connector (CONTEXT)",
+      "file_type": "document",
+      "source_file": "crates/connectors/hyperliquid/CONTEXT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "binance_context_BinanceConnector",
+      "label": "Binance Connector (CONTEXT)",
+      "file_type": "document",
+      "source_file": "crates/connectors/binance/CONTEXT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "lighter_context_LighterConnector",
+      "label": "Lighter Connector (CONTEXT)",
+      "file_type": "document",
+      "source_file": "crates/connectors/lighter/CONTEXT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "polymarket_context_PolymarketConnector",
+      "label": "Polymarket Connector (CONTEXT)",
+      "file_type": "document",
+      "source_file": "crates/connectors/polymarket/CONTEXT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "predict_fun_context_PredictFunConnector",
+      "label": "Predict.fun Connector (CONTEXT)",
+      "file_type": "document",
+      "source_file": "crates/connectors/predict_fun/CONTEXT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "core_context_Core",
+      "label": "Core Crate (CONTEXT)",
+      "file_type": "document",
+      "source_file": "crates/core/CONTEXT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "engine_context_Engine",
+      "label": "Engine Crate (CONTEXT)",
+      "file_type": "document",
+      "source_file": "crates/engine/CONTEXT.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "rationale_single_binary",
+      "label": "Rationale: Single Binary for Unified Risk and Nonce Management",
+      "file_type": "document",
+      "source_file": "decisions/001-single-binary-multi-exchange.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "rationale_broadcast_not_nats",
+      "label": "Rationale: Broadcast Channels Over NATS for 10ns vs 200us Latency",
+      "file_type": "document",
+      "source_file": "decisions/002-broadcast-channels-not-nats.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "rationale_trait_strategy",
+      "label": "Rationale: Trait Abstraction for Live/Backtest Portability",
+      "file_type": "document",
+      "source_file": "decisions/003-trait-based-strategy.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "rationale_fair_value_separate",
+      "label": "Rationale: Separate Fair Value Binary to Keep Engine Lean",
+      "file_type": "document",
+      "source_file": "decisions/004-fair-value-separate-service.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "rationale_unified_risk",
+      "label": "Rationale: Unified Risk Manager for Cross-Exchange Portfolio Limits",
+      "file_type": "document",
+      "source_file": "decisions/005-unified-risk.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "rationale_otel",
+      "label": "Rationale: OTel + Prometheus + JSONL Audit for Observability",
+      "file_type": "document",
+      "source_file": "decisions/006-otel-telemetry.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "concept_latest_value_semantics",
+      "label": "Latest-Value Semantics (skip stale market data)",
+      "file_type": "document",
+      "source_file": "decisions/002-broadcast-channels-not-nats.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "concept_live_backtest_parity",
+      "label": "Live/Backtest Strategy Parity",
+      "file_type": "document",
+      "source_file": "decisions/003-trait-based-strategy.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "concept_uds_fair_value_wire",
+      "label": "Unix Domain Socket Fair Value Wire Protocol",
+      "file_type": "document",
+      "source_file": "decisions/004-fair-value-separate-service.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "concept_nonce_serialization",
+      "label": "Per-Exchange Nonce Serialization",
+      "file_type": "document",
+      "source_file": "decisions/001-single-binary-multi-exchange.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "concept_decision_audit_log",
+      "label": "JSONL Decision Audit Log",
+      "file_type": "document",
+      "source_file": "decisions/006-otel-telemetry.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    }
+  ],
+  "edges": [
+    {
+      "source": "lib_engine_lib",
+      "target": "runner_EngineRunner",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/engine/src/lib.rs",
+      "source_location": "line 1",
+      "weight": 1.0
+    },
+    {
+      "source": "lib_engine_lib",
+      "target": "order_router_OrderRouter",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/engine/src/lib.rs",
+      "source_location": "line 2",
+      "weight": 1.0
+    },
+    {
+      "source": "lib_engine_lib",
+      "target": "market_data_bus_MarketDataBus",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/engine/src/lib.rs",
+      "source_location": "line 6",
+      "weight": 1.0
+    },
+    {
+      "source": "lib_engine_lib",
+      "target": "engine_UnifiedRiskManager",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/engine/src/lib.rs",
+      "source_location": "line 4",
+      "weight": 1.0
+    },
+    {
+      "source": "lib_engine_lib",
+      "target": "engine_OrderManager",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/engine/src/lib.rs",
+      "source_location": "line 3",
+      "weight": 1.0
+    },
+    {
+      "source": "runner_EngineRunner",
+      "target": "market_data_bus_MarketDataBus",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/engine/src/runner.rs",
+      "source_location": "line 33",
+      "weight": 1.0
+    },
+    {
+      "source": "runner_EngineRunner",
+      "target": "engine_UnifiedRiskManager",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/engine/src/runner.rs",
+      "source_location": "line 35",
+      "weight": 1.0
+    },
+    {
+      "source": "runner_EngineRunner",
+      "target": "order_router_OrderRouter",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/engine/src/runner.rs",
+      "source_location": "line 152",
+      "weight": 1.0
+    },
+    {
+      "source": "runner_EngineRunner",
+      "target": "engine_OrderManager",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/engine/src/runner.rs",
+      "source_location": "line 148",
+      "weight": 1.0
+    },
+    {
+      "source": "runner_EngineRunner",
+      "target": "runner_StrategyInstance",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/engine/src/runner.rs",
+      "source_location": "line 32",
+      "weight": 1.0
+    },
+    {
+      "source": "runner_StrategyInstance",
+      "target": "core_Strategy",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/engine/src/runner.rs",
+      "source_location": "line 25",
+      "weight": 1.0
+    },
+    {
+      "source": "runner_StrategyInstance",
+      "target": "order_router_StrategyId",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/engine/src/runner.rs",
+      "source_location": "line 26",
+      "weight": 1.0
+    },
+    {
+      "source": "runner_EngineRunner",
+      "target": "core_ExchangeConnector",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/engine/src/runner.rs",
+      "source_location": "line 31",
+      "weight": 1.0
+    },
+    {
+      "source": "runner_EngineRunner",
+      "target": "core_Exchange",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/engine/src/runner.rs",
+      "source_location": "line 144",
+      "weight": 1.0
+    },
+    {
+      "source": "runner_EngineRunner",
+      "target": "core_StrategyState",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/engine/src/runner.rs",
+      "source_location": "line 82",
+      "weight": 1.0
+    },
+    {
+      "source": "runner_EngineRunner",
+      "target": "core_Action",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/engine/src/runner.rs",
+      "source_location": "line 55",
+      "weight": 1.0
+    },
+    {
+      "source": "runner_EngineRunner",
+      "target": "core_Event",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/engine/src/runner.rs",
+      "source_location": "line 58",
+      "weight": 1.0
+    },
+    {
+      "source": "market_data_bus_MarketDataBus",
+      "target": "core_Event",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/engine/src/market_data_bus.rs",
+      "source_location": "line 7",
+      "weight": 1.0
+    },
+    {
+      "source": "market_data_bus_MarketDataBus",
+      "target": "core_InstrumentId",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/engine/src/market_data_bus.rs",
+      "source_location": "line 7",
+      "weight": 1.0
+    },
+    {
+      "source": "order_router_OrderRouter",
+      "target": "engine_OrderManager",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/engine/src/order_router.rs",
+      "source_location": "line 15",
+      "weight": 1.0
+    },
+    {
+      "source": "order_router_OrderRouter",
+      "target": "engine_UnifiedRiskManager",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/engine/src/order_router.rs",
+      "source_location": "line 16",
+      "weight": 1.0
+    },
+    {
+      "source": "order_router_OrderRouter",
+      "target": "core_Action",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/engine/src/order_router.rs",
+      "source_location": "line 4",
+      "weight": 1.0
+    },
+    {
+      "source": "order_router_OrderRouter",
+      "target": "core_Event",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/engine/src/order_router.rs",
+      "source_location": "line 4",
+      "weight": 1.0
+    },
+    {
+      "source": "order_router_OrderRouter",
+      "target": "core_Exchange",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/engine/src/order_router.rs",
+      "source_location": "line 5",
+      "weight": 1.0
+    },
+    {
+      "source": "order_router_OrderRouter",
+      "target": "core_RiskRejection",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/engine/src/order_router.rs",
+      "source_location": "line 6",
+      "weight": 1.0
+    },
+    {
+      "source": "order_router_OrderRouter",
+      "target": "order_router_StrategyId",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/engine/src/order_router.rs",
+      "source_location": "line 12",
+      "weight": 1.0
+    },
+    {
+      "source": "adr001_SingleBinaryMultiExchange",
+      "target": "rationale_single_binary",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "decisions/001-single-binary-multi-exchange.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "rationale_single_binary",
+      "target": "order_router_OrderRouter",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "decisions/001-single-binary-multi-exchange.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "rationale_single_binary",
+      "target": "engine_OrderManager",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "decisions/001-single-binary-multi-exchange.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "rationale_single_binary",
+      "target": "concept_nonce_serialization",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "decisions/001-single-binary-multi-exchange.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "adr002_BroadcastChannelsNotNats",
+      "target": "rationale_broadcast_not_nats",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "decisions/002-broadcast-channels-not-nats.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "rationale_broadcast_not_nats",
+      "target": "market_data_bus_MarketDataBus",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "decisions/002-broadcast-channels-not-nats.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "rationale_broadcast_not_nats",
+      "target": "concept_latest_value_semantics",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "decisions/002-broadcast-channels-not-nats.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "adr003_TraitBasedStrategy",
+      "target": "rationale_trait_strategy",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "decisions/003-trait-based-strategy.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "rationale_trait_strategy",
+      "target": "core_Strategy",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "decisions/003-trait-based-strategy.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "rationale_trait_strategy",
+      "target": "concept_live_backtest_parity",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "decisions/003-trait-based-strategy.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "adr004_FairValueSeparateService",
+      "target": "rationale_fair_value_separate",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "decisions/004-fair-value-separate-service.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "rationale_fair_value_separate",
+      "target": "fair_value_context_FairValueService",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "decisions/004-fair-value-separate-service.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "rationale_fair_value_separate",
+      "target": "concept_uds_fair_value_wire",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "decisions/004-fair-value-separate-service.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "adr005_UnifiedRisk",
+      "target": "rationale_unified_risk",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "decisions/005-unified-risk.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "rationale_unified_risk",
+      "target": "engine_UnifiedRiskManager",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "decisions/005-unified-risk.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "adr006_OtelTelemetry",
+      "target": "rationale_otel",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "decisions/006-otel-telemetry.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "rationale_otel",
+      "target": "concept_decision_audit_log",
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "decisions/006-otel-telemetry.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "pair_trader_context_PairTrader",
+      "target": "core_Strategy",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/strategies/pair_trader/CONTEXT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "prediction_quoter_context_PredictionQuoter",
+      "target": "core_Strategy",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/strategies/prediction_quoter/CONTEXT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "prediction_quoter_context_PredictionQuoter",
+      "target": "fair_value_context_FairValueService",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/strategies/prediction_quoter/CONTEXT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "backtest_context_BacktestHarness",
+      "target": "core_ExchangeConnector",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/backtest/CONTEXT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "backtest_context_BacktestHarness",
+      "target": "concept_live_backtest_parity",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/backtest/CONTEXT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "hyperliquid_context_HyperliquidConnector",
+      "target": "core_ExchangeConnector",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/connectors/hyperliquid/CONTEXT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "binance_context_BinanceConnector",
+      "target": "core_ExchangeConnector",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/connectors/binance/CONTEXT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "lighter_context_LighterConnector",
+      "target": "core_ExchangeConnector",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/connectors/lighter/CONTEXT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "polymarket_context_PolymarketConnector",
+      "target": "core_ExchangeConnector",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/connectors/polymarket/CONTEXT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "predict_fun_context_PredictFunConnector",
+      "target": "core_ExchangeConnector",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/connectors/predict_fun/CONTEXT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "architecture_Architecture",
+      "target": "runner_EngineRunner",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "ARCHITECTURE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "architecture_Architecture",
+      "target": "market_data_bus_MarketDataBus",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "ARCHITECTURE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "architecture_Architecture",
+      "target": "order_router_OrderRouter",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "ARCHITECTURE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "architecture_Architecture",
+      "target": "engine_UnifiedRiskManager",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "ARCHITECTURE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "architecture_Architecture",
+      "target": "engine_OrderManager",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "ARCHITECTURE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "readme_TradingSystem",
+      "target": "architecture_Architecture",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "readme_TradingSystem",
+      "target": "adr001_SingleBinaryMultiExchange",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 0.8
+    },
+    {
+      "source": "architecture_Architecture",
+      "target": "adr001_SingleBinaryMultiExchange",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "ARCHITECTURE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "architecture_Architecture",
+      "target": "adr002_BroadcastChannelsNotNats",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "ARCHITECTURE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "architecture_Architecture",
+      "target": "adr003_TraitBasedStrategy",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "ARCHITECTURE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "architecture_Architecture",
+      "target": "adr004_FairValueSeparateService",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "ARCHITECTURE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "architecture_Architecture",
+      "target": "adr005_UnifiedRisk",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "ARCHITECTURE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "architecture_Architecture",
+      "target": "adr006_OtelTelemetry",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "ARCHITECTURE.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "hyperliquid_context_HyperliquidConnector",
+      "target": "concept_nonce_serialization",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/connectors/hyperliquid/CONTEXT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "lighter_context_LighterConnector",
+      "target": "concept_nonce_serialization",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "crates/connectors/lighter/CONTEXT.md",
+      "source_location": null,
+      "weight": 0.85
+    },
+    {
+      "source": "concept_decision_audit_log",
+      "target": "core_Action",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "decisions/006-otel-telemetry.md",
+      "source_location": null,
+      "weight": 0.8
+    },
+    {
+      "source": "concept_latest_value_semantics",
+      "target": "market_data_bus_MarketDataBus",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "decisions/002-broadcast-channels-not-nats.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "concept_live_backtest_parity",
+      "target": "backtest_context_BacktestHarness",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/backtest/CONTEXT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "prediction_quoter_context_PredictionQuoter",
+      "target": "polymarket_context_PolymarketConnector",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "crates/strategies/prediction_quoter/CONTEXT.md",
+      "source_location": null,
+      "weight": 0.85
+    },
+    {
+      "source": "prediction_quoter_context_PredictionQuoter",
+      "target": "predict_fun_context_PredictFunConnector",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "crates/strategies/prediction_quoter/CONTEXT.md",
+      "source_location": null,
+      "weight": 0.85
+    },
+    {
+      "source": "pair_trader_context_PairTrader",
+      "target": "hyperliquid_context_HyperliquidConnector",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "crates/strategies/pair_trader/CONTEXT.md",
+      "source_location": null,
+      "weight": 0.8
+    },
+    {
+      "source": "pair_trader_context_PairTrader",
+      "target": "binance_context_BinanceConnector",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "crates/strategies/pair_trader/CONTEXT.md",
+      "source_location": null,
+      "weight": 0.8
+    },
+    {
+      "source": "concept_uds_fair_value_wire",
+      "target": "fair_value_context_FairValueService",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/fair_value_service/CONTEXT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "engine_context_Engine",
+      "target": "runner_EngineRunner",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/engine/CONTEXT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "engine_context_Engine",
+      "target": "order_router_OrderRouter",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/engine/CONTEXT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "engine_context_Engine",
+      "target": "market_data_bus_MarketDataBus",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/engine/CONTEXT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "engine_context_Engine",
+      "target": "engine_UnifiedRiskManager",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/engine/CONTEXT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "engine_context_Engine",
+      "target": "engine_OrderManager",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/engine/CONTEXT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "core_context_Core",
+      "target": "core_Strategy",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/core/CONTEXT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "core_context_Core",
+      "target": "core_ExchangeConnector",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/core/CONTEXT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "core_context_Core",
+      "target": "core_Action",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/core/CONTEXT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "core_context_Core",
+      "target": "core_Event",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/core/CONTEXT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "core_context_Core",
+      "target": "core_InstrumentId",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/core/CONTEXT.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "adr001_SingleBinaryMultiExchange",
+      "target": "adr005_UnifiedRisk",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "decisions/001-single-binary-multi-exchange.md",
+      "source_location": null,
+      "weight": 0.9
+    },
+    {
+      "source": "adr003_TraitBasedStrategy",
+      "target": "adr001_SingleBinaryMultiExchange",
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "decisions/003-trait-based-strategy.md",
+      "source_location": null,
+      "weight": 0.75
+    },
+    {
+      "source": "backtest_context_BacktestHarness",
+      "target": "adr003_TraitBasedStrategy",
+      "relation": "references",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "crates/backtest/CONTEXT.md",
+      "source_location": null,
+      "weight": 0.85
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "engine_event_action_loop",
+      "label": "Engine Event-Action Processing Loop: Strategy, MarketDataBus, OrderRouter",
+      "nodes": [
+        "runner_EngineRunner",
+        "market_data_bus_MarketDataBus",
+        "order_router_OrderRouter",
+        "engine_UnifiedRiskManager"
+      ],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "crates/engine/src/runner.rs"
+    },
+    {
+      "id": "strategy_portability_pattern",
+      "label": "Strategy Portability Pattern: Strategy Trait, Live Engine, Backtest Harness",
+      "nodes": [
+        "core_Strategy",
+        "runner_EngineRunner",
+        "backtest_context_BacktestHarness"
+      ],
+      "relation": "implement",
+      "confidence": "EXTRACTED",
+      "confidence_score": 0.95,
+      "source_file": "decisions/003-trait-based-strategy.md"
+    },
+    {
+      "id": "prediction_market_vertical",
+      "label": "Prediction Market Trading Vertical: PredictionQuoter, FairValueService, Polymarket/PredictFun Connectors",
+      "nodes": [
+        "prediction_quoter_context_PredictionQuoter",
+        "fair_value_context_FairValueService",
+        "polymarket_context_PolymarketConnector",
+        "predict_fun_context_PredictFunConnector"
+      ],
+      "relation": "participate_in",
+      "confidence": "INFERRED",
+      "confidence_score": 0.88,
+      "source_file": "ARCHITECTURE.md"
+    }
+  ],
+  "input_tokens": 0,
+  "output_tokens": 0
+}

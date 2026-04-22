@@ -39,4 +39,13 @@ pub enum Event {
     PositionSnapshot {
         positions: Vec<Position>,
     },
+    /// All orders in a place_batch failed. The strategy should clear its resting-price
+    /// state and transition out of Quoting — no orders landed on the exchange.
+    ///
+    /// `reason` contains the first error string from the batch. Callers should check
+    /// for "Too many cumulative" to distinguish HL rate-limit errors from other failures.
+    PlaceFailed {
+        instrument: InstrumentId,
+        reason: String,
+    },
 }

@@ -9,8 +9,13 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum Action {
     PlaceOrder(OrderRequest),
-    CancelOrder { instrument: InstrumentId, order_id: OrderId },
-    CancelAll { instrument: InstrumentId },
+    CancelOrder {
+        instrument: InstrumentId,
+        order_id: OrderId,
+    },
+    CancelAll {
+        instrument: InstrumentId,
+    },
     ModifyOrder {
         instrument: InstrumentId,
         order_id: OrderId,

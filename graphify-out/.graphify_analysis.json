@@ -1,0 +1,616 @@
+{
+  "communities": {
+    "0": [
+      "adr001_SingleBinaryMultiExchange",
+      "adr002_BroadcastChannelsNotNats",
+      "adr003_TraitBasedStrategy",
+      "adr004_FairValueSeparateService",
+      "adr005_UnifiedRisk",
+      "adr006_OtelTelemetry",
+      "architecture_Architecture",
+      "backtest_context_BacktestHarness",
+      "binance_context_BinanceConnector",
+      "concept_decision_audit_log",
+      "concept_latest_value_semantics",
+      "concept_live_backtest_parity",
+      "concept_nonce_serialization",
+      "concept_uds_fair_value_wire",
+      "core_Action",
+      "core_Event",
+      "core_Exchange",
+      "core_ExchangeConnector",
+      "core_InstrumentId",
+      "core_RiskRejection",
+      "core_Strategy",
+      "core_StrategyState",
+      "core_context_Core",
+      "engine_NonceManager",
+      "engine_OrderManager",
+      "engine_UnifiedRiskManager",
+      "engine_context_Engine",
+      "error_ConnectorError",
+      "error_RiskRejection",
+      "fair_value_context_FairValueService",
+      "hyperliquid_context_HyperliquidConnector",
+      "lib_engine_lib",
+      "lighter_context_LighterConnector",
+      "market_data_bus_MarketDataBus",
+      "order_router_OrderRouter",
+      "order_router_StrategyId",
+      "pair_trader_context_PairTrader",
+      "polymarket_context_PolymarketConnector",
+      "predict_fun_context_PredictFunConnector",
+      "prediction_quoter_context_PredictionQuoter",
+      "rationale_broadcast_not_nats",
+      "rationale_fair_value_separate",
+      "rationale_otel",
+      "rationale_single_binary",
+      "rationale_trait_strategy",
+      "rationale_unified_risk",
+      "readme_TradingSystem",
+      "runner_EngineRunner",
+      "runner_StrategyInstance"
+    ],
+    "1": [
+      "action",
+      "action_action",
+      "action_action_exchange",
+      "client",
+      "connector",
+      "connector_exchangeconnector",
+      "decimal",
+      "event",
+      "event_event",
+      "instrument",
+      "instrument_exchange",
+      "instrument_instrumentid",
+      "instrument_instrumentid_fmt",
+      "instrument_instrumentid_new",
+      "instrument_instrumentkind",
+      "lib",
+      "live",
+      "live_run_once",
+      "market_data",
+      "market_data_trade",
+      "market_data_tradeside",
+      "matching_engine",
+      "matching_engine_fillmodel",
+      "matching_engine_simorder",
+      "order",
+      "order_openorder",
+      "order_orderrequest",
+      "order_orderside",
+      "order_orderstatus",
+      "order_orderupdate",
+      "order_timeinforce",
+      "params",
+      "params_pairtraderparams",
+      "params_quoterparams",
+      "position",
+      "position_fill",
+      "position_position",
+      "recorder",
+      "report",
+      "report_backtestreport",
+      "report_backtestreport_new",
+      "report_backtestreport_print_summary",
+      "risk",
+      "risk_riskcheck",
+      "sim_connector"
+    ],
+    "2": [
+      "action_Action",
+      "cli_backtest",
+      "cli_live",
+      "cli_main",
+      "cli_record",
+      "config_AppConfig",
+      "config_EngineConfig",
+      "config_ExchangeConfig",
+      "config_StrategyConfig",
+      "config_TelemetryConfig",
+      "decimal_Price",
+      "decimal_Quantity",
+      "engine_PositionTracker",
+      "event_Event",
+      "instrument_Exchange",
+      "instrument_InstrumentId",
+      "instrument_InstrumentKind",
+      "market_data_OrderbookSnapshot",
+      "market_data_Trade",
+      "market_data_TradeSide",
+      "order_OpenOrder",
+      "order_OrderId",
+      "order_OrderRequest",
+      "order_OrderSide",
+      "order_OrderStatus",
+      "order_OrderUpdate",
+      "order_TimeInForce",
+      "position_Fill",
+      "position_Position",
+      "traits_ExchangeConnector",
+      "traits_RiskCheck",
+      "traits_Strategy",
+      "traits_StrategyState"
+    ],
+    "3": [
+      "mod",
+      "order_router",
+      "order_router_orderrouter",
+      "order_router_orderrouter_handle_action",
+      "order_router_orderrouter_new",
+      "order_router_orderrouter_run",
+      "quoter",
+      "quoter_predictionquoter",
+      "quoter_predictionquoter_id",
+      "quoter_predictionquoter_initialize",
+      "quoter_predictionquoter_new",
+      "quoter_predictionquoter_on_event",
+      "quoter_predictionquoter_shutdown",
+      "quoter_predictionquoter_subscriptions",
+      "runner",
+      "runner_enginerunner",
+      "runner_enginerunner_new",
+      "runner_enginerunner_run",
+      "runner_strategyinstance",
+      "strategy",
+      "strategy_strategy",
+      "strategy_strategystate",
+      "trader",
+      "trader_pairtrader",
+      "trader_pairtrader_id",
+      "trader_pairtrader_initialize",
+      "trader_pairtrader_new",
+      "trader_pairtrader_on_event",
+      "trader_pairtrader_shutdown",
+      "trader_pairtrader_subscriptions"
+    ],
+    "4": [
+      "backtest_MatchingEngine",
+      "binance_BinanceClient",
+      "binance_lib",
+      "binance_market_data",
+      "binance_normalize",
+      "hyperliquid_HyperliquidClient",
+      "hyperliquid_lib",
+      "hyperliquid_market_data",
+      "hyperliquid_normalize",
+      "hyperliquid_sdk_ExchangeClient",
+      "hyperliquid_sdk_InfoClient",
+      "lighter_LighterClient",
+      "lighter_lib",
+      "lighter_market_data",
+      "lighter_normalize",
+      "polymarket_PolymarketClient",
+      "polymarket_lib",
+      "polymarket_market_data",
+      "polymarket_normalize",
+      "predict_fun_PredictFunClient",
+      "predict_fun_lib",
+      "predict_fun_market_data",
+      "predict_fun_normalize",
+      "sim_connector_SimConnector",
+      "sim_connector_on_market_data",
+      "trading_core_ConnectorError",
+      "trading_core_ExchangeConnector",
+      "trading_core_OrderUpdate"
+    ],
+    "5": [
+      "backtest_harness_BacktestHarness",
+      "backtest_matching_engine_FillModel",
+      "backtest_matching_engine_MatchingEngine",
+      "backtest_recorder_MarketDataRecorder",
+      "backtest_report_BacktestReport",
+      "backtest_sim_market_data_SimMarketDataFeed",
+      "fair_value_service_data_source_PriceAggregator",
+      "fair_value_service_main_FairValueServiceMain",
+      "fair_value_service_model_FairValueModel",
+      "fair_value_service_publisher_FairValueMessage",
+      "fair_value_service_publisher_FairValuePublisher",
+      "pair_trader_params_PairTraderParams",
+      "pair_trader_spread_model_SpreadModel",
+      "pair_trader_trader_PairTrader",
+      "prediction_quoter_params_QuoterParams",
+      "prediction_quoter_quoter_PredictionQuoter",
+      "telemetry_audit_AuditEntry",
+      "telemetry_audit_AuditLogger",
+      "telemetry_trade_log_TradeLogger",
+      "trading_core_Event_FairValueUpdate",
+      "trading_core_traits_Strategy"
+    ],
+    "6": [
+      "client_hyperliquidclient",
+      "client_hyperliquidclient_cancel_all",
+      "client_hyperliquidclient_cancel_order",
+      "client_hyperliquidclient_exchange",
+      "client_hyperliquidclient_from_env",
+      "client_hyperliquidclient_modify_order",
+      "client_hyperliquidclient_new",
+      "client_hyperliquidclient_now_ns",
+      "client_hyperliquidclient_open_orders",
+      "client_hyperliquidclient_order_update_rx",
+      "client_hyperliquidclient_parse_decimal",
+      "client_hyperliquidclient_parse_oid",
+      "client_hyperliquidclient_place_order",
+      "client_hyperliquidclient_positions",
+      "client_hyperliquidclient_to_core_side",
+      "client_hyperliquidclient_to_hl_side",
+      "client_hyperliquidclient_to_hl_tif",
+      "client_hyperliquidclient_to_instrument"
+    ],
+    "7": [
+      "sim_connector_simconnector",
+      "sim_connector_simconnector_cancel_all",
+      "sim_connector_simconnector_cancel_order",
+      "sim_connector_simconnector_exchange",
+      "sim_connector_simconnector_matching_engine",
+      "sim_connector_simconnector_modify_order",
+      "sim_connector_simconnector_new",
+      "sim_connector_simconnector_on_market_data",
+      "sim_connector_simconnector_open_orders",
+      "sim_connector_simconnector_order_update_rx",
+      "sim_connector_simconnector_place_order",
+      "sim_connector_simconnector_positions"
+    ],
+    "8": [
+      "matching_engine_matchingengine",
+      "matching_engine_matchingengine_add_order",
+      "matching_engine_matchingengine_cancel_all_for",
+      "matching_engine_matchingengine_cancel_order",
+      "matching_engine_matchingengine_check_fills",
+      "matching_engine_matchingengine_new",
+      "matching_engine_matchingengine_open_orders_for",
+      "matching_engine_matchingengine_positions",
+      "matching_engine_matchingengine_with_fill_model"
+    ],
+    "9": [
+      "config",
+      "config_appconfig",
+      "config_appconfig_load",
+      "config_engineconfig",
+      "config_exchangeconfig",
+      "config_strategyconfig",
+      "config_telemetryconfig"
+    ],
+    "10": [
+      "order_manager",
+      "order_manager_noncemanager",
+      "order_manager_noncemanager_new",
+      "order_manager_noncemanager_next",
+      "order_manager_ordermanager",
+      "order_manager_ordermanager_new",
+      "order_manager_ordermanager_submit"
+    ],
+    "11": [
+      "data_source",
+      "data_source_priceaggregator",
+      "data_source_priceaggregator_compute_features",
+      "data_source_priceaggregator_get",
+      "data_source_priceaggregator_new",
+      "data_source_priceaggregator_update"
+    ],
+    "12": [
+      "decimal_quantity",
+      "decimal_quantity_abs",
+      "decimal_quantity_fmt",
+      "decimal_quantity_inner",
+      "decimal_quantity_new",
+      "decimal_quantity_zero"
+    ],
+    "13": [
+      "position_tracker",
+      "position_tracker_positiontracker",
+      "position_tracker_positiontracker_all",
+      "position_tracker_positiontracker_get",
+      "position_tracker_positiontracker_new",
+      "position_tracker_positiontracker_on_fill"
+    ],
+    "14": [
+      "market_data_bus",
+      "market_data_bus_marketdatabus",
+      "market_data_bus_marketdatabus_new",
+      "market_data_bus_marketdatabus_publish",
+      "market_data_bus_marketdatabus_sender",
+      "market_data_bus_marketdatabus_subscribe"
+    ],
+    "15": [
+      "spread_model",
+      "spread_model_spreadmodel",
+      "spread_model_spreadmodel_new",
+      "spread_model_spreadmodel_update",
+      "spread_model_spreadmodel_zscore"
+    ],
+    "16": [
+      "publisher",
+      "publisher_fairvaluemessage",
+      "publisher_fairvaluepublisher",
+      "publisher_fairvaluepublisher_new",
+      "publisher_fairvaluepublisher_run"
+    ],
+    "17": [
+      "trade_log",
+      "trade_log_tradelogger",
+      "trade_log_tradelogger_log_fill",
+      "trade_log_tradelogger_log_order_update",
+      "trade_log_tradelogger_new"
+    ],
+    "18": [
+      "audit",
+      "audit_auditentry",
+      "audit_auditlogger",
+      "audit_auditlogger_log",
+      "audit_auditlogger_new"
+    ],
+    "19": [
+      "harness",
+      "harness_backtestharness",
+      "harness_backtestharness_new",
+      "harness_backtestharness_process_actions",
+      "harness_backtestharness_run"
+    ],
+    "20": [
+      "decimal_price",
+      "decimal_price_fmt",
+      "decimal_price_inner",
+      "decimal_price_new",
+      "decimal_price_zero"
+    ],
+    "21": [
+      "risk_unifiedriskmanager",
+      "risk_unifiedriskmanager_all_positions",
+      "risk_unifiedriskmanager_check",
+      "risk_unifiedriskmanager_new",
+      "risk_unifiedriskmanager_update_position"
+    ],
+    "22": [
+      "model",
+      "model_fairvaluemodel",
+      "model_fairvaluemodel_compute",
+      "model_fairvaluemodel_new"
+    ],
+    "23": [
+      "sim_market_data",
+      "sim_market_data_simmarketdatafeed",
+      "sim_market_data_simmarketdatafeed_load_events",
+      "sim_market_data_simmarketdatafeed_new"
+    ],
+    "24": [
+      "market_data_orderbooksnapshot",
+      "market_data_orderbooksnapshot_best_ask",
+      "market_data_orderbooksnapshot_best_bid",
+      "market_data_orderbooksnapshot_mid_price"
+    ],
+    "25": [
+      "error",
+      "error_connectorerror",
+      "error_riskrejection"
+    ],
+    "26": [
+      "recorder_marketdatarecorder",
+      "recorder_marketdatarecorder_new",
+      "recorder_marketdatarecorder_record"
+    ],
+    "27": [
+      "main",
+      "main_main"
+    ],
+    "28": [
+      "tracing_setup",
+      "tracing_setup_init_tracing"
+    ],
+    "29": [
+      "telemetry_metrics_TradingMetrics",
+      "telemetry_tracing_setup_init_tracing"
+    ],
+    "30": [
+      "metrics"
+    ],
+    "31": [
+      "normalize"
+    ],
+    "32": [
+      "backtest"
+    ],
+    "33": [
+      "record"
+    ],
+    "34": [
+      "sim_connector_ExchangeConnector_impl"
+    ],
+    "35": [
+      "hyperliquid_ExchangeConnector_impl"
+    ],
+    "36": [
+      "changelog_Changelog"
+    ],
+    "37": [
+      "adr_template_Template"
+    ]
+  },
+  "cohesion": {
+    "0": 0.08,
+    "1": 0.07,
+    "2": 0.15,
+    "3": 0.07,
+    "4": 0.12,
+    "5": 0.13,
+    "6": 0.23,
+    "7": 0.2,
+    "8": 0.28,
+    "9": 0.29,
+    "10": 0.33,
+    "11": 0.33,
+    "12": 0.33,
+    "13": 0.33,
+    "14": 0.4,
+    "15": 0.4,
+    "16": 0.5,
+    "17": 0.4,
+    "18": 0.4,
+    "19": 0.6,
+    "20": 0.4,
+    "21": 0.4,
+    "22": 0.67,
+    "23": 0.67,
+    "24": 0.83,
+    "25": 1.0,
+    "26": 1.0,
+    "27": 1.0,
+    "28": 1.0,
+    "29": 1.0,
+    "30": 1.0,
+    "31": 1.0,
+    "32": 1.0,
+    "33": 1.0,
+    "34": 1.0,
+    "35": 1.0,
+    "36": 1.0,
+    "37": 1.0
+  },
+  "gods": [
+    {
+      "id": "client_hyperliquidclient",
+      "label": "HyperliquidClient",
+      "edges": 18
+    },
+    {
+      "id": "runner_EngineRunner",
+      "label": "EngineRunner",
+      "edges": 13
+    },
+    {
+      "id": "sim_connector_simconnector",
+      "label": "SimConnector",
+      "edges": 12
+    },
+    {
+      "id": "instrument_InstrumentId",
+      "label": "InstrumentId",
+      "edges": 12
+    },
+    {
+      "id": "traits_ExchangeConnector",
+      "label": "ExchangeConnector Trait",
+      "edges": 12
+    },
+    {
+      "id": "engine_UnifiedRiskManager",
+      "label": "UnifiedRiskManager",
+      "edges": 12
+    },
+    {
+      "id": "order_router_OrderRouter",
+      "label": "OrderRouter",
+      "edges": 12
+    },
+    {
+      "id": "architecture_Architecture",
+      "label": "Architecture Document",
+      "edges": 12
+    },
+    {
+      "id": "hyperliquid_HyperliquidClient",
+      "label": "HyperliquidClient",
+      "edges": 11
+    },
+    {
+      "id": "action_Action",
+      "label": "Action Enum",
+      "edges": 11
+    }
+  ],
+  "surprises": [
+    {
+      "source": "Rationale: Unified Risk Manager for Cross-Exchange Portfolio Limits",
+      "target": "UnifiedRiskManager",
+      "source_files": [
+        "decisions/005-unified-risk.md",
+        "crates/engine/src/risk.rs"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "rationale_for",
+      "why": "crosses file types (code \u2194 doc); connects across different repos/directories; peripheral node `Rationale: Unified Risk Manager for Cross-Exchange Portfolio Limits` unexpectedly reaches hub `UnifiedRiskManager`"
+    },
+    {
+      "source": "Latest-Value Semantics (skip stale market data)",
+      "target": "MarketDataBus",
+      "source_files": [
+        "decisions/002-broadcast-channels-not-nats.md",
+        "crates/engine/src/market_data_bus.rs"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "conceptually_related_to",
+      "why": "crosses file types (code \u2194 doc); connects across different repos/directories; peripheral node `Latest-Value Semantics (skip stale market data)` unexpectedly reaches hub `MarketDataBus`"
+    },
+    {
+      "source": "Architecture Document",
+      "target": "UnifiedRiskManager",
+      "source_files": [
+        "ARCHITECTURE.md",
+        "crates/engine/src/risk.rs"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "references",
+      "why": "crosses file types (code \u2194 doc); connects across different repos/directories"
+    },
+    {
+      "source": "Rationale: Single Binary for Unified Risk and Nonce Management",
+      "target": "OrderManager",
+      "source_files": [
+        "decisions/001-single-binary-multi-exchange.md",
+        "crates/engine/src/order_manager.rs"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "rationale_for",
+      "why": "crosses file types (code \u2194 doc); connects across different repos/directories"
+    },
+    {
+      "source": "Architecture Document",
+      "target": "OrderManager",
+      "source_files": [
+        "ARCHITECTURE.md",
+        "crates/engine/src/order_manager.rs"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "references",
+      "why": "crosses file types (code \u2194 doc); connects across different repos/directories"
+    }
+  ],
+  "questions": [
+    {
+      "type": "bridge_node",
+      "question": "Why does `HyperliquidClient` connect `Community 6` to `Community 1`?",
+      "why": "High betweenness centrality (0.042) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `SimConnector` connect `Community 7` to `Community 1`?",
+      "why": "High betweenness centrality (0.028) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `MatchingEngine` connect `Community 8` to `Community 1`?",
+      "why": "High betweenness centrality (0.021) - this node is a cross-community bridge."
+    },
+    {
+      "type": "isolated_nodes",
+      "question": "What connects `PairTraderParams`, `QuoterParams`, `FairValueMessage` to the rest of the system?",
+      "why": "52 weakly-connected nodes found - possible documentation gaps or missing edges."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `Community 0` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.08 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `Community 1` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.07 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `Community 3` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.07 - nodes in this community are weakly interconnected."
+    }
+  ]
+}

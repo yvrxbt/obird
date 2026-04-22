@@ -1,0 +1,5079 @@
+{
+  "nodes": [
+    {
+      "id": "params",
+      "label": "params.rs",
+      "file_type": "code",
+      "source_file": "crates/strategies/pair_trader/src/params.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "params_pairtraderparams",
+      "label": "PairTraderParams",
+      "file_type": "code",
+      "source_file": "crates/strategies/pair_trader/src/params.rs",
+      "source_location": "L5"
+    },
+    {
+      "id": "spread_model",
+      "label": "spread_model.rs",
+      "file_type": "code",
+      "source_file": "crates/strategies/pair_trader/src/spread_model.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "spread_model_spreadmodel",
+      "label": "SpreadModel",
+      "file_type": "code",
+      "source_file": "crates/strategies/pair_trader/src/spread_model.rs",
+      "source_location": "L4"
+    },
+    {
+      "id": "spread_model_spreadmodel_new",
+      "label": ".new()",
+      "file_type": "code",
+      "source_file": "crates/strategies/pair_trader/src/spread_model.rs",
+      "source_location": "L10"
+    },
+    {
+      "id": "spread_model_spreadmodel_update",
+      "label": ".update()",
+      "file_type": "code",
+      "source_file": "crates/strategies/pair_trader/src/spread_model.rs",
+      "source_location": "L14"
+    },
+    {
+      "id": "spread_model_spreadmodel_zscore",
+      "label": ".zscore()",
+      "file_type": "code",
+      "source_file": "crates/strategies/pair_trader/src/spread_model.rs",
+      "source_location": "L21"
+    },
+    {
+      "id": "lib",
+      "label": "lib.rs",
+      "file_type": "code",
+      "source_file": "crates/strategies/pair_trader/src/lib.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "trader",
+      "label": "trader.rs",
+      "file_type": "code",
+      "source_file": "crates/strategies/pair_trader/src/trader.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "trader_pairtrader",
+      "label": "PairTrader",
+      "file_type": "code",
+      "source_file": "crates/strategies/pair_trader/src/trader.rs",
+      "source_location": "L9"
+    },
+    {
+      "id": "trader_pairtrader_new",
+      "label": ".new()",
+      "file_type": "code",
+      "source_file": "crates/strategies/pair_trader/src/trader.rs",
+      "source_location": "L18"
+    },
+    {
+      "id": "trader_pairtrader_id",
+      "label": ".id()",
+      "file_type": "code",
+      "source_file": "crates/strategies/pair_trader/src/trader.rs",
+      "source_location": "L29"
+    },
+    {
+      "id": "trader_pairtrader_subscriptions",
+      "label": ".subscriptions()",
+      "file_type": "code",
+      "source_file": "crates/strategies/pair_trader/src/trader.rs",
+      "source_location": "L31"
+    },
+    {
+      "id": "trader_pairtrader_on_event",
+      "label": ".on_event()",
+      "file_type": "code",
+      "source_file": "crates/strategies/pair_trader/src/trader.rs",
+      "source_location": "L35"
+    },
+    {
+      "id": "trader_pairtrader_initialize",
+      "label": ".initialize()",
+      "file_type": "code",
+      "source_file": "crates/strategies/pair_trader/src/trader.rs",
+      "source_location": "L50"
+    },
+    {
+      "id": "trader_pairtrader_shutdown",
+      "label": ".shutdown()",
+      "file_type": "code",
+      "source_file": "crates/strategies/pair_trader/src/trader.rs",
+      "source_location": "L55"
+    },
+    {
+      "id": "params",
+      "label": "params.rs",
+      "file_type": "code",
+      "source_file": "crates/strategies/prediction_quoter/src/params.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "params_quoterparams",
+      "label": "QuoterParams",
+      "file_type": "code",
+      "source_file": "crates/strategies/prediction_quoter/src/params.rs",
+      "source_location": "L7"
+    },
+    {
+      "id": "quoter",
+      "label": "quoter.rs",
+      "file_type": "code",
+      "source_file": "crates/strategies/prediction_quoter/src/quoter.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "quoter_predictionquoter",
+      "label": "PredictionQuoter",
+      "file_type": "code",
+      "source_file": "crates/strategies/prediction_quoter/src/quoter.rs",
+      "source_location": "L8"
+    },
+    {
+      "id": "quoter_predictionquoter_new",
+      "label": ".new()",
+      "file_type": "code",
+      "source_file": "crates/strategies/prediction_quoter/src/quoter.rs",
+      "source_location": "L18"
+    },
+    {
+      "id": "quoter_predictionquoter_id",
+      "label": ".id()",
+      "file_type": "code",
+      "source_file": "crates/strategies/prediction_quoter/src/quoter.rs",
+      "source_location": "L30"
+    },
+    {
+      "id": "quoter_predictionquoter_subscriptions",
+      "label": ".subscriptions()",
+      "file_type": "code",
+      "source_file": "crates/strategies/prediction_quoter/src/quoter.rs",
+      "source_location": "L32"
+    },
+    {
+      "id": "quoter_predictionquoter_on_event",
+      "label": ".on_event()",
+      "file_type": "code",
+      "source_file": "crates/strategies/prediction_quoter/src/quoter.rs",
+      "source_location": "L34"
+    },
+    {
+      "id": "quoter_predictionquoter_initialize",
+      "label": ".initialize()",
+      "file_type": "code",
+      "source_file": "crates/strategies/prediction_quoter/src/quoter.rs",
+      "source_location": "L54"
+    },
+    {
+      "id": "quoter_predictionquoter_shutdown",
+      "label": ".shutdown()",
+      "file_type": "code",
+      "source_file": "crates/strategies/prediction_quoter/src/quoter.rs",
+      "source_location": "L59"
+    },
+    {
+      "id": "lib",
+      "label": "lib.rs",
+      "file_type": "code",
+      "source_file": "crates/strategies/prediction_quoter/src/lib.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "main",
+      "label": "main.rs",
+      "file_type": "code",
+      "source_file": "crates/fair_value_service/src/main.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "main_main",
+      "label": "main()",
+      "file_type": "code",
+      "source_file": "crates/fair_value_service/src/main.rs",
+      "source_location": "L7"
+    },
+    {
+      "id": "publisher",
+      "label": "publisher.rs",
+      "file_type": "code",
+      "source_file": "crates/fair_value_service/src/publisher.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "publisher_fairvaluemessage",
+      "label": "FairValueMessage",
+      "file_type": "code",
+      "source_file": "crates/fair_value_service/src/publisher.rs",
+      "source_location": "L18"
+    },
+    {
+      "id": "publisher_fairvaluepublisher",
+      "label": "FairValuePublisher",
+      "file_type": "code",
+      "source_file": "crates/fair_value_service/src/publisher.rs",
+      "source_location": "L30"
+    },
+    {
+      "id": "publisher_fairvaluepublisher_new",
+      "label": ".new()",
+      "file_type": "code",
+      "source_file": "crates/fair_value_service/src/publisher.rs",
+      "source_location": "L35"
+    },
+    {
+      "id": "publisher_fairvaluepublisher_run",
+      "label": ".run()",
+      "file_type": "code",
+      "source_file": "crates/fair_value_service/src/publisher.rs",
+      "source_location": "L43"
+    },
+    {
+      "id": "data_source",
+      "label": "data_source.rs",
+      "file_type": "code",
+      "source_file": "crates/fair_value_service/src/data_source.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "data_source_priceaggregator",
+      "label": "PriceAggregator",
+      "file_type": "code",
+      "source_file": "crates/fair_value_service/src/data_source.rs",
+      "source_location": "L11"
+    },
+    {
+      "id": "data_source_priceaggregator_new",
+      "label": ".new()",
+      "file_type": "code",
+      "source_file": "crates/fair_value_service/src/data_source.rs",
+      "source_location": "L17"
+    },
+    {
+      "id": "data_source_priceaggregator_update",
+      "label": ".update()",
+      "file_type": "code",
+      "source_file": "crates/fair_value_service/src/data_source.rs",
+      "source_location": "L23"
+    },
+    {
+      "id": "data_source_priceaggregator_get",
+      "label": ".get()",
+      "file_type": "code",
+      "source_file": "crates/fair_value_service/src/data_source.rs",
+      "source_location": "L27"
+    },
+    {
+      "id": "data_source_priceaggregator_compute_features",
+      "label": ".compute_features()",
+      "file_type": "code",
+      "source_file": "crates/fair_value_service/src/data_source.rs",
+      "source_location": "L33"
+    },
+    {
+      "id": "model",
+      "label": "model.rs",
+      "file_type": "code",
+      "source_file": "crates/fair_value_service/src/model.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "model_fairvaluemodel",
+      "label": "FairValueModel",
+      "file_type": "code",
+      "source_file": "crates/fair_value_service/src/model.rs",
+      "source_location": "L6"
+    },
+    {
+      "id": "model_fairvaluemodel_new",
+      "label": ".new()",
+      "file_type": "code",
+      "source_file": "crates/fair_value_service/src/model.rs",
+      "source_location": "L11"
+    },
+    {
+      "id": "model_fairvaluemodel_compute",
+      "label": ".compute()",
+      "file_type": "code",
+      "source_file": "crates/fair_value_service/src/model.rs",
+      "source_location": "L14"
+    },
+    {
+      "id": "trade_log",
+      "label": "trade_log.rs",
+      "file_type": "code",
+      "source_file": "crates/telemetry/src/trade_log.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "trade_log_tradelogger",
+      "label": "TradeLogger",
+      "file_type": "code",
+      "source_file": "crates/telemetry/src/trade_log.rs",
+      "source_location": "L9"
+    },
+    {
+      "id": "trade_log_tradelogger_new",
+      "label": ".new()",
+      "file_type": "code",
+      "source_file": "crates/telemetry/src/trade_log.rs",
+      "source_location": "L14"
+    },
+    {
+      "id": "trade_log_tradelogger_log_fill",
+      "label": ".log_fill()",
+      "file_type": "code",
+      "source_file": "crates/telemetry/src/trade_log.rs",
+      "source_location": "L18"
+    },
+    {
+      "id": "trade_log_tradelogger_log_order_update",
+      "label": ".log_order_update()",
+      "file_type": "code",
+      "source_file": "crates/telemetry/src/trade_log.rs",
+      "source_location": "L23"
+    },
+    {
+      "id": "audit",
+      "label": "audit.rs",
+      "file_type": "code",
+      "source_file": "crates/telemetry/src/audit.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "audit_auditentry",
+      "label": "AuditEntry",
+      "file_type": "code",
+      "source_file": "crates/telemetry/src/audit.rs",
+      "source_location": "L21"
+    },
+    {
+      "id": "audit_auditlogger",
+      "label": "AuditLogger",
+      "file_type": "code",
+      "source_file": "crates/telemetry/src/audit.rs",
+      "source_location": "L28"
+    },
+    {
+      "id": "audit_auditlogger_new",
+      "label": ".new()",
+      "file_type": "code",
+      "source_file": "crates/telemetry/src/audit.rs",
+      "source_location": "L33"
+    },
+    {
+      "id": "audit_auditlogger_log",
+      "label": ".log()",
+      "file_type": "code",
+      "source_file": "crates/telemetry/src/audit.rs",
+      "source_location": "L37"
+    },
+    {
+      "id": "metrics",
+      "label": "metrics.rs",
+      "file_type": "code",
+      "source_file": "crates/telemetry/src/metrics.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "lib",
+      "label": "lib.rs",
+      "file_type": "code",
+      "source_file": "crates/telemetry/src/lib.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "tracing_setup",
+      "label": "tracing_setup.rs",
+      "file_type": "code",
+      "source_file": "crates/telemetry/src/tracing_setup.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "tracing_setup_init_tracing",
+      "label": "init_tracing()",
+      "file_type": "code",
+      "source_file": "crates/telemetry/src/tracing_setup.rs",
+      "source_location": "L8"
+    },
+    {
+      "id": "sim_market_data",
+      "label": "sim_market_data.rs",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/sim_market_data.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "sim_market_data_simmarketdatafeed",
+      "label": "SimMarketDataFeed",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/sim_market_data.rs",
+      "source_location": "L10"
+    },
+    {
+      "id": "sim_market_data_simmarketdatafeed_new",
+      "label": ".new()",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/sim_market_data.rs",
+      "source_location": "L15"
+    },
+    {
+      "id": "sim_market_data_simmarketdatafeed_load_events",
+      "label": ".load_events()",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/sim_market_data.rs",
+      "source_location": "L22"
+    },
+    {
+      "id": "lib",
+      "label": "lib.rs",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/lib.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "recorder",
+      "label": "recorder.rs",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/recorder.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "recorder_marketdatarecorder",
+      "label": "MarketDataRecorder",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/recorder.rs",
+      "source_location": "L12"
+    },
+    {
+      "id": "recorder_marketdatarecorder_new",
+      "label": ".new()",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/recorder.rs",
+      "source_location": "L17"
+    },
+    {
+      "id": "recorder_marketdatarecorder_record",
+      "label": ".record()",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/recorder.rs",
+      "source_location": "L25"
+    },
+    {
+      "id": "report",
+      "label": "report.rs",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/report.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "report_backtestreport",
+      "label": "BacktestReport",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/report.rs",
+      "source_location": "L7"
+    },
+    {
+      "id": "report_backtestreport_new",
+      "label": ".new()",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/report.rs",
+      "source_location": "L17"
+    },
+    {
+      "id": "report_backtestreport_print_summary",
+      "label": ".print_summary()",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/report.rs",
+      "source_location": "L33"
+    },
+    {
+      "id": "matching_engine",
+      "label": "matching_engine.rs",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/matching_engine.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "matching_engine_fillmodel",
+      "label": "FillModel",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/matching_engine.rs",
+      "source_location": "L17"
+    },
+    {
+      "id": "matching_engine_simorder",
+      "label": "SimOrder",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/matching_engine.rs",
+      "source_location": "L25"
+    },
+    {
+      "id": "matching_engine_matchingengine",
+      "label": "MatchingEngine",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/matching_engine.rs",
+      "source_location": "L34"
+    },
+    {
+      "id": "matching_engine_matchingengine_new",
+      "label": ".new()",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/matching_engine.rs",
+      "source_location": "L41"
+    },
+    {
+      "id": "matching_engine_matchingengine_with_fill_model",
+      "label": ".with_fill_model()",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/matching_engine.rs",
+      "source_location": "L49"
+    },
+    {
+      "id": "matching_engine_matchingengine_add_order",
+      "label": ".add_order()",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/matching_engine.rs",
+      "source_location": "L54"
+    },
+    {
+      "id": "matching_engine_matchingengine_cancel_order",
+      "label": ".cancel_order()",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/matching_engine.rs",
+      "source_location": "L68"
+    },
+    {
+      "id": "matching_engine_matchingengine_cancel_all_for",
+      "label": ".cancel_all_for()",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/matching_engine.rs",
+      "source_location": "L72"
+    },
+    {
+      "id": "matching_engine_matchingengine_check_fills",
+      "label": ".check_fills()",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/matching_engine.rs",
+      "source_location": "L87"
+    },
+    {
+      "id": "matching_engine_matchingengine_positions",
+      "label": ".positions()",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/matching_engine.rs",
+      "source_location": "L140"
+    },
+    {
+      "id": "matching_engine_matchingengine_open_orders_for",
+      "label": ".open_orders_for()",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/matching_engine.rs",
+      "source_location": "L152"
+    },
+    {
+      "id": "sim_connector",
+      "label": "sim_connector.rs",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "sim_connector_simconnector",
+      "label": "SimConnector",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": "L19"
+    },
+    {
+      "id": "sim_connector_simconnector_new",
+      "label": ".new()",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": "L27"
+    },
+    {
+      "id": "sim_connector_simconnector_on_market_data",
+      "label": ".on_market_data()",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": "L39"
+    },
+    {
+      "id": "sim_connector_simconnector_matching_engine",
+      "label": ".matching_engine()",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": "L47"
+    },
+    {
+      "id": "sim_connector_simconnector_exchange",
+      "label": ".exchange()",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": "L54"
+    },
+    {
+      "id": "sim_connector_simconnector_place_order",
+      "label": ".place_order()",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": "L58"
+    },
+    {
+      "id": "sim_connector_simconnector_cancel_order",
+      "label": ".cancel_order()",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": "L77"
+    },
+    {
+      "id": "sim_connector_simconnector_cancel_all",
+      "label": ".cancel_all()",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": "L98"
+    },
+    {
+      "id": "sim_connector_simconnector_modify_order",
+      "label": ".modify_order()",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": "L115"
+    },
+    {
+      "id": "sim_connector_simconnector_positions",
+      "label": ".positions()",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": "L135"
+    },
+    {
+      "id": "sim_connector_simconnector_open_orders",
+      "label": ".open_orders()",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": "L140"
+    },
+    {
+      "id": "sim_connector_simconnector_order_update_rx",
+      "label": ".order_update_rx()",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": "L148"
+    },
+    {
+      "id": "harness",
+      "label": "harness.rs",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/harness.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "harness_backtestharness",
+      "label": "BacktestHarness",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/harness.rs",
+      "source_location": "L15"
+    },
+    {
+      "id": "harness_backtestharness_new",
+      "label": ".new()",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/harness.rs",
+      "source_location": "L22"
+    },
+    {
+      "id": "harness_backtestharness_run",
+      "label": ".run()",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/harness.rs",
+      "source_location": "L35"
+    },
+    {
+      "id": "harness_backtestharness_process_actions",
+      "label": ".process_actions()",
+      "file_type": "code",
+      "source_file": "crates/backtest/src/harness.rs",
+      "source_location": "L83"
+    },
+    {
+      "id": "market_data",
+      "label": "market_data.rs",
+      "file_type": "code",
+      "source_file": "crates/connectors/lighter/src/market_data.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "lib",
+      "label": "lib.rs",
+      "file_type": "code",
+      "source_file": "crates/connectors/lighter/src/lib.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "client",
+      "label": "client.rs",
+      "file_type": "code",
+      "source_file": "crates/connectors/lighter/src/client.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "normalize",
+      "label": "normalize.rs",
+      "file_type": "code",
+      "source_file": "crates/connectors/lighter/src/normalize.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "market_data",
+      "label": "market_data.rs",
+      "file_type": "code",
+      "source_file": "crates/connectors/hyperliquid/src/market_data.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "lib",
+      "label": "lib.rs",
+      "file_type": "code",
+      "source_file": "crates/connectors/hyperliquid/src/lib.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "client",
+      "label": "client.rs",
+      "file_type": "code",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "client_hyperliquidclient",
+      "label": "HyperliquidClient",
+      "file_type": "code",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L25"
+    },
+    {
+      "id": "client_hyperliquidclient_from_env",
+      "label": ".from_env()",
+      "file_type": "code",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L35"
+    },
+    {
+      "id": "client_hyperliquidclient_new",
+      "label": ".new()",
+      "file_type": "code",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L45"
+    },
+    {
+      "id": "client_hyperliquidclient_now_ns",
+      "label": ".now_ns()",
+      "file_type": "code",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L70"
+    },
+    {
+      "id": "client_hyperliquidclient_parse_decimal",
+      "label": ".parse_decimal()",
+      "file_type": "code",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L77"
+    },
+    {
+      "id": "client_hyperliquidclient_to_hl_tif",
+      "label": ".to_hl_tif()",
+      "file_type": "code",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L82"
+    },
+    {
+      "id": "client_hyperliquidclient_to_hl_side",
+      "label": ".to_hl_side()",
+      "file_type": "code",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L90"
+    },
+    {
+      "id": "client_hyperliquidclient_to_core_side",
+      "label": ".to_core_side()",
+      "file_type": "code",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L94"
+    },
+    {
+      "id": "client_hyperliquidclient_parse_oid",
+      "label": ".parse_oid()",
+      "file_type": "code",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L102"
+    },
+    {
+      "id": "client_hyperliquidclient_to_instrument",
+      "label": ".to_instrument()",
+      "file_type": "code",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L110"
+    },
+    {
+      "id": "client_hyperliquidclient_exchange",
+      "label": ".exchange()",
+      "file_type": "code",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L117"
+    },
+    {
+      "id": "client_hyperliquidclient_place_order",
+      "label": ".place_order()",
+      "file_type": "code",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L121"
+    },
+    {
+      "id": "client_hyperliquidclient_cancel_order",
+      "label": ".cancel_order()",
+      "file_type": "code",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L198"
+    },
+    {
+      "id": "client_hyperliquidclient_cancel_all",
+      "label": ".cancel_all()",
+      "file_type": "code",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L229"
+    },
+    {
+      "id": "client_hyperliquidclient_modify_order",
+      "label": ".modify_order()",
+      "file_type": "code",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L243"
+    },
+    {
+      "id": "client_hyperliquidclient_positions",
+      "label": ".positions()",
+      "file_type": "code",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L295"
+    },
+    {
+      "id": "client_hyperliquidclient_open_orders",
+      "label": ".open_orders()",
+      "file_type": "code",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L325"
+    },
+    {
+      "id": "client_hyperliquidclient_order_update_rx",
+      "label": ".order_update_rx()",
+      "file_type": "code",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L347"
+    },
+    {
+      "id": "normalize",
+      "label": "normalize.rs",
+      "file_type": "code",
+      "source_file": "crates/connectors/hyperliquid/src/normalize.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "market_data",
+      "label": "market_data.rs",
+      "file_type": "code",
+      "source_file": "crates/connectors/polymarket/src/market_data.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "lib",
+      "label": "lib.rs",
+      "file_type": "code",
+      "source_file": "crates/connectors/polymarket/src/lib.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "client",
+      "label": "client.rs",
+      "file_type": "code",
+      "source_file": "crates/connectors/polymarket/src/client.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "normalize",
+      "label": "normalize.rs",
+      "file_type": "code",
+      "source_file": "crates/connectors/polymarket/src/normalize.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "market_data",
+      "label": "market_data.rs",
+      "file_type": "code",
+      "source_file": "crates/connectors/predict_fun/src/market_data.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "lib",
+      "label": "lib.rs",
+      "file_type": "code",
+      "source_file": "crates/connectors/predict_fun/src/lib.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "client",
+      "label": "client.rs",
+      "file_type": "code",
+      "source_file": "crates/connectors/predict_fun/src/client.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "normalize",
+      "label": "normalize.rs",
+      "file_type": "code",
+      "source_file": "crates/connectors/predict_fun/src/normalize.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "market_data",
+      "label": "market_data.rs",
+      "file_type": "code",
+      "source_file": "crates/connectors/binance/src/market_data.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "lib",
+      "label": "lib.rs",
+      "file_type": "code",
+      "source_file": "crates/connectors/binance/src/lib.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "client",
+      "label": "client.rs",
+      "file_type": "code",
+      "source_file": "crates/connectors/binance/src/client.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "normalize",
+      "label": "normalize.rs",
+      "file_type": "code",
+      "source_file": "crates/connectors/binance/src/normalize.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "config",
+      "label": "config.rs",
+      "file_type": "code",
+      "source_file": "crates/core/src/config.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "config_appconfig",
+      "label": "AppConfig",
+      "file_type": "code",
+      "source_file": "crates/core/src/config.rs",
+      "source_location": "L7"
+    },
+    {
+      "id": "config_engineconfig",
+      "label": "EngineConfig",
+      "file_type": "code",
+      "source_file": "crates/core/src/config.rs",
+      "source_location": "L15"
+    },
+    {
+      "id": "config_exchangeconfig",
+      "label": "ExchangeConfig",
+      "file_type": "code",
+      "source_file": "crates/core/src/config.rs",
+      "source_location": "L20"
+    },
+    {
+      "id": "config_strategyconfig",
+      "label": "StrategyConfig",
+      "file_type": "code",
+      "source_file": "crates/core/src/config.rs",
+      "source_location": "L28"
+    },
+    {
+      "id": "config_telemetryconfig",
+      "label": "TelemetryConfig",
+      "file_type": "code",
+      "source_file": "crates/core/src/config.rs",
+      "source_location": "L36"
+    },
+    {
+      "id": "config_appconfig_load",
+      "label": ".load()",
+      "file_type": "code",
+      "source_file": "crates/core/src/config.rs",
+      "source_location": "L43"
+    },
+    {
+      "id": "action",
+      "label": "action.rs",
+      "file_type": "code",
+      "source_file": "crates/core/src/action.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "action_action",
+      "label": "Action",
+      "file_type": "code",
+      "source_file": "crates/core/src/action.rs",
+      "source_location": "L10"
+    },
+    {
+      "id": "action_action_exchange",
+      "label": ".exchange()",
+      "file_type": "code",
+      "source_file": "crates/core/src/action.rs",
+      "source_location": "L29"
+    },
+    {
+      "id": "lib",
+      "label": "lib.rs",
+      "file_type": "code",
+      "source_file": "crates/core/src/lib.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "error",
+      "label": "error.rs",
+      "file_type": "code",
+      "source_file": "crates/core/src/error.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "error_connectorerror",
+      "label": "ConnectorError",
+      "file_type": "code",
+      "source_file": "crates/core/src/error.rs",
+      "source_location": "L6"
+    },
+    {
+      "id": "error_riskrejection",
+      "label": "RiskRejection",
+      "file_type": "code",
+      "source_file": "crates/core/src/error.rs",
+      "source_location": "L22"
+    },
+    {
+      "id": "event",
+      "label": "event.rs",
+      "file_type": "code",
+      "source_file": "crates/core/src/event.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "event_event",
+      "label": "Event",
+      "file_type": "code",
+      "source_file": "crates/core/src/event.rs",
+      "source_location": "L11"
+    },
+    {
+      "id": "position",
+      "label": "position.rs",
+      "file_type": "code",
+      "source_file": "crates/core/src/types/position.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "position_position",
+      "label": "Position",
+      "file_type": "code",
+      "source_file": "crates/core/src/types/position.rs",
+      "source_location": "L9"
+    },
+    {
+      "id": "position_fill",
+      "label": "Fill",
+      "file_type": "code",
+      "source_file": "crates/core/src/types/position.rs",
+      "source_location": "L18"
+    },
+    {
+      "id": "instrument",
+      "label": "instrument.rs",
+      "file_type": "code",
+      "source_file": "crates/core/src/types/instrument.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "instrument_exchange",
+      "label": "Exchange",
+      "file_type": "code",
+      "source_file": "crates/core/src/types/instrument.rs",
+      "source_location": "L10"
+    },
+    {
+      "id": "instrument_instrumentkind",
+      "label": "InstrumentKind",
+      "file_type": "code",
+      "source_file": "crates/core/src/types/instrument.rs",
+      "source_location": "L19"
+    },
+    {
+      "id": "instrument_instrumentid",
+      "label": "InstrumentId",
+      "file_type": "code",
+      "source_file": "crates/core/src/types/instrument.rs",
+      "source_location": "L29"
+    },
+    {
+      "id": "instrument_instrumentid_fmt",
+      "label": ".fmt()",
+      "file_type": "code",
+      "source_file": "crates/core/src/types/instrument.rs",
+      "source_location": "L36"
+    },
+    {
+      "id": "instrument_instrumentid_new",
+      "label": ".new()",
+      "file_type": "code",
+      "source_file": "crates/core/src/types/instrument.rs",
+      "source_location": "L42"
+    },
+    {
+      "id": "market_data",
+      "label": "market_data.rs",
+      "file_type": "code",
+      "source_file": "crates/core/src/types/market_data.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "market_data_orderbooksnapshot",
+      "label": "OrderbookSnapshot",
+      "file_type": "code",
+      "source_file": "crates/core/src/types/market_data.rs",
+      "source_location": "L10"
+    },
+    {
+      "id": "market_data_orderbooksnapshot_best_bid",
+      "label": ".best_bid()",
+      "file_type": "code",
+      "source_file": "crates/core/src/types/market_data.rs",
+      "source_location": "L17"
+    },
+    {
+      "id": "market_data_orderbooksnapshot_best_ask",
+      "label": ".best_ask()",
+      "file_type": "code",
+      "source_file": "crates/core/src/types/market_data.rs",
+      "source_location": "L18"
+    },
+    {
+      "id": "market_data_orderbooksnapshot_mid_price",
+      "label": ".mid_price()",
+      "file_type": "code",
+      "source_file": "crates/core/src/types/market_data.rs",
+      "source_location": "L19"
+    },
+    {
+      "id": "market_data_trade",
+      "label": "Trade",
+      "file_type": "code",
+      "source_file": "crates/core/src/types/market_data.rs",
+      "source_location": "L30"
+    },
+    {
+      "id": "market_data_tradeside",
+      "label": "TradeSide",
+      "file_type": "code",
+      "source_file": "crates/core/src/types/market_data.rs",
+      "source_location": "L38"
+    },
+    {
+      "id": "mod",
+      "label": "mod.rs",
+      "file_type": "code",
+      "source_file": "crates/core/src/types/mod.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "order",
+      "label": "order.rs",
+      "file_type": "code",
+      "source_file": "crates/core/src/types/order.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "order_orderside",
+      "label": "OrderSide",
+      "file_type": "code",
+      "source_file": "crates/core/src/types/order.rs",
+      "source_location": "L10"
+    },
+    {
+      "id": "order_timeinforce",
+      "label": "TimeInForce",
+      "file_type": "code",
+      "source_file": "crates/core/src/types/order.rs",
+      "source_location": "L13"
+    },
+    {
+      "id": "order_orderrequest",
+      "label": "OrderRequest",
+      "file_type": "code",
+      "source_file": "crates/core/src/types/order.rs",
+      "source_location": "L16"
+    },
+    {
+      "id": "order_orderupdate",
+      "label": "OrderUpdate",
+      "file_type": "code",
+      "source_file": "crates/core/src/types/order.rs",
+      "source_location": "L27"
+    },
+    {
+      "id": "order_orderstatus",
+      "label": "OrderStatus",
+      "file_type": "code",
+      "source_file": "crates/core/src/types/order.rs",
+      "source_location": "L38"
+    },
+    {
+      "id": "order_openorder",
+      "label": "OpenOrder",
+      "file_type": "code",
+      "source_file": "crates/core/src/types/order.rs",
+      "source_location": "L47"
+    },
+    {
+      "id": "decimal",
+      "label": "decimal.rs",
+      "file_type": "code",
+      "source_file": "crates/core/src/types/decimal.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "decimal_price",
+      "label": "Price",
+      "file_type": "code",
+      "source_file": "crates/core/src/types/decimal.rs",
+      "source_location": "L9"
+    },
+    {
+      "id": "decimal_quantity",
+      "label": "Quantity",
+      "file_type": "code",
+      "source_file": "crates/core/src/types/decimal.rs",
+      "source_location": "L12"
+    },
+    {
+      "id": "decimal_price_fmt",
+      "label": ".fmt()",
+      "file_type": "code",
+      "source_file": "crates/core/src/types/decimal.rs",
+      "source_location": "L15"
+    },
+    {
+      "id": "decimal_quantity_fmt",
+      "label": ".fmt()",
+      "file_type": "code",
+      "source_file": "crates/core/src/types/decimal.rs",
+      "source_location": "L21"
+    },
+    {
+      "id": "decimal_price_new",
+      "label": ".new()",
+      "file_type": "code",
+      "source_file": "crates/core/src/types/decimal.rs",
+      "source_location": "L27"
+    },
+    {
+      "id": "decimal_price_zero",
+      "label": ".zero()",
+      "file_type": "code",
+      "source_file": "crates/core/src/types/decimal.rs",
+      "source_location": "L28"
+    },
+    {
+      "id": "decimal_price_inner",
+      "label": ".inner()",
+      "file_type": "code",
+      "source_file": "crates/core/src/types/decimal.rs",
+      "source_location": "L29"
+    },
+    {
+      "id": "decimal_quantity_new",
+      "label": ".new()",
+      "file_type": "code",
+      "source_file": "crates/core/src/types/decimal.rs",
+      "source_location": "L33"
+    },
+    {
+      "id": "decimal_quantity_zero",
+      "label": ".zero()",
+      "file_type": "code",
+      "source_file": "crates/core/src/types/decimal.rs",
+      "source_location": "L34"
+    },
+    {
+      "id": "decimal_quantity_inner",
+      "label": ".inner()",
+      "file_type": "code",
+      "source_file": "crates/core/src/types/decimal.rs",
+      "source_location": "L35"
+    },
+    {
+      "id": "decimal_quantity_abs",
+      "label": ".abs()",
+      "file_type": "code",
+      "source_file": "crates/core/src/types/decimal.rs",
+      "source_location": "L36"
+    },
+    {
+      "id": "risk",
+      "label": "risk.rs",
+      "file_type": "code",
+      "source_file": "crates/core/src/traits/risk.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "risk_riskcheck",
+      "label": "RiskCheck",
+      "file_type": "code",
+      "source_file": "crates/core/src/traits/risk.rs",
+      "source_location": "L9"
+    },
+    {
+      "id": "connector",
+      "label": "connector.rs",
+      "file_type": "code",
+      "source_file": "crates/core/src/traits/connector.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "connector_exchangeconnector",
+      "label": "ExchangeConnector",
+      "file_type": "code",
+      "source_file": "crates/core/src/traits/connector.rs",
+      "source_location": "L15"
+    },
+    {
+      "id": "strategy",
+      "label": "strategy.rs",
+      "file_type": "code",
+      "source_file": "crates/core/src/traits/strategy.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "strategy_strategystate",
+      "label": "StrategyState",
+      "file_type": "code",
+      "source_file": "crates/core/src/traits/strategy.rs",
+      "source_location": "L13"
+    },
+    {
+      "id": "strategy_strategy",
+      "label": "Strategy",
+      "file_type": "code",
+      "source_file": "crates/core/src/traits/strategy.rs",
+      "source_location": "L19"
+    },
+    {
+      "id": "mod",
+      "label": "mod.rs",
+      "file_type": "code",
+      "source_file": "crates/core/src/traits/mod.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "live",
+      "label": "live.rs",
+      "file_type": "code",
+      "source_file": "crates/cli/src/live.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "live_run_once",
+      "label": "run_once()",
+      "file_type": "code",
+      "source_file": "crates/cli/src/live.rs",
+      "source_location": "L13"
+    },
+    {
+      "id": "main",
+      "label": "main.rs",
+      "file_type": "code",
+      "source_file": "crates/cli/src/main.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "main_main",
+      "label": "main()",
+      "file_type": "code",
+      "source_file": "crates/cli/src/main.rs",
+      "source_location": "L13"
+    },
+    {
+      "id": "backtest",
+      "label": "backtest.rs",
+      "file_type": "code",
+      "source_file": "crates/cli/src/backtest.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "record",
+      "label": "record.rs",
+      "file_type": "code",
+      "source_file": "crates/cli/src/record.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "risk",
+      "label": "risk.rs",
+      "file_type": "code",
+      "source_file": "crates/engine/src/risk.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "risk_unifiedriskmanager",
+      "label": "UnifiedRiskManager",
+      "file_type": "code",
+      "source_file": "crates/engine/src/risk.rs",
+      "source_location": "L10"
+    },
+    {
+      "id": "risk_unifiedriskmanager_new",
+      "label": ".new()",
+      "file_type": "code",
+      "source_file": "crates/engine/src/risk.rs",
+      "source_location": "L17"
+    },
+    {
+      "id": "risk_unifiedriskmanager_check",
+      "label": ".check()",
+      "file_type": "code",
+      "source_file": "crates/engine/src/risk.rs",
+      "source_location": "L25"
+    },
+    {
+      "id": "risk_unifiedriskmanager_all_positions",
+      "label": ".all_positions()",
+      "file_type": "code",
+      "source_file": "crates/engine/src/risk.rs",
+      "source_location": "L35"
+    },
+    {
+      "id": "risk_unifiedriskmanager_update_position",
+      "label": ".update_position()",
+      "file_type": "code",
+      "source_file": "crates/engine/src/risk.rs",
+      "source_location": "L39"
+    },
+    {
+      "id": "position_tracker",
+      "label": "position_tracker.rs",
+      "file_type": "code",
+      "source_file": "crates/engine/src/position_tracker.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "position_tracker_positiontracker",
+      "label": "PositionTracker",
+      "file_type": "code",
+      "source_file": "crates/engine/src/position_tracker.rs",
+      "source_location": "L7"
+    },
+    {
+      "id": "position_tracker_positiontracker_new",
+      "label": ".new()",
+      "file_type": "code",
+      "source_file": "crates/engine/src/position_tracker.rs",
+      "source_location": "L12"
+    },
+    {
+      "id": "position_tracker_positiontracker_on_fill",
+      "label": ".on_fill()",
+      "file_type": "code",
+      "source_file": "crates/engine/src/position_tracker.rs",
+      "source_location": "L14"
+    },
+    {
+      "id": "position_tracker_positiontracker_get",
+      "label": ".get()",
+      "file_type": "code",
+      "source_file": "crates/engine/src/position_tracker.rs",
+      "source_location": "L19"
+    },
+    {
+      "id": "position_tracker_positiontracker_all",
+      "label": ".all()",
+      "file_type": "code",
+      "source_file": "crates/engine/src/position_tracker.rs",
+      "source_location": "L23"
+    },
+    {
+      "id": "order_manager",
+      "label": "order_manager.rs",
+      "file_type": "code",
+      "source_file": "crates/engine/src/order_manager.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "order_manager_noncemanager",
+      "label": "NonceManager",
+      "file_type": "code",
+      "source_file": "crates/engine/src/order_manager.rs",
+      "source_location": "L8"
+    },
+    {
+      "id": "order_manager_noncemanager_new",
+      "label": ".new()",
+      "file_type": "code",
+      "source_file": "crates/engine/src/order_manager.rs",
+      "source_location": "L13"
+    },
+    {
+      "id": "order_manager_noncemanager_next",
+      "label": ".next()",
+      "file_type": "code",
+      "source_file": "crates/engine/src/order_manager.rs",
+      "source_location": "L17"
+    },
+    {
+      "id": "order_manager_ordermanager",
+      "label": "OrderManager",
+      "file_type": "code",
+      "source_file": "crates/engine/src/order_manager.rs",
+      "source_location": "L22"
+    },
+    {
+      "id": "order_manager_ordermanager_new",
+      "label": ".new()",
+      "file_type": "code",
+      "source_file": "crates/engine/src/order_manager.rs",
+      "source_location": "L28"
+    },
+    {
+      "id": "order_manager_ordermanager_submit",
+      "label": ".submit()",
+      "file_type": "code",
+      "source_file": "crates/engine/src/order_manager.rs",
+      "source_location": "L33"
+    },
+    {
+      "id": "lib",
+      "label": "lib.rs",
+      "file_type": "code",
+      "source_file": "crates/engine/src/lib.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "runner",
+      "label": "runner.rs",
+      "file_type": "code",
+      "source_file": "crates/engine/src/runner.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "runner_strategyinstance",
+      "label": "StrategyInstance",
+      "file_type": "code",
+      "source_file": "crates/engine/src/runner.rs",
+      "source_location": "L24"
+    },
+    {
+      "id": "runner_enginerunner",
+      "label": "EngineRunner",
+      "file_type": "code",
+      "source_file": "crates/engine/src/runner.rs",
+      "source_location": "L30"
+    },
+    {
+      "id": "runner_enginerunner_new",
+      "label": ".new()",
+      "file_type": "code",
+      "source_file": "crates/engine/src/runner.rs",
+      "source_location": "L38"
+    },
+    {
+      "id": "runner_enginerunner_run",
+      "label": ".run()",
+      "file_type": "code",
+      "source_file": "crates/engine/src/runner.rs",
+      "source_location": "L51"
+    },
+    {
+      "id": "market_data_bus",
+      "label": "market_data_bus.rs",
+      "file_type": "code",
+      "source_file": "crates/engine/src/market_data_bus.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "market_data_bus_marketdatabus",
+      "label": "MarketDataBus",
+      "file_type": "code",
+      "source_file": "crates/engine/src/market_data_bus.rs",
+      "source_location": "L15"
+    },
+    {
+      "id": "market_data_bus_marketdatabus_new",
+      "label": ".new()",
+      "file_type": "code",
+      "source_file": "crates/engine/src/market_data_bus.rs",
+      "source_location": "L20"
+    },
+    {
+      "id": "market_data_bus_marketdatabus_sender",
+      "label": ".sender()",
+      "file_type": "code",
+      "source_file": "crates/engine/src/market_data_bus.rs",
+      "source_location": "L25"
+    },
+    {
+      "id": "market_data_bus_marketdatabus_subscribe",
+      "label": ".subscribe()",
+      "file_type": "code",
+      "source_file": "crates/engine/src/market_data_bus.rs",
+      "source_location": "L36"
+    },
+    {
+      "id": "market_data_bus_marketdatabus_publish",
+      "label": ".publish()",
+      "file_type": "code",
+      "source_file": "crates/engine/src/market_data_bus.rs",
+      "source_location": "L41"
+    },
+    {
+      "id": "order_router",
+      "label": "order_router.rs",
+      "file_type": "code",
+      "source_file": "crates/engine/src/order_router.rs",
+      "source_location": "L1"
+    },
+    {
+      "id": "order_router_orderrouter",
+      "label": "OrderRouter",
+      "file_type": "code",
+      "source_file": "crates/engine/src/order_router.rs",
+      "source_location": "L14"
+    },
+    {
+      "id": "order_router_orderrouter_new",
+      "label": ".new()",
+      "file_type": "code",
+      "source_file": "crates/engine/src/order_router.rs",
+      "source_location": "L22"
+    },
+    {
+      "id": "order_router_orderrouter_run",
+      "label": ".run()",
+      "file_type": "code",
+      "source_file": "crates/engine/src/order_router.rs",
+      "source_location": "L31"
+    },
+    {
+      "id": "order_router_orderrouter_handle_action",
+      "label": ".handle_action()",
+      "file_type": "code",
+      "source_file": "crates/engine/src/order_router.rs",
+      "source_location": "L37"
+    }
+  ],
+  "edges": [
+    {
+      "source": "params",
+      "target": "decimal",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/strategies/pair_trader/src/params.rs",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "params",
+      "target": "deserialize",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/strategies/pair_trader/src/params.rs",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "params",
+      "target": "params_pairtraderparams",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/strategies/pair_trader/src/params.rs",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "spread_model",
+      "target": "spread_model_spreadmodel",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/strategies/pair_trader/src/spread_model.rs",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "spread_model_spreadmodel",
+      "target": "spread_model_spreadmodel_new",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/strategies/pair_trader/src/spread_model.rs",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "spread_model_spreadmodel",
+      "target": "spread_model_spreadmodel_update",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/strategies/pair_trader/src/spread_model.rs",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "spread_model_spreadmodel",
+      "target": "spread_model_spreadmodel_zscore",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/strategies/pair_trader/src/spread_model.rs",
+      "source_location": "L21",
+      "weight": 1.0
+    },
+    {
+      "source": "trader",
+      "target": "strategy",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/strategies/pair_trader/src/trader.rs",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "trader",
+      "target": "strategystate",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/strategies/pair_trader/src/trader.rs",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "trader",
+      "target": "trading_core",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/strategies/pair_trader/src/trader.rs",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "trader",
+      "target": "pairtraderparams",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/strategies/pair_trader/src/trader.rs",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "trader",
+      "target": "spreadmodel",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/strategies/pair_trader/src/trader.rs",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "trader",
+      "target": "trader_pairtrader",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/strategies/pair_trader/src/trader.rs",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "trader_pairtrader",
+      "target": "trader_pairtrader_new",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/strategies/pair_trader/src/trader.rs",
+      "source_location": "L18",
+      "weight": 1.0
+    },
+    {
+      "source": "trader_pairtrader",
+      "target": "trader_pairtrader_id",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/strategies/pair_trader/src/trader.rs",
+      "source_location": "L29",
+      "weight": 1.0
+    },
+    {
+      "source": "trader_pairtrader",
+      "target": "trader_pairtrader_subscriptions",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/strategies/pair_trader/src/trader.rs",
+      "source_location": "L31",
+      "weight": 1.0
+    },
+    {
+      "source": "trader_pairtrader",
+      "target": "trader_pairtrader_on_event",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/strategies/pair_trader/src/trader.rs",
+      "source_location": "L35",
+      "weight": 1.0
+    },
+    {
+      "source": "trader_pairtrader",
+      "target": "trader_pairtrader_initialize",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/strategies/pair_trader/src/trader.rs",
+      "source_location": "L50",
+      "weight": 1.0
+    },
+    {
+      "source": "trader_pairtrader",
+      "target": "trader_pairtrader_shutdown",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/strategies/pair_trader/src/trader.rs",
+      "source_location": "L55",
+      "weight": 1.0
+    },
+    {
+      "source": "params",
+      "target": "decimal",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/strategies/prediction_quoter/src/params.rs",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "params",
+      "target": "deserialize",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/strategies/prediction_quoter/src/params.rs",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "params",
+      "target": "params_quoterparams",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/strategies/prediction_quoter/src/params.rs",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "quoter",
+      "target": "strategy",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/strategies/prediction_quoter/src/quoter.rs",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "quoter",
+      "target": "strategystate",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/strategies/prediction_quoter/src/quoter.rs",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "quoter",
+      "target": "trading_core",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/strategies/prediction_quoter/src/quoter.rs",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "quoter",
+      "target": "quoterparams",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/strategies/prediction_quoter/src/quoter.rs",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "quoter",
+      "target": "quoter_predictionquoter",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/strategies/prediction_quoter/src/quoter.rs",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "quoter_predictionquoter",
+      "target": "quoter_predictionquoter_new",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/strategies/prediction_quoter/src/quoter.rs",
+      "source_location": "L18",
+      "weight": 1.0
+    },
+    {
+      "source": "quoter_predictionquoter",
+      "target": "quoter_predictionquoter_id",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/strategies/prediction_quoter/src/quoter.rs",
+      "source_location": "L30",
+      "weight": 1.0
+    },
+    {
+      "source": "quoter_predictionquoter",
+      "target": "quoter_predictionquoter_subscriptions",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/strategies/prediction_quoter/src/quoter.rs",
+      "source_location": "L32",
+      "weight": 1.0
+    },
+    {
+      "source": "quoter_predictionquoter",
+      "target": "quoter_predictionquoter_on_event",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/strategies/prediction_quoter/src/quoter.rs",
+      "source_location": "L34",
+      "weight": 1.0
+    },
+    {
+      "source": "quoter_predictionquoter",
+      "target": "quoter_predictionquoter_initialize",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/strategies/prediction_quoter/src/quoter.rs",
+      "source_location": "L54",
+      "weight": 1.0
+    },
+    {
+      "source": "quoter_predictionquoter",
+      "target": "quoter_predictionquoter_shutdown",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/strategies/prediction_quoter/src/quoter.rs",
+      "source_location": "L59",
+      "weight": 1.0
+    },
+    {
+      "source": "main",
+      "target": "envfilter",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/fair_value_service/src/main.rs",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "main",
+      "target": "main_main",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/fair_value_service/src/main.rs",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "publisher",
+      "target": "price",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/fair_value_service/src/publisher.rs",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "publisher",
+      "target": "instrumentid",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/fair_value_service/src/publisher.rs",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "publisher",
+      "target": "serde",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/fair_value_service/src/publisher.rs",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "publisher",
+      "target": "decimal",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/fair_value_service/src/publisher.rs",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "publisher",
+      "target": "hashmap",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/fair_value_service/src/publisher.rs",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "publisher",
+      "target": "path",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/fair_value_service/src/publisher.rs",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "publisher",
+      "target": "publisher_fairvaluemessage",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/fair_value_service/src/publisher.rs",
+      "source_location": "L18",
+      "weight": 1.0
+    },
+    {
+      "source": "publisher",
+      "target": "publisher_fairvaluepublisher",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/fair_value_service/src/publisher.rs",
+      "source_location": "L30",
+      "weight": 1.0
+    },
+    {
+      "source": "publisher_fairvaluepublisher",
+      "target": "publisher_fairvaluepublisher_new",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/fair_value_service/src/publisher.rs",
+      "source_location": "L35",
+      "weight": 1.0
+    },
+    {
+      "source": "publisher_fairvaluepublisher",
+      "target": "publisher_fairvaluepublisher_run",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/fair_value_service/src/publisher.rs",
+      "source_location": "L43",
+      "weight": 1.0
+    },
+    {
+      "source": "publisher_fairvaluepublisher_run",
+      "target": "publisher_fairvaluepublisher_new",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/fair_value_service/src/publisher.rs",
+      "source_location": "L48",
+      "weight": 1.0
+    },
+    {
+      "source": "data_source",
+      "target": "price",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/fair_value_service/src/data_source.rs",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "data_source",
+      "target": "hashmap",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/fair_value_service/src/data_source.rs",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "data_source",
+      "target": "data_source_priceaggregator",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/fair_value_service/src/data_source.rs",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "data_source_priceaggregator",
+      "target": "data_source_priceaggregator_new",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/fair_value_service/src/data_source.rs",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "data_source_priceaggregator",
+      "target": "data_source_priceaggregator_update",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/fair_value_service/src/data_source.rs",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "data_source_priceaggregator",
+      "target": "data_source_priceaggregator_get",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/fair_value_service/src/data_source.rs",
+      "source_location": "L27",
+      "weight": 1.0
+    },
+    {
+      "source": "data_source_priceaggregator",
+      "target": "data_source_priceaggregator_compute_features",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/fair_value_service/src/data_source.rs",
+      "source_location": "L33",
+      "weight": 1.0
+    },
+    {
+      "source": "model",
+      "target": "decimal",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/fair_value_service/src/model.rs",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "model",
+      "target": "model_fairvaluemodel",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/fair_value_service/src/model.rs",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "model_fairvaluemodel",
+      "target": "model_fairvaluemodel_new",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/fair_value_service/src/model.rs",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "model_fairvaluemodel",
+      "target": "model_fairvaluemodel_compute",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/fair_value_service/src/model.rs",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "model_fairvaluemodel_compute",
+      "target": "model_fairvaluemodel_new",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/fair_value_service/src/model.rs",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "trade_log",
+      "target": "orderupdate",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/telemetry/src/trade_log.rs",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "trade_log",
+      "target": "fill",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/telemetry/src/trade_log.rs",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "trade_log",
+      "target": "asyncwriteext",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/telemetry/src/trade_log.rs",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "trade_log",
+      "target": "path",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/telemetry/src/trade_log.rs",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "trade_log",
+      "target": "trade_log_tradelogger",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/telemetry/src/trade_log.rs",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "trade_log_tradelogger",
+      "target": "trade_log_tradelogger_new",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/telemetry/src/trade_log.rs",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "trade_log_tradelogger",
+      "target": "trade_log_tradelogger_log_fill",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/telemetry/src/trade_log.rs",
+      "source_location": "L18",
+      "weight": 1.0
+    },
+    {
+      "source": "trade_log_tradelogger",
+      "target": "trade_log_tradelogger_log_order_update",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/telemetry/src/trade_log.rs",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "audit",
+      "target": "serde",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/telemetry/src/audit.rs",
+      "source_location": "L18",
+      "weight": 1.0
+    },
+    {
+      "source": "audit",
+      "target": "audit_auditentry",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/telemetry/src/audit.rs",
+      "source_location": "L21",
+      "weight": 1.0
+    },
+    {
+      "source": "audit",
+      "target": "audit_auditlogger",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/telemetry/src/audit.rs",
+      "source_location": "L28",
+      "weight": 1.0
+    },
+    {
+      "source": "audit_auditlogger",
+      "target": "audit_auditlogger_new",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/telemetry/src/audit.rs",
+      "source_location": "L33",
+      "weight": 1.0
+    },
+    {
+      "source": "audit_auditlogger",
+      "target": "audit_auditlogger_log",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/telemetry/src/audit.rs",
+      "source_location": "L37",
+      "weight": 1.0
+    },
+    {
+      "source": "tracing_setup",
+      "target": "tracing_subscriber",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/telemetry/src/tracing_setup.rs",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "tracing_setup",
+      "target": "tracing_setup_init_tracing",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/telemetry/src/tracing_setup.rs",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "sim_market_data",
+      "target": "event",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/sim_market_data.rs",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "sim_market_data",
+      "target": "path",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/sim_market_data.rs",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "sim_market_data",
+      "target": "io",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/sim_market_data.rs",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "sim_market_data",
+      "target": "file",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/sim_market_data.rs",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "sim_market_data",
+      "target": "sim_market_data_simmarketdatafeed",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/sim_market_data.rs",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "sim_market_data_simmarketdatafeed",
+      "target": "sim_market_data_simmarketdatafeed_new",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/sim_market_data.rs",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "sim_market_data_simmarketdatafeed",
+      "target": "sim_market_data_simmarketdatafeed_load_events",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/sim_market_data.rs",
+      "source_location": "L22",
+      "weight": 1.0
+    },
+    {
+      "source": "sim_market_data_simmarketdatafeed_load_events",
+      "target": "sim_market_data_simmarketdatafeed_new",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/sim_market_data.rs",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "recorder",
+      "target": "event",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/recorder.rs",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "recorder",
+      "target": "broadcast",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/recorder.rs",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "recorder",
+      "target": "asyncwriteext",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/recorder.rs",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "recorder",
+      "target": "path",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/recorder.rs",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "recorder",
+      "target": "recorder_marketdatarecorder",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/recorder.rs",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "recorder_marketdatarecorder",
+      "target": "recorder_marketdatarecorder_new",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/recorder.rs",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "recorder_marketdatarecorder",
+      "target": "recorder_marketdatarecorder_record",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/recorder.rs",
+      "source_location": "L25",
+      "weight": 1.0
+    },
+    {
+      "source": "recorder_marketdatarecorder_record",
+      "target": "recorder_marketdatarecorder_new",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/recorder.rs",
+      "source_location": "L32",
+      "weight": 1.0
+    },
+    {
+      "source": "report",
+      "target": "position",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/report.rs",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "report",
+      "target": "decimal",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/report.rs",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "report",
+      "target": "report_backtestreport",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/report.rs",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "report_backtestreport",
+      "target": "report_backtestreport_new",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/report.rs",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "report_backtestreport",
+      "target": "report_backtestreport_print_summary",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/report.rs",
+      "source_location": "L33",
+      "weight": 1.0
+    },
+    {
+      "source": "matching_engine",
+      "target": "decimal",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/matching_engine.rs",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "matching_engine",
+      "target": "instrumentid",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/matching_engine.rs",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "matching_engine",
+      "target": "order",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/matching_engine.rs",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "matching_engine",
+      "target": "position",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/matching_engine.rs",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "matching_engine",
+      "target": "decimal",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/matching_engine.rs",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "matching_engine",
+      "target": "hashmap",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/matching_engine.rs",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "matching_engine",
+      "target": "matching_engine_fillmodel",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/matching_engine.rs",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "matching_engine",
+      "target": "matching_engine_simorder",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/matching_engine.rs",
+      "source_location": "L25",
+      "weight": 1.0
+    },
+    {
+      "source": "matching_engine",
+      "target": "matching_engine_matchingengine",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/matching_engine.rs",
+      "source_location": "L34",
+      "weight": 1.0
+    },
+    {
+      "source": "matching_engine_matchingengine",
+      "target": "matching_engine_matchingengine_new",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/matching_engine.rs",
+      "source_location": "L41",
+      "weight": 1.0
+    },
+    {
+      "source": "matching_engine_matchingengine",
+      "target": "matching_engine_matchingengine_with_fill_model",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/matching_engine.rs",
+      "source_location": "L49",
+      "weight": 1.0
+    },
+    {
+      "source": "matching_engine_matchingengine",
+      "target": "matching_engine_matchingengine_add_order",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/matching_engine.rs",
+      "source_location": "L54",
+      "weight": 1.0
+    },
+    {
+      "source": "matching_engine_matchingengine",
+      "target": "matching_engine_matchingengine_cancel_order",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/matching_engine.rs",
+      "source_location": "L68",
+      "weight": 1.0
+    },
+    {
+      "source": "matching_engine_matchingengine",
+      "target": "matching_engine_matchingengine_cancel_all_for",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/matching_engine.rs",
+      "source_location": "L72",
+      "weight": 1.0
+    },
+    {
+      "source": "matching_engine_matchingengine",
+      "target": "matching_engine_matchingengine_check_fills",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/matching_engine.rs",
+      "source_location": "L87",
+      "weight": 1.0
+    },
+    {
+      "source": "matching_engine_matchingengine",
+      "target": "matching_engine_matchingengine_positions",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/matching_engine.rs",
+      "source_location": "L140",
+      "weight": 1.0
+    },
+    {
+      "source": "matching_engine_matchingengine",
+      "target": "matching_engine_matchingengine_open_orders_for",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/matching_engine.rs",
+      "source_location": "L152",
+      "weight": 1.0
+    },
+    {
+      "source": "matching_engine_matchingengine_check_fills",
+      "target": "matching_engine_matchingengine_new",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/matching_engine.rs",
+      "source_location": "L92",
+      "weight": 1.0
+    },
+    {
+      "source": "matching_engine_matchingengine_positions",
+      "target": "matching_engine_matchingengine_new",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/matching_engine.rs",
+      "source_location": "L145",
+      "weight": 1.0
+    },
+    {
+      "source": "sim_connector",
+      "target": "exchangeconnector",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "sim_connector",
+      "target": "decimal",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "sim_connector",
+      "target": "instrument",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "sim_connector",
+      "target": "order",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "sim_connector",
+      "target": "position",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "sim_connector",
+      "target": "connectorerror",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "sim_connector",
+      "target": "matchingengine",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "sim_connector",
+      "target": "mpsc",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "sim_connector",
+      "target": "sync",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": "L16",
+      "weight": 1.0
+    },
+    {
+      "source": "sim_connector",
+      "target": "uuid",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "sim_connector",
+      "target": "sim_connector_simconnector",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": "L19",
+      "weight": 1.0
+    },
+    {
+      "source": "sim_connector_simconnector",
+      "target": "sim_connector_simconnector_new",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": "L27",
+      "weight": 1.0
+    },
+    {
+      "source": "sim_connector_simconnector",
+      "target": "sim_connector_simconnector_on_market_data",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": "L39",
+      "weight": 1.0
+    },
+    {
+      "source": "sim_connector_simconnector",
+      "target": "sim_connector_simconnector_matching_engine",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": "L47",
+      "weight": 1.0
+    },
+    {
+      "source": "sim_connector_simconnector",
+      "target": "sim_connector_simconnector_exchange",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": "L54",
+      "weight": 1.0
+    },
+    {
+      "source": "sim_connector_simconnector",
+      "target": "sim_connector_simconnector_place_order",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": "L58",
+      "weight": 1.0
+    },
+    {
+      "source": "sim_connector_simconnector",
+      "target": "sim_connector_simconnector_cancel_order",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": "L77",
+      "weight": 1.0
+    },
+    {
+      "source": "sim_connector_simconnector",
+      "target": "sim_connector_simconnector_cancel_all",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": "L98",
+      "weight": 1.0
+    },
+    {
+      "source": "sim_connector_simconnector",
+      "target": "sim_connector_simconnector_modify_order",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": "L115",
+      "weight": 1.0
+    },
+    {
+      "source": "sim_connector_simconnector",
+      "target": "sim_connector_simconnector_positions",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": "L135",
+      "weight": 1.0
+    },
+    {
+      "source": "sim_connector_simconnector",
+      "target": "sim_connector_simconnector_open_orders",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": "L140",
+      "weight": 1.0
+    },
+    {
+      "source": "sim_connector_simconnector",
+      "target": "sim_connector_simconnector_order_update_rx",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": "L148",
+      "weight": 1.0
+    },
+    {
+      "source": "sim_connector_simconnector_modify_order",
+      "target": "sim_connector_simconnector_cancel_order",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": "L123",
+      "weight": 1.0
+    },
+    {
+      "source": "sim_connector_simconnector_modify_order",
+      "target": "sim_connector_simconnector_place_order",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/sim_connector.rs",
+      "source_location": "L132",
+      "weight": 1.0
+    },
+    {
+      "source": "harness",
+      "target": "simconnector",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/harness.rs",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "harness",
+      "target": "simmarketdatafeed",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/harness.rs",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "harness",
+      "target": "backtestreport",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/harness.rs",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "harness",
+      "target": "traits",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/harness.rs",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "harness",
+      "target": "strategystate",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/harness.rs",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "harness",
+      "target": "exchange",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/harness.rs",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "harness",
+      "target": "trading_core",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/harness.rs",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "harness",
+      "target": "path",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/harness.rs",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "harness",
+      "target": "harness_backtestharness",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/harness.rs",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "harness_backtestharness",
+      "target": "harness_backtestharness_new",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/harness.rs",
+      "source_location": "L22",
+      "weight": 1.0
+    },
+    {
+      "source": "harness_backtestharness",
+      "target": "harness_backtestharness_run",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/harness.rs",
+      "source_location": "L35",
+      "weight": 1.0
+    },
+    {
+      "source": "harness_backtestharness",
+      "target": "harness_backtestharness_process_actions",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/harness.rs",
+      "source_location": "L83",
+      "weight": 1.0
+    },
+    {
+      "source": "harness_backtestharness_run",
+      "target": "harness_backtestharness_process_actions",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/harness.rs",
+      "source_location": "L45",
+      "weight": 1.0
+    },
+    {
+      "source": "harness_backtestharness_run",
+      "target": "harness_backtestharness_new",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/backtest/src/harness.rs",
+      "source_location": "L80",
+      "weight": 1.0
+    },
+    {
+      "source": "lib",
+      "target": "hyperliquidclient",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/lib.rs",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "client",
+      "target": "fromstr",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "client",
+      "target": "arc",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "client",
+      "target": "utc",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "client",
+      "target": "signers",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "client",
+      "target": "h160",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "client",
+      "target": "hyperliquid_sdk",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "client",
+      "target": "decimal",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "client",
+      "target": "sync",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "client",
+      "target": "connectorerror",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "client",
+      "target": "exchangeconnector",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L16",
+      "weight": 1.0
+    },
+    {
+      "source": "client",
+      "target": "decimal",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "client",
+      "target": "instrument",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L18",
+      "weight": 1.0
+    },
+    {
+      "source": "client",
+      "target": "order",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L19",
+      "weight": 1.0
+    },
+    {
+      "source": "client",
+      "target": "position",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L22",
+      "weight": 1.0
+    },
+    {
+      "source": "client",
+      "target": "client_hyperliquidclient",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L25",
+      "weight": 1.0
+    },
+    {
+      "source": "client_hyperliquidclient",
+      "target": "client_hyperliquidclient_from_env",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L35",
+      "weight": 1.0
+    },
+    {
+      "source": "client_hyperliquidclient",
+      "target": "client_hyperliquidclient_new",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L45",
+      "weight": 1.0
+    },
+    {
+      "source": "client_hyperliquidclient",
+      "target": "client_hyperliquidclient_now_ns",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L70",
+      "weight": 1.0
+    },
+    {
+      "source": "client_hyperliquidclient",
+      "target": "client_hyperliquidclient_parse_decimal",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L77",
+      "weight": 1.0
+    },
+    {
+      "source": "client_hyperliquidclient",
+      "target": "client_hyperliquidclient_to_hl_tif",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L82",
+      "weight": 1.0
+    },
+    {
+      "source": "client_hyperliquidclient",
+      "target": "client_hyperliquidclient_to_hl_side",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L90",
+      "weight": 1.0
+    },
+    {
+      "source": "client_hyperliquidclient",
+      "target": "client_hyperliquidclient_to_core_side",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L94",
+      "weight": 1.0
+    },
+    {
+      "source": "client_hyperliquidclient",
+      "target": "client_hyperliquidclient_parse_oid",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L102",
+      "weight": 1.0
+    },
+    {
+      "source": "client_hyperliquidclient",
+      "target": "client_hyperliquidclient_to_instrument",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L110",
+      "weight": 1.0
+    },
+    {
+      "source": "client_hyperliquidclient",
+      "target": "client_hyperliquidclient_exchange",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L117",
+      "weight": 1.0
+    },
+    {
+      "source": "client_hyperliquidclient",
+      "target": "client_hyperliquidclient_place_order",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L121",
+      "weight": 1.0
+    },
+    {
+      "source": "client_hyperliquidclient",
+      "target": "client_hyperliquidclient_cancel_order",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L198",
+      "weight": 1.0
+    },
+    {
+      "source": "client_hyperliquidclient",
+      "target": "client_hyperliquidclient_cancel_all",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L229",
+      "weight": 1.0
+    },
+    {
+      "source": "client_hyperliquidclient",
+      "target": "client_hyperliquidclient_modify_order",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L243",
+      "weight": 1.0
+    },
+    {
+      "source": "client_hyperliquidclient",
+      "target": "client_hyperliquidclient_positions",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L295",
+      "weight": 1.0
+    },
+    {
+      "source": "client_hyperliquidclient",
+      "target": "client_hyperliquidclient_open_orders",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L325",
+      "weight": 1.0
+    },
+    {
+      "source": "client_hyperliquidclient",
+      "target": "client_hyperliquidclient_order_update_rx",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L347",
+      "weight": 1.0
+    },
+    {
+      "source": "client_hyperliquidclient_from_env",
+      "target": "client_hyperliquidclient_new",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L41",
+      "weight": 1.0
+    },
+    {
+      "source": "client_hyperliquidclient_to_instrument",
+      "target": "client_hyperliquidclient_new",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L111",
+      "weight": 1.0
+    },
+    {
+      "source": "client_hyperliquidclient_place_order",
+      "target": "client_hyperliquidclient_to_hl_side",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L124",
+      "weight": 1.0
+    },
+    {
+      "source": "client_hyperliquidclient_place_order",
+      "target": "client_hyperliquidclient_to_hl_tif",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L134",
+      "weight": 1.0
+    },
+    {
+      "source": "client_hyperliquidclient_place_order",
+      "target": "client_hyperliquidclient_parse_oid",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L156",
+      "weight": 1.0
+    },
+    {
+      "source": "client_hyperliquidclient_place_order",
+      "target": "client_hyperliquidclient_now_ns",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L168",
+      "weight": 1.0
+    },
+    {
+      "source": "client_hyperliquidclient_place_order",
+      "target": "client_hyperliquidclient_parse_decimal",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L171",
+      "weight": 1.0
+    },
+    {
+      "source": "client_hyperliquidclient_place_order",
+      "target": "client_hyperliquidclient_new",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L177",
+      "weight": 1.0
+    },
+    {
+      "source": "client_hyperliquidclient_cancel_order",
+      "target": "client_hyperliquidclient_now_ns",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L223",
+      "weight": 1.0
+    },
+    {
+      "source": "client_hyperliquidclient_cancel_all",
+      "target": "client_hyperliquidclient_open_orders",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L230",
+      "weight": 1.0
+    },
+    {
+      "source": "client_hyperliquidclient_cancel_all",
+      "target": "client_hyperliquidclient_cancel_order",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L237",
+      "weight": 1.0
+    },
+    {
+      "source": "client_hyperliquidclient_modify_order",
+      "target": "client_hyperliquidclient_parse_oid",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L288",
+      "weight": 1.0
+    },
+    {
+      "source": "client_hyperliquidclient_positions",
+      "target": "client_hyperliquidclient_parse_decimal",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L304",
+      "weight": 1.0
+    },
+    {
+      "source": "client_hyperliquidclient_positions",
+      "target": "client_hyperliquidclient_to_instrument",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L315",
+      "weight": 1.0
+    },
+    {
+      "source": "client_hyperliquidclient_positions",
+      "target": "client_hyperliquidclient_new",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L316",
+      "weight": 1.0
+    },
+    {
+      "source": "client_hyperliquidclient_open_orders",
+      "target": "client_hyperliquidclient_new",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L332",
+      "weight": 1.0
+    },
+    {
+      "source": "client_hyperliquidclient_open_orders",
+      "target": "client_hyperliquidclient_to_core_side",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L337",
+      "weight": 1.0
+    },
+    {
+      "source": "client_hyperliquidclient_open_orders",
+      "target": "client_hyperliquidclient_parse_decimal",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/connectors/hyperliquid/src/client.rs",
+      "source_location": "L338",
+      "weight": 1.0
+    },
+    {
+      "source": "config",
+      "target": "deserialize",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/config.rs",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "config",
+      "target": "path",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/config.rs",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "config",
+      "target": "config_appconfig",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/config.rs",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "config",
+      "target": "config_engineconfig",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/config.rs",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "config",
+      "target": "config_exchangeconfig",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/config.rs",
+      "source_location": "L20",
+      "weight": 1.0
+    },
+    {
+      "source": "config",
+      "target": "config_strategyconfig",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/config.rs",
+      "source_location": "L28",
+      "weight": 1.0
+    },
+    {
+      "source": "config",
+      "target": "config_telemetryconfig",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/config.rs",
+      "source_location": "L36",
+      "weight": 1.0
+    },
+    {
+      "source": "config_appconfig",
+      "target": "config_appconfig_load",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/config.rs",
+      "source_location": "L43",
+      "weight": 1.0
+    },
+    {
+      "source": "action",
+      "target": "decimal",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/action.rs",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "action",
+      "target": "instrumentid",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/action.rs",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "action",
+      "target": "order",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/action.rs",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "action",
+      "target": "serde",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/action.rs",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "action",
+      "target": "action_action",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/action.rs",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "action_action",
+      "target": "action_action_exchange",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/action.rs",
+      "source_location": "L29",
+      "weight": 1.0
+    },
+    {
+      "source": "lib",
+      "target": "action",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/lib.rs",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "lib",
+      "target": "event",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/lib.rs",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "lib",
+      "target": "instrument",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/lib.rs",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "lib",
+      "target": "order",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/lib.rs",
+      "source_location": "L16",
+      "weight": 1.0
+    },
+    {
+      "source": "lib",
+      "target": "market_data",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/lib.rs",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "lib",
+      "target": "position",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/lib.rs",
+      "source_location": "L18",
+      "weight": 1.0
+    },
+    {
+      "source": "lib",
+      "target": "decimal",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/lib.rs",
+      "source_location": "L19",
+      "weight": 1.0
+    },
+    {
+      "source": "error",
+      "target": "error",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/error.rs",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "error",
+      "target": "error_connectorerror",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/error.rs",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "error",
+      "target": "error_riskrejection",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/error.rs",
+      "source_location": "L22",
+      "weight": 1.0
+    },
+    {
+      "source": "event",
+      "target": "price",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/event.rs",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "event",
+      "target": "instrumentid",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/event.rs",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "event",
+      "target": "market_data",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/event.rs",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "event",
+      "target": "orderupdate",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/event.rs",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "event",
+      "target": "position",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/event.rs",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "event",
+      "target": "serde",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/event.rs",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "event",
+      "target": "event_event",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/event.rs",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "position",
+      "target": "decimal",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/types/position.rs",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "position",
+      "target": "instrumentid",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/types/position.rs",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "position",
+      "target": "order",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/types/position.rs",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "position",
+      "target": "serde",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/types/position.rs",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "position",
+      "target": "position_position",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/types/position.rs",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "position",
+      "target": "position_fill",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/types/position.rs",
+      "source_location": "L18",
+      "weight": 1.0
+    },
+    {
+      "source": "instrument",
+      "target": "serde",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/types/instrument.rs",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "instrument",
+      "target": "fmt",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/types/instrument.rs",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "instrument",
+      "target": "instrument_exchange",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/types/instrument.rs",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "instrument",
+      "target": "instrument_instrumentkind",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/types/instrument.rs",
+      "source_location": "L19",
+      "weight": 1.0
+    },
+    {
+      "source": "instrument",
+      "target": "instrument_instrumentid",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/types/instrument.rs",
+      "source_location": "L29",
+      "weight": 1.0
+    },
+    {
+      "source": "instrument_instrumentid",
+      "target": "instrument_instrumentid_fmt",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/types/instrument.rs",
+      "source_location": "L36",
+      "weight": 1.0
+    },
+    {
+      "source": "instrument_instrumentid",
+      "target": "instrument_instrumentid_new",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/types/instrument.rs",
+      "source_location": "L42",
+      "weight": 1.0
+    },
+    {
+      "source": "market_data",
+      "target": "decimal",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/types/market_data.rs",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "market_data",
+      "target": "serde",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/types/market_data.rs",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "market_data",
+      "target": "market_data_orderbooksnapshot",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/types/market_data.rs",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "market_data_orderbooksnapshot",
+      "target": "market_data_orderbooksnapshot_best_bid",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/types/market_data.rs",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "market_data_orderbooksnapshot",
+      "target": "market_data_orderbooksnapshot_best_ask",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/types/market_data.rs",
+      "source_location": "L18",
+      "weight": 1.0
+    },
+    {
+      "source": "market_data_orderbooksnapshot",
+      "target": "market_data_orderbooksnapshot_mid_price",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/types/market_data.rs",
+      "source_location": "L19",
+      "weight": 1.0
+    },
+    {
+      "source": "market_data",
+      "target": "market_data_trade",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/types/market_data.rs",
+      "source_location": "L30",
+      "weight": 1.0
+    },
+    {
+      "source": "market_data",
+      "target": "market_data_tradeside",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/types/market_data.rs",
+      "source_location": "L38",
+      "weight": 1.0
+    },
+    {
+      "source": "market_data_orderbooksnapshot_mid_price",
+      "target": "market_data_orderbooksnapshot_best_bid",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/types/market_data.rs",
+      "source_location": "L20",
+      "weight": 1.0
+    },
+    {
+      "source": "market_data_orderbooksnapshot_mid_price",
+      "target": "market_data_orderbooksnapshot_best_ask",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/types/market_data.rs",
+      "source_location": "L20",
+      "weight": 1.0
+    },
+    {
+      "source": "order",
+      "target": "decimal",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/types/order.rs",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "order",
+      "target": "instrumentid",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/types/order.rs",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "order",
+      "target": "serde",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/types/order.rs",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "order",
+      "target": "order_orderside",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/types/order.rs",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "order",
+      "target": "order_timeinforce",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/types/order.rs",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "order",
+      "target": "order_orderrequest",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/types/order.rs",
+      "source_location": "L16",
+      "weight": 1.0
+    },
+    {
+      "source": "order",
+      "target": "order_orderupdate",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/types/order.rs",
+      "source_location": "L27",
+      "weight": 1.0
+    },
+    {
+      "source": "order",
+      "target": "order_orderstatus",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/types/order.rs",
+      "source_location": "L38",
+      "weight": 1.0
+    },
+    {
+      "source": "order",
+      "target": "order_openorder",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/types/order.rs",
+      "source_location": "L47",
+      "weight": 1.0
+    },
+    {
+      "source": "decimal",
+      "target": "decimal",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/types/decimal.rs",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "decimal",
+      "target": "serde",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/types/decimal.rs",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "decimal",
+      "target": "fmt",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/types/decimal.rs",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "decimal",
+      "target": "decimal_price",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/types/decimal.rs",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "decimal",
+      "target": "decimal_quantity",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/types/decimal.rs",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "decimal_price",
+      "target": "decimal_price_fmt",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/types/decimal.rs",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "decimal_quantity",
+      "target": "decimal_quantity_fmt",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/types/decimal.rs",
+      "source_location": "L21",
+      "weight": 1.0
+    },
+    {
+      "source": "decimal_price",
+      "target": "decimal_price_new",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/types/decimal.rs",
+      "source_location": "L27",
+      "weight": 1.0
+    },
+    {
+      "source": "decimal_price",
+      "target": "decimal_price_zero",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/types/decimal.rs",
+      "source_location": "L28",
+      "weight": 1.0
+    },
+    {
+      "source": "decimal_price",
+      "target": "decimal_price_inner",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/types/decimal.rs",
+      "source_location": "L29",
+      "weight": 1.0
+    },
+    {
+      "source": "decimal_quantity",
+      "target": "decimal_quantity_new",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/types/decimal.rs",
+      "source_location": "L33",
+      "weight": 1.0
+    },
+    {
+      "source": "decimal_quantity",
+      "target": "decimal_quantity_zero",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/types/decimal.rs",
+      "source_location": "L34",
+      "weight": 1.0
+    },
+    {
+      "source": "decimal_quantity",
+      "target": "decimal_quantity_inner",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/types/decimal.rs",
+      "source_location": "L35",
+      "weight": 1.0
+    },
+    {
+      "source": "decimal_quantity",
+      "target": "decimal_quantity_abs",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/types/decimal.rs",
+      "source_location": "L36",
+      "weight": 1.0
+    },
+    {
+      "source": "risk",
+      "target": "action",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/traits/risk.rs",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "risk",
+      "target": "riskrejection",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/traits/risk.rs",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "risk",
+      "target": "position",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/traits/risk.rs",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "risk",
+      "target": "risk_riskcheck",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/traits/risk.rs",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "connector",
+      "target": "decimal",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/traits/connector.rs",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "connector",
+      "target": "instrument",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/traits/connector.rs",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "connector",
+      "target": "order",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/traits/connector.rs",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "connector",
+      "target": "position",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/traits/connector.rs",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "connector",
+      "target": "connectorerror",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/traits/connector.rs",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "connector",
+      "target": "mpsc",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/traits/connector.rs",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "connector",
+      "target": "connector_exchangeconnector",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/traits/connector.rs",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "strategy",
+      "target": "crate",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/traits/strategy.rs",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "strategy",
+      "target": "position",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/traits/strategy.rs",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "strategy",
+      "target": "openorder",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/traits/strategy.rs",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "strategy",
+      "target": "strategy_strategystate",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/traits/strategy.rs",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "strategy",
+      "target": "strategy_strategy",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/traits/strategy.rs",
+      "source_location": "L19",
+      "weight": 1.0
+    },
+    {
+      "source": "mod",
+      "target": "strategy",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/traits/mod.rs",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "mod",
+      "target": "exchangeconnector",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/traits/mod.rs",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "mod",
+      "target": "riskcheck",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/core/src/traits/mod.rs",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "live",
+      "target": "fromstr",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/cli/src/live.rs",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "live",
+      "target": "hyperliquidclient",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/cli/src/live.rs",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "live",
+      "target": "decimal",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/cli/src/live.rs",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "live",
+      "target": "exchangeconnector",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/cli/src/live.rs",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "live",
+      "target": "decimal",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/cli/src/live.rs",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "live",
+      "target": "instrument",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/cli/src/live.rs",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "live",
+      "target": "order",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/cli/src/live.rs",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "live",
+      "target": "live_run_once",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/cli/src/live.rs",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "main",
+      "target": "envfilter",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/cli/src/main.rs",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "main",
+      "target": "main_main",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/cli/src/main.rs",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "risk",
+      "target": "action",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/risk.rs",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "risk",
+      "target": "riskrejection",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/risk.rs",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "risk",
+      "target": "position",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/risk.rs",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "risk",
+      "target": "decimal",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/risk.rs",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "risk",
+      "target": "hashmap",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/risk.rs",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "risk",
+      "target": "instrumentid",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/risk.rs",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "risk",
+      "target": "risk_unifiedriskmanager",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/risk.rs",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "risk_unifiedriskmanager",
+      "target": "risk_unifiedriskmanager_new",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/risk.rs",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "risk_unifiedriskmanager",
+      "target": "risk_unifiedriskmanager_check",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/risk.rs",
+      "source_location": "L25",
+      "weight": 1.0
+    },
+    {
+      "source": "risk_unifiedriskmanager",
+      "target": "risk_unifiedriskmanager_all_positions",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/risk.rs",
+      "source_location": "L35",
+      "weight": 1.0
+    },
+    {
+      "source": "risk_unifiedriskmanager",
+      "target": "risk_unifiedriskmanager_update_position",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/risk.rs",
+      "source_location": "L39",
+      "weight": 1.0
+    },
+    {
+      "source": "position_tracker",
+      "target": "position",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/position_tracker.rs",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "position_tracker",
+      "target": "instrumentid",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/position_tracker.rs",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "position_tracker",
+      "target": "hashmap",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/position_tracker.rs",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "position_tracker",
+      "target": "position_tracker_positiontracker",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/position_tracker.rs",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "position_tracker_positiontracker",
+      "target": "position_tracker_positiontracker_new",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/position_tracker.rs",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "position_tracker_positiontracker",
+      "target": "position_tracker_positiontracker_on_fill",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/position_tracker.rs",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "position_tracker_positiontracker",
+      "target": "position_tracker_positiontracker_get",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/position_tracker.rs",
+      "source_location": "L19",
+      "weight": 1.0
+    },
+    {
+      "source": "position_tracker_positiontracker",
+      "target": "position_tracker_positiontracker_all",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/position_tracker.rs",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "order_manager",
+      "target": "action",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/order_manager.rs",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "order_manager",
+      "target": "connectorerror",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/order_manager.rs",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "order_manager",
+      "target": "exchangeconnector",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/order_manager.rs",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "order_manager",
+      "target": "atomic",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/order_manager.rs",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "order_manager",
+      "target": "order_manager_noncemanager",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/order_manager.rs",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "order_manager_noncemanager",
+      "target": "order_manager_noncemanager_new",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/order_manager.rs",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "order_manager_noncemanager",
+      "target": "order_manager_noncemanager_next",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/order_manager.rs",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "order_manager",
+      "target": "order_manager_ordermanager",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/order_manager.rs",
+      "source_location": "L22",
+      "weight": 1.0
+    },
+    {
+      "source": "order_manager_ordermanager",
+      "target": "order_manager_ordermanager_new",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/order_manager.rs",
+      "source_location": "L28",
+      "weight": 1.0
+    },
+    {
+      "source": "order_manager_ordermanager",
+      "target": "order_manager_ordermanager_submit",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/order_manager.rs",
+      "source_location": "L33",
+      "weight": 1.0
+    },
+    {
+      "source": "order_manager_noncemanager_new",
+      "target": "order_manager_ordermanager_new",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/order_manager.rs",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "runner",
+      "target": "marketdatabus",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/runner.rs",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "runner",
+      "target": "order_router",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/runner.rs",
+      "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "runner",
+      "target": "ordermanager",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/runner.rs",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "runner",
+      "target": "unifiedriskmanager",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/runner.rs",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "runner",
+      "target": "exchangeconnector",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/runner.rs",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "runner",
+      "target": "strategy",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/runner.rs",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "runner",
+      "target": "exchange",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/runner.rs",
+      "source_location": "L16",
+      "weight": 1.0
+    },
+    {
+      "source": "runner",
+      "target": "trading_core",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/runner.rs",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "runner",
+      "target": "hashmap",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/runner.rs",
+      "source_location": "L18",
+      "weight": 1.0
+    },
+    {
+      "source": "runner",
+      "target": "sync",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/runner.rs",
+      "source_location": "L19",
+      "weight": 1.0
+    },
+    {
+      "source": "runner",
+      "target": "signal",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/runner.rs",
+      "source_location": "L20",
+      "weight": 1.0
+    },
+    {
+      "source": "runner",
+      "target": "dec",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/runner.rs",
+      "source_location": "L21",
+      "weight": 1.0
+    },
+    {
+      "source": "runner",
+      "target": "runner_strategyinstance",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/runner.rs",
+      "source_location": "L24",
+      "weight": 1.0
+    },
+    {
+      "source": "runner",
+      "target": "runner_enginerunner",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/runner.rs",
+      "source_location": "L30",
+      "weight": 1.0
+    },
+    {
+      "source": "runner_enginerunner",
+      "target": "runner_enginerunner_new",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/runner.rs",
+      "source_location": "L38",
+      "weight": 1.0
+    },
+    {
+      "source": "runner_enginerunner",
+      "target": "runner_enginerunner_run",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/runner.rs",
+      "source_location": "L51",
+      "weight": 1.0
+    },
+    {
+      "source": "runner_enginerunner_run",
+      "target": "runner_enginerunner_new",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/runner.rs",
+      "source_location": "L58",
+      "weight": 1.0
+    },
+    {
+      "source": "market_data_bus",
+      "target": "trading_core",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/market_data_bus.rs",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "market_data_bus",
+      "target": "broadcast",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/market_data_bus.rs",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "market_data_bus",
+      "target": "hashmap",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/market_data_bus.rs",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "market_data_bus",
+      "target": "market_data_bus_marketdatabus",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/market_data_bus.rs",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "market_data_bus_marketdatabus",
+      "target": "market_data_bus_marketdatabus_new",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/market_data_bus.rs",
+      "source_location": "L20",
+      "weight": 1.0
+    },
+    {
+      "source": "market_data_bus_marketdatabus",
+      "target": "market_data_bus_marketdatabus_sender",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/market_data_bus.rs",
+      "source_location": "L25",
+      "weight": 1.0
+    },
+    {
+      "source": "market_data_bus_marketdatabus",
+      "target": "market_data_bus_marketdatabus_subscribe",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/market_data_bus.rs",
+      "source_location": "L36",
+      "weight": 1.0
+    },
+    {
+      "source": "market_data_bus_marketdatabus",
+      "target": "market_data_bus_marketdatabus_publish",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/market_data_bus.rs",
+      "source_location": "L41",
+      "weight": 1.0
+    },
+    {
+      "source": "market_data_bus_marketdatabus_subscribe",
+      "target": "market_data_bus_marketdatabus_sender",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/market_data_bus.rs",
+      "source_location": "L37",
+      "weight": 1.0
+    },
+    {
+      "source": "order_router",
+      "target": "trading_core",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/order_router.rs",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "order_router",
+      "target": "exchange",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/order_router.rs",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
+      "source": "order_router",
+      "target": "riskrejection",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/order_router.rs",
+      "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "order_router",
+      "target": "ordermanager",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/order_router.rs",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "order_router",
+      "target": "unifiedriskmanager",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/order_router.rs",
+      "source_location": "L8",
+      "weight": 1.0
+    },
+    {
+      "source": "order_router",
+      "target": "hashmap",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/order_router.rs",
+      "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "order_router",
+      "target": "mpsc",
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/order_router.rs",
+      "source_location": "L10",
+      "weight": 1.0
+    },
+    {
+      "source": "order_router",
+      "target": "order_router_orderrouter",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/order_router.rs",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "order_router_orderrouter",
+      "target": "order_router_orderrouter_new",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/order_router.rs",
+      "source_location": "L22",
+      "weight": 1.0
+    },
+    {
+      "source": "order_router_orderrouter",
+      "target": "order_router_orderrouter_run",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/order_router.rs",
+      "source_location": "L31",
+      "weight": 1.0
+    },
+    {
+      "source": "order_router_orderrouter",
+      "target": "order_router_orderrouter_handle_action",
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/order_router.rs",
+      "source_location": "L37",
+      "weight": 1.0
+    },
+    {
+      "source": "order_router_orderrouter_run",
+      "target": "order_router_orderrouter_handle_action",
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "crates/engine/src/order_router.rs",
+      "source_location": "L33",
+      "weight": 1.0
+    }
+  ],
+  "input_tokens": 0,
+  "output_tokens": 0
+}

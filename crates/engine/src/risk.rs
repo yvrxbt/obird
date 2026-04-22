@@ -1,10 +1,10 @@
 //! Unified risk management across all exchanges.
 
-use trading_core::Action;
-use trading_core::error::RiskRejection;
-use trading_core::types::position::Position;
 use rust_decimal::Decimal;
 use std::collections::HashMap;
+use trading_core::error::RiskRejection;
+use trading_core::types::position::Position;
+use trading_core::Action;
 use trading_core::InstrumentId;
 
 pub struct UnifiedRiskManager {

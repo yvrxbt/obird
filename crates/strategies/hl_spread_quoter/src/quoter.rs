@@ -22,9 +22,9 @@ use std::time::{Duration, Instant};
 
 use rust_decimal::Decimal;
 use trading_core::{
-    Action, Event, InstrumentId, Price, Quantity,
-    traits::{Strategy, strategy::StrategyState},
+    traits::{strategy::StrategyState, Strategy},
     types::order::{OrderRequest, OrderSide, TimeInForce},
+    Action, Event, InstrumentId, Price, Quantity,
 };
 
 use crate::params::QuoterParams;
@@ -42,7 +42,9 @@ enum State {
 }
 
 impl State {
-    fn is_quoting(&self) -> bool { matches!(self, State::Quoting) }
+    fn is_quoting(&self) -> bool {
+        matches!(self, State::Quoting)
+    }
 }
 
 // ── Strategy ──────────────────────────────────────────────────────────────────
@@ -120,11 +122,15 @@ impl HlSpreadQuoter {
 
             if !resting_bid.is_zero() {
                 let d = ((target_bid - resting_bid).abs() / resting_bid) * Decimal::from(10_000);
-                if d > max_drift { max_drift = d; }
+                if d > max_drift {
+                    max_drift = d;
+                }
             }
             if !resting_ask.is_zero() {
                 let d = ((target_ask - resting_ask).abs() / resting_ask) * Decimal::from(10_000);
-                if d > max_drift { max_drift = d; }
+                if d > max_drift {
+                    max_drift = d;
+                }
             }
         }
         max_drift
@@ -173,12 +179,19 @@ impl HlSpreadQuoter {
         let reservation = self.reservation_mid(mid);
 
         let mut actions = Vec::with_capacity(5);
-        actions.push(Action::CancelAll { instrument: self.instrument.clone() });
+        actions.push(Action::CancelAll {
+            instrument: self.instrument.clone(),
+        });
         let place_actions = self.build_place_actions(reservation);
 
         // Store the reservation-adjusted prices so drift (measured vs raw mid) is correct.
         let new_resting: Vec<(Decimal, Decimal)> = (0..self.params.level_bps.len())
-            .map(|l| (self.bid_price(reservation, l), self.ask_price(reservation, l)))
+            .map(|l| {
+                (
+                    self.bid_price(reservation, l),
+                    self.ask_price(reservation, l),
+                )
+            })
             .collect();
         self.resting_prices = new_resting;
 
@@ -240,13 +253,17 @@ impl HlSpreadQuoter {
         );
         self.state = State::Cooldown(Instant::now() + Duration::from_secs(pause_secs));
         self.clear_resting();
-        vec![Action::CancelAll { instrument: self.instrument.clone() }]
+        vec![Action::CancelAll {
+            instrument: self.instrument.clone(),
+        }]
     }
 }
 
 #[async_trait::async_trait]
 impl Strategy for HlSpreadQuoter {
-    fn id(&self) -> &str { &self.id }
+    fn id(&self) -> &str {
+        &self.id
+    }
 
     fn subscriptions(&self) -> Vec<InstrumentId> {
         vec![self.instrument.clone()]
@@ -254,7 +271,6 @@ impl Strategy for HlSpreadQuoter {
 
     async fn on_event(&mut self, event: &Event) -> Vec<Action> {
         match event {
-
             Event::BookUpdate { book, .. } => {
                 let mid = match book.mid_price() {
                     Some(m) => m.inner(),
@@ -311,15 +327,19 @@ impl Strategy for HlSpreadQuoter {
 
             Event::Fill { fill, .. } => {
                 match fill.side {
-                    OrderSide::Buy  => self.net_position += fill.quantity.inner(),
+                    OrderSide::Buy => self.net_position += fill.quantity.inner(),
                     OrderSide::Sell => self.net_position -= fill.quantity.inner(),
                 }
                 self.fill_count += 1;
 
                 // Cash-flow P&L: positive cash in on sells, negative on buys, always minus fee.
                 let cash_flow = match fill.side {
-                    OrderSide::Sell =>  fill.price.inner() * fill.quantity.inner() - fill.fee.inner(),
-                    OrderSide::Buy  => -(fill.price.inner() * fill.quantity.inner()) - fill.fee.inner(),
+                    OrderSide::Sell => {
+                        fill.price.inner() * fill.quantity.inner() - fill.fee.inner()
+                    }
+                    OrderSide::Buy => {
+                        -(fill.price.inner() * fill.quantity.inner()) - fill.fee.inner()
+                    }
                 };
                 self.session_pnl += cash_flow;
 
@@ -373,6 +393,33 @@ impl Strategy for HlSpreadQuoter {
                 vec![]
             }
 
+            // Every order in a place_batch failed — orders never landed on the exchange.
+            // Without this handler, the strategy stays in Quoting state with resting_prices
+            // set, believing it has active orders while having none ("ghost quoting").
+            //
+            // On HL rate-limit errors ("Too many cumulative requests"), back off 5 minutes
+            // before retrying so we don't hammer a rejected endpoint every ~13s for hours.
+            // On other transient failures, use a short backoff before retrying.
+            Event::PlaceFailed { reason, .. } => {
+                // Already in cooldown from an earlier failure — don't re-enter.
+                if matches!(self.state, State::Cooldown(_)) {
+                    return vec![];
+                }
+                let is_rate_limited = reason.contains("Too many cumulative");
+                let pause_secs = if is_rate_limited { 300 } else { 10 };
+                self.state = State::Cooldown(Instant::now() + Duration::from_secs(pause_secs));
+                self.clear_resting();
+                tracing::warn!(
+                    target: "quoter",
+                    strategy = %self.id,
+                    reason = %reason,
+                    pause_secs,
+                    "PLACE_FAILED — orders did not land, entering backoff"
+                );
+                // No CancelAll needed — orders never reached the exchange.
+                vec![]
+            }
+
             _ => vec![],
         }
     }
@@ -399,7 +446,9 @@ impl Strategy for HlSpreadQuoter {
             skew_factor_bps_per_unit = %self.params.skew_factor_bps_per_unit,
             "INIT"
         );
-        vec![Action::CancelAll { instrument: self.instrument.clone() }]
+        vec![Action::CancelAll {
+            instrument: self.instrument.clone(),
+        }]
     }
 
     async fn shutdown(&mut self) -> Vec<Action> {
@@ -411,6 +460,8 @@ impl Strategy for HlSpreadQuoter {
             net_pos = %self.net_position,
             "SHUTDOWN"
         );
-        vec![Action::CancelAll { instrument: self.instrument.clone() }]
+        vec![Action::CancelAll {
+            instrument: self.instrument.clone(),
+        }]
     }
 }

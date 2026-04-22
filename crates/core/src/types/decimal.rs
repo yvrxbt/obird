@@ -24,14 +24,28 @@ impl fmt::Display for Quantity {
 }
 
 impl Price {
-    pub fn new(val: Decimal) -> Self { Self(val) }
-    pub fn zero() -> Self { Self(Decimal::ZERO) }
-    pub fn inner(&self) -> Decimal { self.0 }
+    pub fn new(val: Decimal) -> Self {
+        Self(val)
+    }
+    pub fn zero() -> Self {
+        Self(Decimal::ZERO)
+    }
+    pub fn inner(&self) -> Decimal {
+        self.0
+    }
 }
 
 impl Quantity {
-    pub fn new(val: Decimal) -> Self { Self(val) }
-    pub fn zero() -> Self { Self(Decimal::ZERO) }
-    pub fn inner(&self) -> Decimal { self.0 }
-    pub fn abs(&self) -> Self { Self(self.0.abs()) }
+    pub fn new(val: Decimal) -> Self {
+        Self(val)
+    }
+    pub fn zero() -> Self {
+        Self(Decimal::ZERO)
+    }
+    pub fn inner(&self) -> Decimal {
+        self.0
+    }
+    pub fn abs(&self) -> Self {
+        Self(self.0.abs())
+    }
 }

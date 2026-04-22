@@ -44,7 +44,9 @@ pub struct QuoterParams {
     pub taker_fee_bps: Decimal,
 }
 
-fn default_taker_fee_bps() -> Decimal { Decimal::new(2, 1) } // 0.2 bps default (HL maker rebate)
+fn default_taker_fee_bps() -> Decimal {
+    Decimal::new(2, 1)
+} // 0.2 bps default (HL maker rebate)
 
 impl QuoterParams {
     pub fn drift_ratio(&self) -> Decimal {

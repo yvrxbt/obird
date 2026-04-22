@@ -1,3 +1,3 @@
-pub mod trader;
-pub mod spread_model;
 pub mod params;
+pub mod spread_model;
+pub mod trader;

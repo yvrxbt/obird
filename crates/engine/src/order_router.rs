@@ -11,11 +11,7 @@
 use std::collections::HashMap;
 
 use futures::future::join_all;
-use trading_core::{
-    Action, Event,
-    types::instrument::Exchange,
-    types::order::OrderRequest,
-};
+use trading_core::{types::instrument::Exchange, types::order::OrderRequest, Action, Event};
 
 use crate::order_manager::OrderManager;
 use crate::risk::UnifiedRiskManager;
@@ -36,7 +32,12 @@ impl OrderRouter {
         action_rx: tokio::sync::mpsc::UnboundedReceiver<(StrategyId, Vec<Action>)>,
         strategy_txs: HashMap<StrategyId, tokio::sync::mpsc::UnboundedSender<Event>>,
     ) -> Self {
-        Self { managers, risk, action_rx, strategy_txs }
+        Self {
+            managers,
+            risk,
+            action_rx,
+            strategy_txs,
+        }
     }
 
     pub async fn run(&mut self) {
@@ -69,7 +70,9 @@ impl OrderRouter {
                         .or_default()
                         .push(req.clone());
                 }
-                Action::LogDecision { decision, context, .. } => {
+                Action::LogDecision {
+                    decision, context, ..
+                } => {
                     tracing::info!(decision, ?context, "Decision logged");
                 }
                 _ => {
@@ -97,6 +100,9 @@ impl OrderRouter {
         // Pass 3 — submit place batches concurrently across exchanges
         // Each exchange gets one place_batch call (HL: single BatchOrder API call).
         // Multiple exchanges run in parallel via join_all.
+        //
+        // Each future returns (all_failed: bool, first_error: Option<String>, instrument)
+        // so we can feed PlaceFailed back to the strategy when every order in a batch fails.
         let n_orders: usize = place_orders.values().map(|v| v.len()).sum();
         if !place_orders.is_empty() {
             let futures: Vec<_> = place_orders
@@ -107,10 +113,15 @@ impl OrderRouter {
                 .map(|(exchange, reqs)| {
                     let mgr = self.managers.get(&exchange).unwrap();
                     let sid = strategy_id.clone();
+                    let first_instrument = reqs[0].instrument.clone();
                     async move {
                         let results = mgr.place_batch(reqs).await;
+                        let mut first_error: Option<String> = None;
                         for (i, result) in results.iter().enumerate() {
                             if let Err(e) = result {
+                                if first_error.is_none() {
+                                    first_error = Some(e.to_string());
+                                }
                                 tracing::error!(
                                     strategy = %sid,
                                     exchange = ?exchange,
@@ -120,11 +131,24 @@ impl OrderRouter {
                                 );
                             }
                         }
+                        let all_failed = results.iter().all(|r| r.is_err());
+                        (all_failed, first_error, first_instrument)
                     }
                 })
                 .collect();
 
-            join_all(futures).await;
+            let batch_outcomes = join_all(futures).await;
+
+            // If every order in a batch failed, notify the strategy so it can clear
+            // its resting-price state. Without this, the strategy believes it's quoting
+            // while having zero orders on the book — "ghost quoting" for hours.
+            for (all_failed, error, instrument) in batch_outcomes {
+                if all_failed {
+                    if let (Some(reason), Some(tx)) = (error, self.strategy_txs.get(&strategy_id)) {
+                        let _ = tx.send(Event::PlaceFailed { instrument, reason });
+                    }
+                }
+            }
         }
 
         let total_elapsed_ms = batch_start.elapsed().as_millis();

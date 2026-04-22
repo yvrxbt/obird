@@ -3,14 +3,14 @@
 //! The harness replays events through the strategy, processing actions
 //! through a SimConnector, and collects results for reporting.
 
+use crate::report::BacktestReport;
 use crate::sim_connector::SimConnector;
 use crate::sim_market_data::SimMarketDataFeed;
-use crate::report::BacktestReport;
-use trading_core::traits::{ExchangeConnector, Strategy};
+use std::path::Path;
 use trading_core::traits::strategy::StrategyState;
+use trading_core::traits::{ExchangeConnector, Strategy};
 use trading_core::types::instrument::Exchange;
 use trading_core::{Action, Event};
-use std::path::Path;
 
 pub struct BacktestHarness {
     strategy: Box<dyn Strategy>,
@@ -40,6 +40,7 @@ impl BacktestHarness {
         let state = StrategyState {
             positions: vec![],
             open_orders: vec![],
+            decimal_precisions: std::collections::HashMap::new(), // backtest uses strategy defaults
         };
         let init_actions = self.strategy.initialize(&state).await;
         self.process_actions(init_actions);
@@ -49,7 +50,10 @@ impl BacktestHarness {
         // Replay events
         for event in &events {
             // Feed market data to matching engine (may trigger fills)
-            if let Event::BookUpdate { instrument, book, .. } = event {
+            if let Event::BookUpdate {
+                instrument, book, ..
+            } = event
+            {
                 if let Some(mid) = book.mid_price() {
                     self.connector.on_market_data(instrument, mid);
                 }
@@ -89,7 +93,10 @@ impl BacktestHarness {
                     // In a full implementation, use proper async handling
                     let _ = rt.block_on(connector.place_order(req));
                 }
-                Action::CancelOrder { instrument, order_id } => {
+                Action::CancelOrder {
+                    instrument,
+                    order_id,
+                } => {
                     let _ = rt.block_on(self.connector.cancel_order(instrument, order_id));
                 }
                 Action::CancelAll { instrument } => {

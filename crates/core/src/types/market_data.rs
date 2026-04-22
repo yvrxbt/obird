@@ -14,8 +14,12 @@ pub struct OrderbookSnapshot {
 }
 
 impl OrderbookSnapshot {
-    pub fn best_bid(&self) -> Option<(Price, Quantity)> { self.bids.first().copied() }
-    pub fn best_ask(&self) -> Option<(Price, Quantity)> { self.asks.first().copied() }
+    pub fn best_bid(&self) -> Option<(Price, Quantity)> {
+        self.bids.first().copied()
+    }
+    pub fn best_ask(&self) -> Option<(Price, Quantity)> {
+        self.asks.first().copied()
+    }
     pub fn mid_price(&self) -> Option<Price> {
         match (self.best_bid(), self.best_ask()) {
             (Some((b, _)), Some((a, _))) => {

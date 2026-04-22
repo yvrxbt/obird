@@ -1,0 +1,238 @@
+{"timestamp":"2026-04-12T22:55:18.175631Z","level":"INFO","fields":{"message":"Starting live trading","config":"configs/quoter.toml"},"target":"trading_cli"}
+{"timestamp":"2026-04-12T22:55:18.177129Z","level":"INFO","fields":{"message":"Starting live quoter","config":"configs/quoter.toml","symbol":"ETH","testnet":false},"target":"trading_cli::live"}
+{"timestamp":"2026-04-12T22:55:18.410640Z","level":"INFO","fields":{"message":"Resolved as perp","symbol":"ETH","index":1},"target":"connector_hyperliquid::client"}
+{"timestamp":"2026-04-12T22:55:18.410857Z","level":"INFO","fields":{"message":"HyperliquidClient ready","symbol":"ETH","testnet":false,"index":1,"sz_decimals":4},"target":"connector_hyperliquid::client"}
+{"timestamp":"2026-04-12T22:55:18.411048Z","level":"INFO","fields":{"message":"Engine wired — starting run loop"},"target":"trading_cli::live"}
+{"timestamp":"2026-04-12T22:55:18.411117Z","level":"INFO","fields":{"message":"Engine starting with 1 strategies"},"target":"trading_engine::runner"}
+{"timestamp":"2026-04-12T22:55:18.411737Z","level":"INFO","fields":{"message":"HL market data feed started","instrument":"Hyperliquid.Perpetual.ETH"},"target":"connector_hyperliquid::market_data"}
+{"timestamp":"2026-04-12T22:55:18.425942Z","level":"INFO","fields":{"message":"HL WS connected"},"target":"connector_hyperliquid::market_data"}
+{"timestamp":"2026-04-12T22:55:18.426517Z","level":"INFO","fields":{"message":"Loaded initial positions from exchange","exchange":"Hyperliquid","count":1},"target":"trading_engine::runner"}
+{"timestamp":"2026-04-12T22:55:18.426642Z","level":"INFO","fields":{"message":"INIT existing position","strategy":"hl_quoter_v1","net_pos":"-0.02"},"target":"quoter"}
+{"timestamp":"2026-04-12T22:55:18.426717Z","level":"INFO","fields":{"message":"INIT","strategy":"hl_quoter_v1","instrument":"Hyperliquid.Perpetual.ETH","levels":"[5, 10]","order_size":"0.01","drift_bps":3},"target":"quoter"}
+{"timestamp":"2026-04-12T22:55:18.426864Z","level":"INFO","fields":{"message":"Engine running — Ctrl-C to shut down"},"target":"trading_engine::runner"}
+{"timestamp":"2026-04-12T22:55:18.426864Z","level":"INFO","fields":{"message":"Strategy task started","strategy":"hl_quoter_v1"},"target":"trading_engine::runner"}
+{"timestamp":"2026-04-12T22:55:18.881681Z","level":"INFO","fields":{"message":"REQUOTE cancel_all + batch_place","strategy":"hl_quoter_v1","mid":"2195.95","n_orders":4,"net_pos":"-0.02"},"target":"quoter"}
+{"timestamp":"2026-04-12T22:55:18.881981Z","level":"INFO","fields":{"message":"ORDER_SUBMIT","strategy":"hl_quoter_v1","side":"Buy","price":"2194.852025","qty":"0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T22:55:18.882145Z","level":"INFO","fields":{"message":"ORDER_SUBMIT","strategy":"hl_quoter_v1","side":"Sell","price":"2197.047975","qty":"0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T22:55:18.882272Z","level":"INFO","fields":{"message":"ORDER_SUBMIT","strategy":"hl_quoter_v1","side":"Buy","price":"2193.75405","qty":"0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T22:55:18.882384Z","level":"INFO","fields":{"message":"ORDER_SUBMIT","strategy":"hl_quoter_v1","side":"Sell","price":"2198.14595","qty":"0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T22:55:18.938494Z","level":"DEBUG","fields":{"message":"price rounded","raw":"2194.852025","rounded":"2194.8","dp":1,"is_buy":true},"target":"connector_hyperliquid::client"}
+{"timestamp":"2026-04-12T22:55:18.938811Z","level":"DEBUG","fields":{"message":"price rounded","raw":"2197.047975","rounded":"2197.1","dp":1,"is_buy":false},"target":"connector_hyperliquid::client"}
+{"timestamp":"2026-04-12T22:55:18.938995Z","level":"DEBUG","fields":{"message":"price rounded","raw":"2193.75405","rounded":"2193.7","dp":1,"is_buy":true},"target":"connector_hyperliquid::client"}
+{"timestamp":"2026-04-12T22:55:18.939193Z","level":"DEBUG","fields":{"message":"price rounded","raw":"2198.14595","rounded":"2198.2","dp":1,"is_buy":false},"target":"connector_hyperliquid::client"}
+{"timestamp":"2026-04-12T22:56:32.215851Z","level":"INFO","fields":{"message":"Starting live trading","config":"configs/quoter.toml"},"target":"trading_cli"}
+{"timestamp":"2026-04-12T22:56:32.217615Z","level":"INFO","fields":{"message":"Starting live quoter","config":"configs/quoter.toml","symbol":"ETH","testnet":false},"target":"trading_cli::live"}
+{"timestamp":"2026-04-12T22:56:32.448812Z","level":"INFO","fields":{"message":"Resolved as perp","symbol":"ETH","index":1},"target":"connector_hyperliquid::client"}
+{"timestamp":"2026-04-12T22:56:32.449451Z","level":"INFO","fields":{"message":"HyperliquidClient ready","symbol":"ETH","testnet":false,"index":1,"sz_decimals":4},"target":"connector_hyperliquid::client"}
+{"timestamp":"2026-04-12T22:56:32.449921Z","level":"INFO","fields":{"message":"HL market data feed started","instrument":"Hyperliquid.Perpetual.ETH"},"target":"connector_hyperliquid::market_data"}
+{"timestamp":"2026-04-12T22:56:32.450398Z","level":"INFO","fields":{"message":"Engine wired — starting run loop"},"target":"trading_cli::live"}
+{"timestamp":"2026-04-12T22:56:32.450598Z","level":"INFO","fields":{"message":"Engine starting with 1 strategies"},"target":"trading_engine::runner"}
+{"timestamp":"2026-04-12T22:56:32.465182Z","level":"INFO","fields":{"message":"HL WS connected"},"target":"connector_hyperliquid::market_data"}
+{"timestamp":"2026-04-12T22:56:32.466229Z","level":"INFO","fields":{"message":"Loaded initial positions from exchange","exchange":"Hyperliquid","count":1},"target":"trading_engine::runner"}
+{"timestamp":"2026-04-12T22:56:32.466451Z","level":"INFO","fields":{"message":"INIT existing position","strategy":"hl_quoter_v1","net_pos":"-0.02"},"target":"quoter"}
+{"timestamp":"2026-04-12T22:56:32.466573Z","level":"INFO","fields":{"message":"INIT","strategy":"hl_quoter_v1","instrument":"Hyperliquid.Perpetual.ETH","levels":"[5, 10]","order_size":"0.01","drift_bps":3},"target":"quoter"}
+{"timestamp":"2026-04-12T22:56:32.466740Z","level":"INFO","fields":{"message":"Engine running — Ctrl-C to shut down"},"target":"trading_engine::runner"}
+{"timestamp":"2026-04-12T22:56:32.466972Z","level":"INFO","fields":{"message":"Strategy task started","strategy":"hl_quoter_v1"},"target":"trading_engine::runner"}
+{"timestamp":"2026-04-12T22:56:32.828832Z","level":"INFO","fields":{"message":"REQUOTE cancel_all + batch_place","strategy":"hl_quoter_v1","mid":"2196.25","n_orders":4,"net_pos":"-0.02"},"target":"quoter"}
+{"timestamp":"2026-04-12T22:56:32.828986Z","level":"INFO","fields":{"message":"ORDER_SUBMIT","strategy":"hl_quoter_v1","side":"Buy","price":"2195.151875","qty":"0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T22:56:32.829283Z","level":"INFO","fields":{"message":"ORDER_SUBMIT","strategy":"hl_quoter_v1","side":"Sell","price":"2197.348125","qty":"0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T22:56:32.829430Z","level":"INFO","fields":{"message":"ORDER_SUBMIT","strategy":"hl_quoter_v1","side":"Buy","price":"2194.05375","qty":"0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T22:56:32.829514Z","level":"INFO","fields":{"message":"ORDER_SUBMIT","strategy":"hl_quoter_v1","side":"Sell","price":"2198.44625","qty":"0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T22:56:33.626096Z","level":"DEBUG","fields":{"message":"price rounded","raw":"2195.151875","rounded":"2195.1","dp":1,"is_buy":true},"target":"connector_hyperliquid::client"}
+{"timestamp":"2026-04-12T22:56:33.626406Z","level":"DEBUG","fields":{"message":"price rounded","raw":"2197.348125","rounded":"2197.4","dp":1,"is_buy":false},"target":"connector_hyperliquid::client"}
+{"timestamp":"2026-04-12T22:56:33.626577Z","level":"DEBUG","fields":{"message":"price rounded","raw":"2194.05375","rounded":"2194.0","dp":1,"is_buy":true},"target":"connector_hyperliquid::client"}
+{"timestamp":"2026-04-12T22:56:33.626740Z","level":"DEBUG","fields":{"message":"price rounded","raw":"2198.44625","rounded":"2198.5","dp":1,"is_buy":false},"target":"connector_hyperliquid::client"}
+{"timestamp":"2026-04-12T22:56:52.495560Z","level":"INFO","fields":{"message":"Shutdown signal received"},"target":"trading_engine::runner"}
+{"timestamp":"2026-04-12T22:56:52.495707Z","level":"INFO","fields":{"message":"Shutting down","strategy":"hl_quoter_v1"},"target":"trading_engine::runner"}
+{"timestamp":"2026-04-12T22:56:52.496509Z","level":"INFO","fields":{"message":"Engine stopped — cancelling all open orders"},"target":"trading_cli::live"}
+{"timestamp":"2026-04-12T22:56:52.606960Z","level":"INFO","fields":{"message":"SHUTDOWN cancelling all open orders","instrument":"Hyperliquid.Perpetual.ETH","count":4},"target":"connector_hyperliquid::client"}
+{"timestamp":"2026-04-12T22:56:52.865411Z","level":"INFO","fields":{"message":"SHUTDOWN all orders cancelled","instrument":"Hyperliquid.Perpetual.ETH"},"target":"connector_hyperliquid::client"}
+{"timestamp":"2026-04-12T23:00:08.286525Z","level":"INFO","fields":{"message":"Starting live trading","config":"configs/quoter.toml"},"target":"trading_cli"}
+{"timestamp":"2026-04-12T23:00:08.287651Z","level":"INFO","fields":{"message":"Starting live quoter","config":"configs/quoter.toml","symbol":"ETH","testnet":false},"target":"trading_cli::live"}
+{"timestamp":"2026-04-12T23:00:08.476859Z","level":"INFO","fields":{"message":"Resolved as perp","symbol":"ETH","index":1},"target":"connector_hyperliquid::client"}
+{"timestamp":"2026-04-12T23:00:08.477111Z","level":"INFO","fields":{"message":"HyperliquidClient ready","symbol":"ETH","testnet":false,"index":1,"sz_decimals":4},"target":"connector_hyperliquid::client"}
+{"timestamp":"2026-04-12T23:00:08.477308Z","level":"INFO","fields":{"message":"Engine wired — starting run loop"},"target":"trading_cli::live"}
+{"timestamp":"2026-04-12T23:00:08.477392Z","level":"INFO","fields":{"message":"Engine starting with 1 strategies"},"target":"trading_engine::runner"}
+{"timestamp":"2026-04-12T23:00:08.477400Z","level":"INFO","fields":{"message":"HL market data feed started","instrument":"Hyperliquid.Perpetual.ETH"},"target":"connector_hyperliquid::market_data"}
+{"timestamp":"2026-04-12T23:00:08.491539Z","level":"INFO","fields":{"message":"HL WS connected"},"target":"connector_hyperliquid::market_data"}
+{"timestamp":"2026-04-12T23:00:08.493769Z","level":"INFO","fields":{"message":"Loaded initial positions from exchange","exchange":"Hyperliquid","count":1},"target":"trading_engine::runner"}
+{"timestamp":"2026-04-12T23:00:08.493917Z","level":"INFO","fields":{"message":"INIT existing position","strategy":"hl_quoter_v1","net_pos":"-0.02"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:00:08.494006Z","level":"INFO","fields":{"message":"INIT","strategy":"hl_quoter_v1","instrument":"Hyperliquid.Perpetual.ETH","levels":"[5, 10]","order_size":"0.01","drift_bps":3},"target":"quoter"}
+{"timestamp":"2026-04-12T23:00:08.494161Z","level":"INFO","fields":{"message":"Engine running — Ctrl-C to shut down"},"target":"trading_engine::runner"}
+{"timestamp":"2026-04-12T23:00:08.494178Z","level":"INFO","fields":{"message":"Strategy task started","strategy":"hl_quoter_v1"},"target":"trading_engine::runner"}
+{"timestamp":"2026-04-12T23:00:09.217732Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2196.65","state":"Empty","drift_bps":"0","net_pos":"-0.02"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:00:09.217838Z","level":"INFO","fields":{"message":"REQUOTE cancel_all + batch_place","strategy":"hl_quoter_v1","mid":"2196.65","n_orders":4,"net_pos":"-0.02"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:00:09.217942Z","level":"INFO","fields":{"message":"ORDER_SUBMIT","strategy":"hl_quoter_v1","side":"Buy","price":"2195.551675","qty":"0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:00:09.218017Z","level":"INFO","fields":{"message":"ORDER_SUBMIT","strategy":"hl_quoter_v1","side":"Sell","price":"2197.748325","qty":"0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:00:09.218126Z","level":"INFO","fields":{"message":"ORDER_SUBMIT","strategy":"hl_quoter_v1","side":"Buy","price":"2194.45335","qty":"0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:00:09.218218Z","level":"INFO","fields":{"message":"ORDER_SUBMIT","strategy":"hl_quoter_v1","side":"Sell","price":"2198.84665","qty":"0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:00:09.347798Z","level":"DEBUG","fields":{"message":"price rounded","raw":"2195.551675","rounded":"2195.5","dp":1,"is_buy":true},"target":"connector_hyperliquid::client"}
+{"timestamp":"2026-04-12T23:00:09.348078Z","level":"DEBUG","fields":{"message":"price rounded","raw":"2197.748325","rounded":"2197.8","dp":1,"is_buy":false},"target":"connector_hyperliquid::client"}
+{"timestamp":"2026-04-12T23:00:09.348275Z","level":"DEBUG","fields":{"message":"price rounded","raw":"2194.45335","rounded":"2194.4","dp":1,"is_buy":true},"target":"connector_hyperliquid::client"}
+{"timestamp":"2026-04-12T23:00:09.348462Z","level":"DEBUG","fields":{"message":"price rounded","raw":"2198.84665","rounded":"2198.9","dp":1,"is_buy":false},"target":"connector_hyperliquid::client"}
+{"timestamp":"2026-04-12T23:00:10.247249Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2196.05","state":"Quoting","drift_bps":"2.73","net_pos":"-0.02"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:00:12.415569Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2195.95","state":"Quoting","drift_bps":"3.19","net_pos":"-0.02"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:00:12.415668Z","level":"WARN","fields":{"message":"DRIFT","strategy":"hl_quoter_v1","mid":"2195.95","resting_bid_l0":"2195.551675","target_bid_l0":"2194.852025","drift_bps":"3.19","threshold":3},"target":"quoter"}
+{"timestamp":"2026-04-12T23:00:12.415783Z","level":"WARN","fields":{"message":"PULL_QUOTES","strategy":"hl_quoter_v1","reason":"drift","mid":"2195.95","pause_secs":3},"target":"quoter"}
+{"timestamp":"2026-04-12T23:00:13.099021Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2195.95","state":"Cooldown(Instant { tv_sec: 4853578, tv_nsec: 361830821 })","drift_bps":"0","net_pos":"-0.02"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:00:13.476793Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2195.95","state":"Cooldown(Instant { tv_sec: 4853578, tv_nsec: 361830821 })","drift_bps":"0","net_pos":"-0.02"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:00:14.329147Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2195.95","state":"Cooldown(Instant { tv_sec: 4853578, tv_nsec: 361830821 })","drift_bps":"0","net_pos":"-0.02"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:00:15.436580Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2195.75","state":"Cooldown(Instant { tv_sec: 4853578, tv_nsec: 361830821 })","drift_bps":"0","net_pos":"-0.02"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:00:15.436766Z","level":"INFO","fields":{"message":"COOLDOWN_EXPIRED","strategy":"hl_quoter_v1","mid":"2195.75"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:00:15.436859Z","level":"INFO","fields":{"message":"REQUOTE cancel_all + batch_place","strategy":"hl_quoter_v1","mid":"2195.75","n_orders":4,"net_pos":"-0.02"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:00:15.436938Z","level":"INFO","fields":{"message":"ORDER_SUBMIT","strategy":"hl_quoter_v1","side":"Buy","price":"2194.652125","qty":"0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:00:15.436999Z","level":"INFO","fields":{"message":"ORDER_SUBMIT","strategy":"hl_quoter_v1","side":"Sell","price":"2196.847875","qty":"0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:00:15.437556Z","level":"INFO","fields":{"message":"ORDER_SUBMIT","strategy":"hl_quoter_v1","side":"Buy","price":"2193.55425","qty":"0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:00:15.437777Z","level":"INFO","fields":{"message":"ORDER_SUBMIT","strategy":"hl_quoter_v1","side":"Sell","price":"2197.94575","qty":"0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:00:15.528221Z","level":"DEBUG","fields":{"message":"price rounded","raw":"2194.652125","rounded":"2194.6","dp":1,"is_buy":true},"target":"connector_hyperliquid::client"}
+{"timestamp":"2026-04-12T23:00:15.528517Z","level":"DEBUG","fields":{"message":"price rounded","raw":"2196.847875","rounded":"2196.9","dp":1,"is_buy":false},"target":"connector_hyperliquid::client"}
+{"timestamp":"2026-04-12T23:00:15.528686Z","level":"DEBUG","fields":{"message":"price rounded","raw":"2193.55425","rounded":"2193.5","dp":1,"is_buy":true},"target":"connector_hyperliquid::client"}
+{"timestamp":"2026-04-12T23:00:15.528844Z","level":"DEBUG","fields":{"message":"price rounded","raw":"2197.94575","rounded":"2198.0","dp":1,"is_buy":false},"target":"connector_hyperliquid::client"}
+{"timestamp":"2026-04-12T23:00:16.465637Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2195.75","state":"Quoting","drift_bps":"0","net_pos":"-0.02"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:00:17.542319Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2195.95","state":"Quoting","drift_bps":"0.91","net_pos":"-0.02"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:00:18.505932Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2195.95","state":"Quoting","drift_bps":"0.91","net_pos":"-0.02"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:00:19.449725Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2195.95","state":"Quoting","drift_bps":"0.91","net_pos":"-0.02"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:00:20.453644Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2195.95","state":"Quoting","drift_bps":"0.91","net_pos":"-0.02"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:00:21.455532Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2195.95","state":"Quoting","drift_bps":"0.91","net_pos":"-0.02"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:00:22.571431Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2195.95","state":"Quoting","drift_bps":"0.91","net_pos":"-0.02"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:06.523488Z","level":"INFO","fields":{"message":"Starting live trading","config":"configs/quoter.toml"},"target":"trading_cli"}
+{"timestamp":"2026-04-12T23:02:06.524629Z","level":"INFO","fields":{"message":"Starting live quoter","config":"configs/quoter.toml","symbol":"ETH","testnet":false},"target":"trading_cli::live"}
+{"timestamp":"2026-04-12T23:02:06.674280Z","level":"INFO","fields":{"message":"Resolved as perp","symbol":"ETH","index":1},"target":"connector_hyperliquid::client"}
+{"timestamp":"2026-04-12T23:02:06.674461Z","level":"INFO","fields":{"message":"HyperliquidClient ready","symbol":"ETH","testnet":false,"index":1,"sz_decimals":4},"target":"connector_hyperliquid::client"}
+{"timestamp":"2026-04-12T23:02:06.674628Z","level":"INFO","fields":{"message":"Engine wired — starting run loop"},"target":"trading_cli::live"}
+{"timestamp":"2026-04-12T23:02:06.674703Z","level":"INFO","fields":{"message":"Engine starting with 1 strategies"},"target":"trading_engine::runner"}
+{"timestamp":"2026-04-12T23:02:06.674700Z","level":"INFO","fields":{"message":"HL market data feed started","instrument":"Hyperliquid.Perpetual.ETH"},"target":"connector_hyperliquid::market_data"}
+{"timestamp":"2026-04-12T23:02:06.684641Z","level":"INFO","fields":{"message":"HL WS connected"},"target":"connector_hyperliquid::market_data"}
+{"timestamp":"2026-04-12T23:02:06.689172Z","level":"INFO","fields":{"message":"Loaded initial positions from exchange","exchange":"Hyperliquid","count":0},"target":"trading_engine::runner"}
+{"timestamp":"2026-04-12T23:02:06.689297Z","level":"INFO","fields":{"message":"INIT","strategy":"hl_quoter_v1","instrument":"Hyperliquid.Perpetual.ETH","levels":"[5, 10]","order_size":"0.01","drift_bps":3},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:06.689458Z","level":"INFO","fields":{"message":"Engine running — Ctrl-C to shut down"},"target":"trading_engine::runner"}
+{"timestamp":"2026-04-12T23:02:06.689477Z","level":"INFO","fields":{"message":"Strategy task started","strategy":"hl_quoter_v1"},"target":"trading_engine::runner"}
+{"timestamp":"2026-04-12T23:02:07.363825Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2191.45","state":"Empty","drift_bps":"0","net_pos":"0"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:07.363930Z","level":"INFO","fields":{"message":"REQUOTE cancel_all + batch_place","strategy":"hl_quoter_v1","mid":"2191.45","n_orders":4,"net_pos":"0"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:07.364052Z","level":"INFO","fields":{"message":"ORDER_SUBMIT","strategy":"hl_quoter_v1","side":"Buy","price":"2190.354275","qty":"0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:07.364140Z","level":"INFO","fields":{"message":"ORDER_SUBMIT","strategy":"hl_quoter_v1","side":"Sell","price":"2192.545725","qty":"0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:07.364218Z","level":"INFO","fields":{"message":"ORDER_SUBMIT","strategy":"hl_quoter_v1","side":"Buy","price":"2189.25855","qty":"0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:07.364299Z","level":"INFO","fields":{"message":"ORDER_SUBMIT","strategy":"hl_quoter_v1","side":"Sell","price":"2193.64145","qty":"0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:07.550572Z","level":"DEBUG","fields":{"message":"price rounded","raw":"2190.354275","rounded":"2190.3","dp":1,"is_buy":true},"target":"connector_hyperliquid::client"}
+{"timestamp":"2026-04-12T23:02:07.550794Z","level":"DEBUG","fields":{"message":"price rounded","raw":"2192.545725","rounded":"2192.6","dp":1,"is_buy":false},"target":"connector_hyperliquid::client"}
+{"timestamp":"2026-04-12T23:02:07.550929Z","level":"DEBUG","fields":{"message":"price rounded","raw":"2189.25855","rounded":"2189.2","dp":1,"is_buy":true},"target":"connector_hyperliquid::client"}
+{"timestamp":"2026-04-12T23:02:07.551104Z","level":"DEBUG","fields":{"message":"price rounded","raw":"2193.64145","rounded":"2193.7","dp":1,"is_buy":false},"target":"connector_hyperliquid::client"}
+{"timestamp":"2026-04-12T23:02:08.405530Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2191.45","state":"Quoting","drift_bps":"0","net_pos":"0"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:09.510996Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2191.65","state":"Quoting","drift_bps":"0.91","net_pos":"0"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:10.428246Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2191.65","state":"Quoting","drift_bps":"0.91","net_pos":"0"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:11.526771Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2191.65","state":"Quoting","drift_bps":"0.91","net_pos":"0"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:12.508680Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2191.85","state":"Quoting","drift_bps":"1.83","net_pos":"0"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:13.531283Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2191.85","state":"Quoting","drift_bps":"1.83","net_pos":"0"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:14.582788Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2191.85","state":"Quoting","drift_bps":"1.83","net_pos":"0"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:15.575117Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2191.85","state":"Quoting","drift_bps":"1.83","net_pos":"0"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:16.553464Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2191.85","state":"Quoting","drift_bps":"1.83","net_pos":"0"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:17.575061Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2191.85","state":"Quoting","drift_bps":"1.83","net_pos":"0"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:18.586294Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2191.85","state":"Quoting","drift_bps":"1.83","net_pos":"0"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:19.608128Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2191.95","state":"Quoting","drift_bps":"2.28","net_pos":"0"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:20.588778Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2191.95","state":"Quoting","drift_bps":"2.28","net_pos":"0"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:21.637199Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2191.95","state":"Quoting","drift_bps":"2.28","net_pos":"0"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:22.672203Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2191.95","state":"Quoting","drift_bps":"2.28","net_pos":"0"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:23.699328Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2191.95","state":"Quoting","drift_bps":"2.28","net_pos":"0"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:24.791622Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2191.55","state":"Quoting","drift_bps":"0.46","net_pos":"0"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:25.808282Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2191.55","state":"Quoting","drift_bps":"0.46","net_pos":"0"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:26.756815Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2191.55","state":"Quoting","drift_bps":"0.46","net_pos":"0"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:27.769611Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2191.55","state":"Quoting","drift_bps":"0.46","net_pos":"0"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:28.845073Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2191.55","state":"Quoting","drift_bps":"0.46","net_pos":"0"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:29.821400Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2190.55","state":"Quoting","drift_bps":"4.11","net_pos":"0"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:29.821618Z","level":"WARN","fields":{"message":"DRIFT","strategy":"hl_quoter_v1","mid":"2190.55","resting_bid_l0":"2190.354275","target_bid_l0":"2189.454725","drift_bps":"4.11","threshold":3},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:29.822289Z","level":"WARN","fields":{"message":"PULL_QUOTES","strategy":"hl_quoter_v1","reason":"drift","mid":"2190.55","pause_secs":3},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:30.844776Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2190.55","state":"Cooldown(Instant { tv_sec: 4853715, tv_nsec: 768706208 })","drift_bps":"0","net_pos":"0"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:31.934859Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2190.55","state":"Cooldown(Instant { tv_sec: 4853715, tv_nsec: 768706208 })","drift_bps":"0","net_pos":"0"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:33.067534Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2190.85","state":"Cooldown(Instant { tv_sec: 4853715, tv_nsec: 768706208 })","drift_bps":"0","net_pos":"0"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:33.067642Z","level":"INFO","fields":{"message":"COOLDOWN_EXPIRED","strategy":"hl_quoter_v1","mid":"2190.85"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:33.067740Z","level":"INFO","fields":{"message":"REQUOTE cancel_all + batch_place","strategy":"hl_quoter_v1","mid":"2190.85","n_orders":4,"net_pos":"0"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:33.067830Z","level":"INFO","fields":{"message":"ORDER_SUBMIT","strategy":"hl_quoter_v1","side":"Buy","price":"2189.754575","qty":"0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:33.067934Z","level":"INFO","fields":{"message":"ORDER_SUBMIT","strategy":"hl_quoter_v1","side":"Sell","price":"2191.945425","qty":"0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:33.068152Z","level":"INFO","fields":{"message":"ORDER_SUBMIT","strategy":"hl_quoter_v1","side":"Buy","price":"2188.65915","qty":"0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:33.068330Z","level":"INFO","fields":{"message":"ORDER_SUBMIT","strategy":"hl_quoter_v1","side":"Sell","price":"2193.04085","qty":"0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:33.084061Z","level":"DEBUG","fields":{"message":"price rounded","raw":"2189.754575","rounded":"2189.7","dp":1,"is_buy":true},"target":"connector_hyperliquid::client"}
+{"timestamp":"2026-04-12T23:02:33.084264Z","level":"DEBUG","fields":{"message":"price rounded","raw":"2191.945425","rounded":"2192.0","dp":1,"is_buy":false},"target":"connector_hyperliquid::client"}
+{"timestamp":"2026-04-12T23:02:33.084437Z","level":"DEBUG","fields":{"message":"price rounded","raw":"2188.65915","rounded":"2188.6","dp":1,"is_buy":true},"target":"connector_hyperliquid::client"}
+{"timestamp":"2026-04-12T23:02:33.084602Z","level":"DEBUG","fields":{"message":"price rounded","raw":"2193.04085","rounded":"2193.1","dp":1,"is_buy":false},"target":"connector_hyperliquid::client"}
+{"timestamp":"2026-04-12T23:02:33.991311Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2190.65","state":"Quoting","drift_bps":"0.91","net_pos":"0"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:34.981560Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2190.55","state":"Quoting","drift_bps":"1.37","net_pos":"0"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:36.062194Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2190.45","state":"Quoting","drift_bps":"1.83","net_pos":"0"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:37.145499Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2190.45","state":"Quoting","drift_bps":"1.83","net_pos":"0"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:38.199502Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2190.25","state":"Quoting","drift_bps":"2.74","net_pos":"0"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:39.242475Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2190.25","state":"Quoting","drift_bps":"2.74","net_pos":"0"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:40.204521Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2190.25","state":"Quoting","drift_bps":"2.74","net_pos":"0"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:41.209395Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2190.25","state":"Quoting","drift_bps":"2.74","net_pos":"0"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:42.394544Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2190.45","state":"Quoting","drift_bps":"1.83","net_pos":"0"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:43.362070Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2190.65","state":"Quoting","drift_bps":"0.91","net_pos":"0"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:44.374373Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2190.45","state":"Quoting","drift_bps":"1.83","net_pos":"0"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:45.438452Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2190.45","state":"Quoting","drift_bps":"1.83","net_pos":"0"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:46.461967Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2190.45","state":"Quoting","drift_bps":"1.83","net_pos":"0"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:47.540789Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2190.75","state":"Quoting","drift_bps":"0.46","net_pos":"0"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:48.631613Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2190.75","state":"Quoting","drift_bps":"0.46","net_pos":"0"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:49.679276Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2190.95","state":"Quoting","drift_bps":"0.46","net_pos":"0"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:50.701371Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2191.15","state":"Quoting","drift_bps":"1.37","net_pos":"0"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:51.706779Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2191.45","state":"Quoting","drift_bps":"2.74","net_pos":"0"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:52.745610Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2191.75","state":"Quoting","drift_bps":"4.11","net_pos":"0"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:52.745702Z","level":"WARN","fields":{"message":"DRIFT","strategy":"hl_quoter_v1","mid":"2191.75","resting_bid_l0":"2189.754575","target_bid_l0":"2190.654125","drift_bps":"4.11","threshold":3},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:52.745804Z","level":"WARN","fields":{"message":"PULL_QUOTES","strategy":"hl_quoter_v1","reason":"drift","mid":"2191.75","pause_secs":3},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:53.516227Z","level":"INFO","fields":{"message":"FILL","strategy":"hl_quoter_v1","side":"Sell","price":"2192.0","qty":"0.01","fee":"0.003287","net_pos":"-0.01","pause_secs":10},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:53.516429Z","level":"WARN","fields":{"message":"PULL_QUOTES","strategy":"hl_quoter_v1","reason":"fill","mid":"2191.75","pause_secs":10},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:53.735457Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2192.65","state":"Cooldown(Instant { tv_sec: 4853746, tv_nsec: 462503460 })","drift_bps":"0","net_pos":"-0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:54.750661Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2192.65","state":"Cooldown(Instant { tv_sec: 4853746, tv_nsec: 462503460 })","drift_bps":"0","net_pos":"-0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:54.751219Z","level":"INFO","fields":{"message":"Decision logged","decision":"fill","context":"Object {\"fee\": String(\"0.003287\"), \"net_position\": String(\"-0.01\"), \"price\": String(\"2192.0\"), \"qty\": String(\"0.01\"), \"side\": String(\"Sell\")}"},"target":"trading_engine::order_router"}
+{"timestamp":"2026-04-12T23:02:55.803269Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2192.35","state":"Cooldown(Instant { tv_sec: 4853746, tv_nsec: 462503460 })","drift_bps":"0","net_pos":"-0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:56.839205Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2192.05","state":"Cooldown(Instant { tv_sec: 4853746, tv_nsec: 462503460 })","drift_bps":"0","net_pos":"-0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:57.860070Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2191.85","state":"Cooldown(Instant { tv_sec: 4853746, tv_nsec: 462503460 })","drift_bps":"0","net_pos":"-0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:59.046355Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2191.85","state":"Cooldown(Instant { tv_sec: 4853746, tv_nsec: 462503460 })","drift_bps":"0","net_pos":"-0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:02:59.920067Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2191.85","state":"Cooldown(Instant { tv_sec: 4853746, tv_nsec: 462503460 })","drift_bps":"0","net_pos":"-0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:03:00.914479Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2191.85","state":"Cooldown(Instant { tv_sec: 4853746, tv_nsec: 462503460 })","drift_bps":"0","net_pos":"-0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:03:01.989862Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2191.85","state":"Cooldown(Instant { tv_sec: 4853746, tv_nsec: 462503460 })","drift_bps":"0","net_pos":"-0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:03:02.988427Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2191.95","state":"Cooldown(Instant { tv_sec: 4853746, tv_nsec: 462503460 })","drift_bps":"0","net_pos":"-0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:03:03.966578Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2191.95","state":"Cooldown(Instant { tv_sec: 4853746, tv_nsec: 462503460 })","drift_bps":"0","net_pos":"-0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:03:03.966734Z","level":"INFO","fields":{"message":"COOLDOWN_EXPIRED","strategy":"hl_quoter_v1","mid":"2191.95"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:03:03.966848Z","level":"INFO","fields":{"message":"REQUOTE cancel_all + batch_place","strategy":"hl_quoter_v1","mid":"2191.95","n_orders":4,"net_pos":"-0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:03:03.966949Z","level":"INFO","fields":{"message":"ORDER_SUBMIT","strategy":"hl_quoter_v1","side":"Buy","price":"2190.854025","qty":"0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:03:03.967048Z","level":"INFO","fields":{"message":"ORDER_SUBMIT","strategy":"hl_quoter_v1","side":"Sell","price":"2193.045975","qty":"0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:03:03.967136Z","level":"INFO","fields":{"message":"ORDER_SUBMIT","strategy":"hl_quoter_v1","side":"Buy","price":"2189.75805","qty":"0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:03:03.967217Z","level":"INFO","fields":{"message":"ORDER_SUBMIT","strategy":"hl_quoter_v1","side":"Sell","price":"2194.14195","qty":"0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:03:04.027862Z","level":"DEBUG","fields":{"message":"price rounded","raw":"2190.854025","rounded":"2190.8","dp":1,"is_buy":true},"target":"connector_hyperliquid::client"}
+{"timestamp":"2026-04-12T23:03:04.028082Z","level":"DEBUG","fields":{"message":"price rounded","raw":"2193.045975","rounded":"2193.1","dp":1,"is_buy":false},"target":"connector_hyperliquid::client"}
+{"timestamp":"2026-04-12T23:03:04.028221Z","level":"DEBUG","fields":{"message":"price rounded","raw":"2189.75805","rounded":"2189.7","dp":1,"is_buy":true},"target":"connector_hyperliquid::client"}
+{"timestamp":"2026-04-12T23:03:04.028358Z","level":"DEBUG","fields":{"message":"price rounded","raw":"2194.14195","rounded":"2194.2","dp":1,"is_buy":false},"target":"connector_hyperliquid::client"}
+{"timestamp":"2026-04-12T23:03:04.953504Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2191.65","state":"Quoting","drift_bps":"1.37","net_pos":"-0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:03:06.028519Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2191.65","state":"Quoting","drift_bps":"1.37","net_pos":"-0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:03:07.032601Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2191.65","state":"Quoting","drift_bps":"1.37","net_pos":"-0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:03:08.190766Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2191.55","state":"Quoting","drift_bps":"1.82","net_pos":"-0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:03:09.090512Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2191.55","state":"Quoting","drift_bps":"1.82","net_pos":"-0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:03:10.174513Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2191.75","state":"Quoting","drift_bps":"0.91","net_pos":"-0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:03:11.233646Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2191.75","state":"Quoting","drift_bps":"0.91","net_pos":"-0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:03:12.262545Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2192.25","state":"Quoting","drift_bps":"1.37","net_pos":"-0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:03:13.317839Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2192.25","state":"Quoting","drift_bps":"1.37","net_pos":"-0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:03:14.289215Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2192.25","state":"Quoting","drift_bps":"1.37","net_pos":"-0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:03:15.298324Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2192.25","state":"Quoting","drift_bps":"1.37","net_pos":"-0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:03:16.293473Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2192.45","state":"Quoting","drift_bps":"2.28","net_pos":"-0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:03:17.293248Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2192.75","state":"Quoting","drift_bps":"3.65","net_pos":"-0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:03:17.293386Z","level":"WARN","fields":{"message":"DRIFT","strategy":"hl_quoter_v1","mid":"2192.75","resting_bid_l0":"2190.854025","target_bid_l0":"2191.653625","drift_bps":"3.65","threshold":3},"target":"quoter"}
+{"timestamp":"2026-04-12T23:03:17.293541Z","level":"WARN","fields":{"message":"PULL_QUOTES","strategy":"hl_quoter_v1","reason":"drift","mid":"2192.75","pause_secs":3},"target":"quoter"}
+{"timestamp":"2026-04-12T23:03:18.357449Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2192.75","state":"Cooldown(Instant { tv_sec: 4853763, tv_nsec: 239605835 })","drift_bps":"0","net_pos":"-0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:03:19.333173Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2192.75","state":"Cooldown(Instant { tv_sec: 4853763, tv_nsec: 239605835 })","drift_bps":"0","net_pos":"-0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:03:20.332750Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2192.75","state":"Cooldown(Instant { tv_sec: 4853763, tv_nsec: 239605835 })","drift_bps":"0","net_pos":"-0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:03:20.332849Z","level":"INFO","fields":{"message":"COOLDOWN_EXPIRED","strategy":"hl_quoter_v1","mid":"2192.75"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:03:20.332930Z","level":"INFO","fields":{"message":"REQUOTE cancel_all + batch_place","strategy":"hl_quoter_v1","mid":"2192.75","n_orders":4,"net_pos":"-0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:03:20.333017Z","level":"INFO","fields":{"message":"ORDER_SUBMIT","strategy":"hl_quoter_v1","side":"Buy","price":"2191.653625","qty":"0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:03:20.333124Z","level":"INFO","fields":{"message":"ORDER_SUBMIT","strategy":"hl_quoter_v1","side":"Sell","price":"2193.846375","qty":"0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:03:20.333208Z","level":"INFO","fields":{"message":"ORDER_SUBMIT","strategy":"hl_quoter_v1","side":"Buy","price":"2190.55725","qty":"0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:03:20.333281Z","level":"INFO","fields":{"message":"ORDER_SUBMIT","strategy":"hl_quoter_v1","side":"Sell","price":"2194.94275","qty":"0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:03:20.460510Z","level":"DEBUG","fields":{"message":"price rounded","raw":"2191.653625","rounded":"2191.6","dp":1,"is_buy":true},"target":"connector_hyperliquid::client"}
+{"timestamp":"2026-04-12T23:03:20.460684Z","level":"DEBUG","fields":{"message":"price rounded","raw":"2193.846375","rounded":"2193.9","dp":1,"is_buy":false},"target":"connector_hyperliquid::client"}
+{"timestamp":"2026-04-12T23:03:20.460809Z","level":"DEBUG","fields":{"message":"price rounded","raw":"2190.55725","rounded":"2190.5","dp":1,"is_buy":true},"target":"connector_hyperliquid::client"}
+{"timestamp":"2026-04-12T23:03:20.460920Z","level":"DEBUG","fields":{"message":"price rounded","raw":"2194.94275","rounded":"2195.0","dp":1,"is_buy":false},"target":"connector_hyperliquid::client"}
+{"timestamp":"2026-04-12T23:03:21.388991Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2192.55","state":"Quoting","drift_bps":"0.91","net_pos":"-0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:03:22.363181Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2192.55","state":"Quoting","drift_bps":"0.91","net_pos":"-0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:03:23.402622Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2192.55","state":"Quoting","drift_bps":"0.91","net_pos":"-0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:03:24.359742Z","level":"DEBUG","fields":{"message":"MID","strategy":"hl_quoter_v1","mid":"2192.55","state":"Quoting","drift_bps":"0.91","net_pos":"-0.01"},"target":"quoter"}
+{"timestamp":"2026-04-12T23:03:24.558571Z","level":"INFO","fields":{"message":"Shutdown signal received"},"target":"trading_engine::runner"}
+{"timestamp":"2026-04-12T23:03:24.558709Z","level":"INFO","fields":{"message":"Shutting down","strategy":"hl_quoter_v1"},"target":"trading_engine::runner"}
+{"timestamp":"2026-04-12T23:03:24.558799Z","level":"INFO","fields":{"message":"Engine stopped — cancelling all open orders"},"target":"trading_cli::live"}
+{"timestamp":"2026-04-12T23:03:24.642921Z","level":"INFO","fields":{"message":"SHUTDOWN cancelling all open orders","instrument":"Hyperliquid.Perpetual.ETH","count":4},"target":"connector_hyperliquid::client"}
+{"timestamp":"2026-04-12T23:03:24.865517Z","level":"INFO","fields":{"message":"SHUTDOWN all orders cancelled","instrument":"Hyperliquid.Perpetual.ETH"},"target":"connector_hyperliquid::client"}

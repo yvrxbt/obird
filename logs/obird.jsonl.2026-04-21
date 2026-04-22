@@ -1,0 +1,25 @@
+{"timestamp":"2026-04-21T21:04:59.728150Z","level":"DEBUG","fields":{"message":"Got auth message to sign: Please sign this message to log in. By signing, yo"},"target":"predict_sdk::client"}
+{"timestamp":"2026-04-21T21:04:59.836693Z","level":"INFO","fields":{"message":"Successfully authenticated with Predict API"},"target":"predict_sdk::client"}
+{"timestamp":"2026-04-21T21:04:59.836758Z","level":"DEBUG","fields":{"message":"Fetching markets from: https://api.predict.fun/v1/markets?status=OPEN"},"target":"predict_sdk::client"}
+{"timestamp":"2026-04-21T21:05:00.092457Z","level":"DEBUG","fields":{"message":"Fetching markets from: https://api.predict.fun/v1/markets?status=OPEN&cursor=MTk4NzU0"},"target":"predict_sdk::client"}
+{"timestamp":"2026-04-21T21:05:00.379799Z","level":"INFO","fields":{"message":"Fetched 40 markets from Predict"},"target":"predict_sdk::client"}
+{"timestamp":"2026-04-21T21:05:00.379950Z","level":"DEBUG","fields":{"message":"Fetching orderbook from: https://api.predict.fun/v1/markets/174032/orderbook"},"target":"predict_sdk::client"}
+{"timestamp":"2026-04-21T21:05:00.491601Z","level":"DEBUG","fields":{"message":"Fetching orderbook from: https://api.predict.fun/v1/markets/189658/orderbook"},"target":"predict_sdk::client"}
+{"timestamp":"2026-04-21T21:05:00.596169Z","level":"DEBUG","fields":{"message":"Fetching orderbook from: https://api.predict.fun/v1/markets/189659/orderbook"},"target":"predict_sdk::client"}
+{"timestamp":"2026-04-21T21:05:00.700208Z","level":"DEBUG","fields":{"message":"Fetching orderbook from: https://api.predict.fun/v1/markets/189660/orderbook"},"target":"predict_sdk::client"}
+{"timestamp":"2026-04-21T21:05:00.806430Z","level":"DEBUG","fields":{"message":"Fetching orderbook from: https://api.predict.fun/v1/markets/189661/orderbook"},"target":"predict_sdk::client"}
+{"timestamp":"2026-04-21T21:05:00.911532Z","level":"DEBUG","fields":{"message":"Fetching orderbook from: https://api.predict.fun/v1/markets/218168/orderbook"},"target":"predict_sdk::client"}
+{"timestamp":"2026-04-21T21:05:01.016220Z","level":"DEBUG","fields":{"message":"Fetching orderbook from: https://api.predict.fun/v1/markets/218169/orderbook"},"target":"predict_sdk::client"}
+{"timestamp":"2026-04-21T21:05:01.120619Z","level":"DEBUG","fields":{"message":"Fetching orderbook from: https://api.predict.fun/v1/markets/218170/orderbook"},"target":"predict_sdk::client"}
+{"timestamp":"2026-04-21T21:05:01.222972Z","level":"DEBUG","fields":{"message":"Fetching orderbook from: https://api.predict.fun/v1/markets/218171/orderbook"},"target":"predict_sdk::client"}
+{"timestamp":"2026-04-21T21:05:01.327072Z","level":"DEBUG","fields":{"message":"Fetching orderbook from: https://api.predict.fun/v1/markets/218172/orderbook"},"target":"predict_sdk::client"}
+{"timestamp":"2026-04-21T21:05:01.430107Z","level":"DEBUG","fields":{"message":"Fetching orderbook from: https://api.predict.fun/v1/markets/218173/orderbook"},"target":"predict_sdk::client"}
+{"timestamp":"2026-04-21T21:05:01.535263Z","level":"DEBUG","fields":{"message":"Fetching orderbook from: https://api.predict.fun/v1/markets/218174/orderbook"},"target":"predict_sdk::client"}
+{"timestamp":"2026-04-21T21:05:01.639212Z","level":"DEBUG","fields":{"message":"Fetching orderbook from: https://api.predict.fun/v1/markets/218175/orderbook"},"target":"predict_sdk::client"}
+{"timestamp":"2026-04-21T21:05:01.743405Z","level":"DEBUG","fields":{"message":"Fetching orderbook from: https://api.predict.fun/v1/markets/218176/orderbook"},"target":"predict_sdk::client"}
+{"timestamp":"2026-04-21T21:05:01.847188Z","level":"DEBUG","fields":{"message":"Fetching orderbook from: https://api.predict.fun/v1/markets/21177/orderbook"},"target":"predict_sdk::client"}
+{"timestamp":"2026-04-21T21:05:02.038319Z","level":"DEBUG","fields":{"message":"Fetching orderbook from: https://api.predict.fun/v1/markets/52261/orderbook"},"target":"predict_sdk::client"}
+{"timestamp":"2026-04-21T21:05:02.466753Z","level":"DEBUG","fields":{"message":"Fetching orderbook from: https://api.predict.fun/v1/markets/142932/orderbook"},"target":"predict_sdk::client"}
+{"timestamp":"2026-04-21T21:05:02.570847Z","level":"DEBUG","fields":{"message":"Fetching orderbook from: https://api.predict.fun/v1/markets/190414/orderbook"},"target":"predict_sdk::client"}
+{"timestamp":"2026-04-21T21:05:02.675706Z","level":"DEBUG","fields":{"message":"Fetching orderbook from: https://api.predict.fun/v1/markets/198731/orderbook"},"target":"predict_sdk::client"}
+{"timestamp":"2026-04-21T21:05:02.780269Z","level":"DEBUG","fields":{"message":"Fetching orderbook from: https://api.predict.fun/v1/markets/198754/orderbook"},"target":"predict_sdk::client"}

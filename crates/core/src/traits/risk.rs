@@ -2,9 +2,9 @@
 //! Called synchronously by the OrderRouter on every action.
 //! Must be fast — microseconds, not milliseconds.
 
-use crate::Action;
 use crate::error::RiskRejection;
 use crate::types::position::Position;
+use crate::Action;
 
 pub trait RiskCheck: Send + Sync {
     /// Check whether an action is allowed given current positions.

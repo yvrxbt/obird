@@ -34,7 +34,11 @@ pub struct HlMarketDataFeed {
 
 impl HlMarketDataFeed {
     pub fn new(asset: AssetInfo, user: hypersdk::Address, testnet: bool) -> Self {
-        Self { asset, user, testnet }
+        Self {
+            asset,
+            user,
+            testnet,
+        }
     }
 
     pub async fn run(self, sink: Arc<dyn MarketDataSink>) {
@@ -55,7 +59,9 @@ impl HlMarketDataFeed {
 
         // L2Book gives real BBO + exchange timestamp. One subscription per instrument.
         // AllMids (removed) gave only a synthetic mid with no per-instrument timestamp.
-        ws.subscribe(Subscription::L2Book { coin: self.asset.ws_coin.clone() });
+        ws.subscribe(Subscription::L2Book {
+            coin: self.asset.ws_coin.clone(),
+        });
         ws.subscribe(Subscription::OrderUpdates { user: self.user });
         ws.subscribe(Subscription::UserFills { user: self.user });
 
@@ -115,7 +121,9 @@ impl HlMarketDataFeed {
                 }
             }
 
-            Incoming::UserFills { fills, is_snapshot, .. } => {
+            Incoming::UserFills {
+                fills, is_snapshot, ..
+            } => {
                 if is_snapshot {
                     return; // skip historical snapshot on subscription
                 }

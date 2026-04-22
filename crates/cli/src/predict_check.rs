@@ -100,6 +100,7 @@ pub async fn run() -> anyhow::Result<()> {
         is_yield_bearing: target.is_yield_bearing,
         fee_rate_bps: target.fee_rate_bps,
         polymarket_yes_token_id: None, // smoke test only — no Polymarket FV needed
+        polymarket_no_token_id: None,
     };
 
     tracing::info!(
