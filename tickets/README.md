@@ -73,5 +73,7 @@ labels: agent-task,phase-1a,difficulty-trivial,area-core
 |---|---|---|---|
 | `phase_1a/` | `PROJECT_PLAN.md` §1.8 | Engine key change: `HashMap<Exchange>` → `HashMap<InstrumentId>`; single-process multi-market | Ready |
 | `phase_1b/` | `PROJECT_PLAN.md` §1.4 | Extract `fair_value_service`: in-process task + `FairValueBus`, strategy consumes external FV | Ready |
+| `phase_1c/` | `PROJECT_PLAN.md` §1.3 | Extract md-ingest binaries over UDS + tier-0 NDJSON safety net | Ready |
+| `phase_1d/` | `PROJECT_PLAN.md` §1.1, §1.2, §1.5, §1.6 | NATS substrate: schemas, Action/OrderUpdate/FV/MD transports, idempotency | Ready |
 
 More phases will be added as they're scoped. Each phase scoping session produces a new directory under `tickets/`.

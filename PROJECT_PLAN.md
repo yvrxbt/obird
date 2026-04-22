@@ -41,6 +41,7 @@ Transform obird from a monolith into a cleanly-composed multi-service platform:
 
 **Owner**: Z  
 **Blockers**: None  
+**Pre-drafted tickets**: `tickets/phase_1d/` (localhost NATS covered in T1; production cluster is Phase 2 infra).
 **Deliverables**:
 - [ ] 1.1.1 Deploy 3x t4g.small NATS cluster in eu-west-2 (Terraform module)
 - [ ] 1.1.2 Configure JetStream streams: `md_archive`, `actions`, `order_updates`
@@ -64,6 +65,7 @@ Transform obird from a monolith into a cleanly-composed multi-service platform:
 
 **Owner**: Z  
 **Blockers**: None (can run parallel with 1.1)  
+**Pre-drafted tickets**: `tickets/phase_1d/T2-wire-schemas.md`.
 **Deliverables**:
 - [ ] 1.2.1 Document NATS subject hierarchy in `docs/NATS_SUBJECTS.md`:
   - `md.<venue>.<instrument>.book` / `.trade` / `.fill`
@@ -94,6 +96,7 @@ Transform obird from a monolith into a cleanly-composed multi-service platform:
 
 **Owner**: Z  
 **Blockers**: 1.2 (needs subject contract)  
+**Pre-drafted tickets**: `tickets/phase_1c/` (T1→T5). 1c splits feeds into binaries over UDS first; NATS swap is `tickets/phase_1d/T6`.
 **Deliverables**:
 - [ ] 1.3.1 Create `crates/md-ingest/` with common binary scaffold
 - [ ] 1.3.2 Extract Polymarket feed: `md-ingest-poly` binary
@@ -150,6 +153,7 @@ Transform obird from a monolith into a cleanly-composed multi-service platform:
 
 **Owner**: Z  
 **Blockers**: 1.2 (needs contract), 1.4 (needs FV service)  
+**Pre-drafted tickets**: `tickets/phase_1d/` (T3 action transport, T4 idempotency, T5 FV swap, T7 end-to-end validation).
 **Deliverables**:
 - [ ] 1.5.1 Add `ActionTransport` trait: `in_process(mpsc)` vs `nats(JetStream)`
 - [ ] 1.5.2 Add `EventTransport` trait: `in_process(broadcast)` vs `nats(Core)`
@@ -177,6 +181,7 @@ Transform obird from a monolith into a cleanly-composed multi-service platform:
 
 **Owner**: Z  
 **Blockers**: 1.5 (needs Action transport)  
+**Pre-drafted tickets**: covered within `tickets/phase_1d/T3` (transport) + `T7` (multi-process validation). A dedicated binary scaffold is created during T7 setup. If it grows substantial, split into its own `tickets/phase_1e/`.
 **Deliverables**:
 - [ ] 1.6.1 Create `crates/strategy-controller/` binary scaffold
 - [ ] 1.6.2 Move `PredictionQuoter` logic into controller:

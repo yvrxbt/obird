@@ -1,5 +1,9 @@
 # Trading System — Claude Code Instructions
 
+## Resume from here (NEW SESSION)
+
+If you are starting fresh, read `QUICK_START.md` first — it is the canonical handoff doc, covers current state, Phase 1 ticket plan, and how to pick up work. This file (`CLAUDE.md`) is terse code-invariant reminders, not a state snapshot.
+
 ## Project Overview
 
 Rust HFT trading system. Two verticals, single binary:
