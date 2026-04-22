@@ -121,16 +121,17 @@ Transform obird from a monolith into a cleanly-composed multi-service platform:
 
 **Owner**: Z  
 **Blockers**: 1.2 (needs NATS contract), 1.3 (needs MD ingest)  
+**Pre-drafted tickets**: `tickets/phase_1b/` (T1 → T7). Note: Phase 1b does in-process extraction first (bus-based, no NATS) to de-risk the service boundary. NATS migration is Phase 1d. Publish with `./tickets/publish.sh phase_1b` when ready.
 **Deliverables**:
-- [ ] 1.4.1 Promote `crates/fair_value_service` from stub to full binary
+- [ ] 1.4.1 Promote `crates/fair_value_service` from stub to full binary *(ticket T4)*
 - [ ] 1.4.2 Implement pluggable FV models:
   - `mid` (single venue BBO)
-  - `cross_venue_conservative` (current `PredictionQuoter` logic)
-  - `microprice` (depth-weighted)
-- [ ] 1.4.3 Subscribe to `md.<venue>.<instrument>.book` via NATS
-- [ ] 1.4.4 Publish to `fv.<symbol>` (NATS Core, latest-value)
+  - `cross_venue_conservative` (current `PredictionQuoter` logic) *(ticket T3)*
+  - `microprice` (depth-weighted) *(deferred, phase 1b.2)*
+- [ ] 1.4.3 Subscribe to `md.<venue>.<instrument>.book` via NATS *(deferred, phase 1d)*
+- [ ] 1.4.4 Publish to `fv.<symbol>` (NATS Core, latest-value) *(deferred, phase 1d; in-process `FairValueBus` first — ticket T2)*
 - [ ] 1.4.5 Config file: map symbols to models + source venues
-- [ ] 1.4.6 Add staleness monitoring: emit warning if no FV update in >2s
+- [ ] 1.4.6 Add staleness monitoring: emit warning if no FV update in >2s *(carried over from existing PredictionQuoter behavior; ticket T6)*
 
 **Acceptance**:
 - FV service runs standalone, publishes Poly + predict FV
@@ -236,11 +237,12 @@ Transform obird from a monolith into a cleanly-composed multi-service platform:
 
 **Owner**: Z  
 **Blockers**: None (can run parallel with 1.7)  
+**Pre-drafted tickets**: `tickets/phase_1a/` (T1 → T7). Publish to GitHub Issues with `./tickets/publish.sh phase_1a` when ready to delegate.
 **Deliverables**:
-- [ ] 1.8.1 Change engine key from `HashMap<Exchange, Connector>` to `HashMap<InstrumentId, Connector>`
-- [ ] 1.8.2 Update `OrderRouter` and `EngineRunner` to support multi-market per exchange
-- [ ] 1.8.3 Test: one `obird-engine` process quotes 3+ predict.fun markets simultaneously
-- [ ] 1.8.4 Retire `scripts/farm.py` crash-loop orchestration
+- [ ] 1.8.1 Change engine key from `HashMap<Exchange, Connector>` to `HashMap<InstrumentId, Connector>` *(tickets T1, T2, T3)*
+- [ ] 1.8.2 Update `OrderRouter` and `EngineRunner` to support multi-market per exchange *(tickets T3, T4, T6)*
+- [ ] 1.8.3 Test: one `obird-engine` process quotes 3+ predict.fun markets simultaneously *(tickets T5, T7)*
+- [ ] 1.8.4 Retire `scripts/farm.py` crash-loop orchestration *(ticket T7)*
 
 **Acceptance**:
 - Single engine process serves all predict.fun markets
